@@ -108,7 +108,19 @@ table.object {
 }
 
 .object td, .object th {
-	padding: 1px 5px
+	padding: 1px 5px;
+	vertical-align: top;
+}
+
+.object ul {
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
+	font-style: italic;
+}
+
+.object tr {
+	border: 1px dashed gray;
 }
 
 .object tr td:first-child {

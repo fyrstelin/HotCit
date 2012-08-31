@@ -1,0 +1,79 @@
+Usecase for HotCit
+
+== Info ==
+Players: Turing, Ada, Nygaard, Linus
+Characters: 8 standard characters
+Districts: watchtower, manor, harbor, church, School of Magic, Library, Laboratory
+
+== User registration ==
+
+...
+
+
+== Game setup ==
+
+- Turing creates the game (dat, 3-6 players, no password)
+- Ada joins the game
+- Turing and Ada is ready
+- Nygaard and Linus joins the game
+- Nygaard and Linus are ready
+- The game starts
+
+
+== Playing the game ==
+- Round 0
+- Turing is chosen randomly to be King
+- 4 cards is dealt to each player
+	(Linus gets a Manor)
+- 2 gold is given to each player
+
+- Round 1
+
+- Step 1
+- Cards are shuffled
+- Two c-cards (Architect and Magician) are discarded faceup and one facedown (Warlord)
+
+- Step 2
+- Turing chooses between Assassin, Thief, King, Bishop and Merchant
+- He chooses Thief
+- Ada chooses between Assassin, King, Bishop and Merchant
+- She chooses Bishop
+- Nygaard chooses between Assassin, King and Merchant
+- He chooses King
+- Linus chooses between Assassin and Merchant
+- He chooses Assassin
+- Merchant is discarded facedown
+
+- Step 3
+- Assassin is in turn - that would be Linus
+- Linus can choose "Use action (gold/district)" or "Use ability (assassinate)"
+- He chooses to Assassinate the King
+- Linus can choose "Use action (gold/district)"
+- He chooses to take gold
+- Linus can choose "Build district" or "end turn"
+- He chooses to builds a Manor
+- Linus can choose "end turn"
+- Linus ends his turn
+
+- Thief is in turn - that would be Turing
+- Turing can choose "Use action (gold/district)" or "Use ability (steal)"
+- He chooses to draw two Church cards and discards one of them
+- Turing can choose "Use ability (steal)" or "Build district"
+- Turing steals from Bishop
+- Turing can choose "Build district" or "end turn"
+- He chooses to builds a Harbor
+- Turing can choose "end turn"
+- Turing ends his turn
+
+- Magician is in turn - he is not in play
+- King is in turn - he is dead
+
+- Bishop is in turn - that would be Ada
+- She looses all her gold to Turing
+...
+- Ada ends her turn
+
+
+
+
+

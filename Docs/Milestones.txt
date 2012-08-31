@@ -1,0 +1,24 @@
+== Milestones ==
+
+1)
+	- Usecases
+		- Human->Client Done
+		- Client->Server Andreas
+	- Server API Andreas
+	- UI sketch (human->client) Mads
+	- Billeder Mads
+	
+2)
+	- UML
+	- Pre-/post condition
+	- Interfaces (server->app)
+	
+3)
+	- Unit tests
+	- Integration test
+	
+4)
+	- Implementer application (ift til test)
+	
+5)
+	- Implementer server
