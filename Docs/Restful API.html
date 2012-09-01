@@ -3,11 +3,27 @@
 	<head>
 		<title>HotCit - RESTful API</title>
 		<link rel = 'stylesheet' type = 'text/css' href = './etc/style.css'/>
+		<script src="./etc/utils.js"></script>
+		<script src="./etc/jquery.min.js"></script>
+		<script>
+			$(document).ready(function(){
+				title = 'h4'
+				box = '.box'
+				uri = '.box>div:first-child'
+				uri_description = '.box>div:nth-child(2)'
+			
+				$(uri_description).hide();
+			
+				$(uri).click(function() {
+					// toggle between .hide() and .show()
+					$($(event.target).next()).toggle();
+				});
+			});
+		</script>
 	</head>
 	<body>
 		<h1>HotCit</h1>
 
-		
 		
 		<h2>List of Content</h2>
 		<ol>
@@ -39,8 +55,8 @@
 		
 		<h4>Get All Characters</h4>
 		<div class = 'box'>
-			<div>GET /characters/</div>
-			<div>
+			<div class=uri>GET /characters/</div>
+			<div class=uri_description>
 				Response
 					<div>200 OK - <a href = '#CharacterObj'>Character</a>[ ]</div>
 				Note
