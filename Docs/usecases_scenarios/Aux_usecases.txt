@@ -1,0 +1,114 @@
+== USECASE #2 ==
+== Create user ==
+	John access the 'create user page'
+	A webform pops up and requests:
+		Username: John
+		Password: xxx
+		Avatar-name: SuperDelicision2000
+		Avatar-picture:  upload-button
+
+	After filling out the details
+	John clicks submit and is redirected to a new page
+
+		'you have successfully created a user, congratulations'
+		[link to the official <gamessite>]
+		[link to <see my user>]
+	
+== USECASE #3 ==
+== See user details ==
+	Either john has clicked <see my user> after creating his user,
+	or he has followed the link <see my user> from the official <gamessite>
+	
+	at this page, john
+	can change his avatarname, and picture
+	
+	he can also see some interesting staticstics,
+	such as:
+		- games played
+		- total wins
+		- total losses
+		- avarage points scored pr game
+		- a graph of all the points in all games John has scored
+
+== USECASE #4 ==
+== Create game==
+	From the link[<new game>] John is redirected to the <create game> page.
+	here he is greeted by a webform requesting:
+	
+		- game name
+		- game password
+		- no players
+		- *possible some options concerning starred cards
+		- no rounds to win the game
+		
+	after which he click the submit button
+	and is redirected to a new page
+	containing a picture of his avatar,
+	several grey rectangles, 
+	a small chat window, 
+	a small splash screen indicating the game is waiting
+	for other people to join,
+	a leave button,
+	and a ready button
+	
+	John clicks ready,
+	and the button is replaced with a 
+	cancel button.
+	
+	after a while, 
+	the gray rectangles begin to fill up 
+	with other avatar pictures and names,
+	
+	John can see they all have clicked the ready button,
+	and when the last grey rectangle has been filled,
+	and all the players have clicked 'ready',
+	John is redirected to the new game.
+	
+
+== USECASE #5 ==
+== Join game ==
+	John accesses the games site,
+	sees a list of the games currently available,
+	a button <[create game]>,
+	a button <[spectate]>,
+	and a button <[join game]>.
+
+	He selects one of the games
+	from the list by clicking on it.
+	Afterwhich it is marked as selected.
+
+	He then clicks join game,
+	is promted for a password.
+
+	John writes the password,
+	clicks the submit button and
+	is redirected to the screen
+	of waiting players - see usecase #3
+
+
+	USECASE#X5 - Spectate a game
+	John accesses the games site,
+	selects a game, and then
+	clicks the <[spectate game]> 
+	button.
+
+	Is promted for a password,
+	afterwhich he is redirected to the 
+	screen of waiting players.
+
+	...
+
+	through out the game, John can 
+	see a 'table' of all faceup cards in play,
+	around which is displayed, for each player:
+	- the name of the player
+	- a display of his hand, facedown,
+	- possible the king token
+	- a stack of gold
+	- the character card of the player, either facedown, or faceup
+	- the districts the player has build
+	- the avatar image of the player
+
+	* possible John has an option list,
+	to access any specific player's view.
+
