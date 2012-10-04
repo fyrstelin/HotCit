@@ -1,3 +1,7 @@
+html {
+	background: gray;
+}
+
 body {
 	background-color: #fdfdfd;
 	padding: 2cm 1.5cm;
@@ -56,6 +60,7 @@ div.entry span {
 
 div.box {
 	border: 1px solid black;
+	clear: both;
 }
 
 .box>div:first-child{

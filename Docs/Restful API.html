@@ -39,8 +39,12 @@
 				<a href = '#object'>Objects</a>
 				<ol>
 					<li><a href = '#objectsFormat'>Formats</a></li>
-					<li><a href = '#simple'>Simple objects</a></li>
-					<li><a href = '#advanced'>Advanced objects</a></li>
+					<li><a href = '#objectsCards'>Objects representing cards</a></li>
+					<li><a href = '#objectsGameState'>Objects representing the game state</a></li>
+					<li><a href = '#objectsPlaying'>Objects for playing</a></li>
+					<li><a href = '#objectsCreation'>Game creation objects</a></li>
+					<li><a href = '#objectsExamples'>Examples</a></li>
+					<li><a href = '#objectsCharacterExamples'>Examples of Character Abilities</a></li>
 				</ol>
 			</li>
 		</ol>
@@ -396,7 +400,7 @@
 		</ul>
 		
 		
-		<h3>Objects representing cards</h3>
+		<h3 id = 'objectsCards'>Objects representing cards</h3>
 		<table class = 'object' id = 'CharacterObj'>
 			<tr><th colspan = '2'>Character</th></tr>
 			<tr><td>string</td><td>Name</td></tr>
@@ -414,7 +418,7 @@
 		</table>
 		
 		
-		<h3>Objects representing the game state</h3>
+		<h3 id = 'objectsGameState'>Objects representing the game state</h3>
 		
 		<table class = 'object' id = 'GameStateVectorObj'>
 			<tr><th colspan = '2'>GameStateVector</th></tr>
@@ -481,7 +485,7 @@
 		</table>
 		
 		
-		<h3>Objects for playing</h3>
+		<h3 id = 'objectsPlaying'>Objects for playing</h3>
 		
 		<table class = 'object' id = 'UpdateObj'>
 			<tr><th colspan = '2'>Update</th></tr>
@@ -502,17 +506,17 @@
 		
 		<table class = 'object' id = 'AbilityInfoObj'>
 			<tr><th colspan = '2'>AbilityInfo</th></tr>
-			<tr><td>string</td><td>Character</td></tr>
-			<tr><td>List&lt;string&gt;</td><td>Districts</td></tr>
+			<tr><td>string</td><td>Target*</td></tr>
+			<tr><td>List&lt;string&gt;</td><td>Districts*</td></tr>
 			<tr><th colspan = '2'>
 				Used for using ability. Some fields are <br/> optional.<br/>
-				<b>Characters</b> used for Assassin, Thief, <br/> Magician and Warlord. <br/>
+				<b>Target</b> used for Assassin, Thief, <br/> Magician and Warlord. <br/>
 				<b>Districts</b> used for Magician and <br/> Warlord <br/>
 			</th></tr>
 		</table>
 		
 
-		<h3 id = 'advanced'>Game creation objects</h3>
+		<h3 id = 'objectsCreation'>Game creation objects</h3>
 		
 		<table class = 'object' id = 'GameInfoObj'>
 			<tr><th colspan = '2'>GameInfo</th></tr>
@@ -537,7 +541,7 @@
 		</table>
 		
 		
-		<h3>Examples</h3>
+		<h3 id = 'objectsExamples'>Examples</h3>
 		
 		<h4>GameStateVector</h4>
 		<table class = 'object'>
@@ -754,8 +758,179 @@
 		</table>
 		
 		
-		<h4></h4> <!--Just for clearing-->
+		<h3 id = 'objectsCharacterExamples'>Examples of Character Abilities</h3>
 		
+		<h4>Assassin</h4>
+		<table class = 'object'>
+			<tr><th colspan = '2'>Option</th></tr>
+			<tr><td>Type</td><td><i>UseCharacterAbility</i></td></tr>
+			<tr><td>Message</td><td>Use your ability and assassinate another character.</td></tr>
+			<tr><td>Choices</td><td>[thief, magician, king, bishop, merchant, warlord]</td></tr>
+		</table>
+		<div class = 'box'>
+			<div>PUT /games/{<i>gamename</i>}/ability/assassin/</div>
+			<div>
+				Data
+					<div>
+						{Target: king}
+					</div>
+				Response
+					<div>204 No Content</div>
+			</div>
+		</div>
+		
+		<h4>Thief</h4>
+		<table class = 'object'>
+			<tr><th colspan = '2'>Option</th></tr>
+			<tr><td>Type</td><td><i>UseCharacterAbility</i></td></tr>
+			<tr><td>Message</td><td>Use your ability and steal another characters gold.</td></tr>
+			<tr><td>Choices</td><td>[magician, king, bishop, merchant, warlord]</td></tr>
+		</table>
+		<div class = 'box'>
+			<div>PUT /games/{<i>gamename</i>}/ability/thief/</div>
+			<div>
+				Data
+					<div>
+						{Target: merchant}
+					</div>
+				Response
+					<div>204 No Content</div>
+			</div>
+		</div>
+		
+		<h4>Magician</h4>
+		<table class = 'object'>
+			<tr><th colspan = '2'>Option</th></tr>
+			<tr><td>Type</td><td><i>UseCharacterAbility</i></td></tr>
+			<tr><td>Message</td><td>Use your ability and swap hand with another player.</td></tr>
+			<tr><td>Choices</td><td>[turing, ada, linus]</td></tr>
+		</table>
+		
+		<div class = 'box'>
+			<div>PUT /games/{<i>gamename</i>}/ability/magician/</div>
+			<div>
+				Data
+					<div>
+						{Target: turing}
+					</div>
+				Response
+					<div>204 No Content</div>
+			</div>
+		</div>
+		
+		<table class = 'object'>
+			<tr><th colspan = '2'>Option</th></tr>
+			<tr><td>Type</td><td><i>UseCharacterAbility</i></td></tr>
+			<tr><td>Message</td><td>Use your ability and swap a number of districts in the pile.</td></tr>
+		</table>
+		
+		<div class = 'box'>
+			<div>PUT /games/{<i>gamename</i>}/ability/magician/</div>
+			<div>
+				Data
+					<div>
+						{Districts: [castle, habor]}
+					</div>
+				Response
+					<div>204 No Content</div>
+			</div>
+		</div>
+		
+		<h4>King</h4>
+		<table class = 'object'>
+			<tr><th colspan = '2'>Option</th></tr>
+			<tr><td>Type</td><td><i>UseCharacterAbility</i></td></tr>
+			<tr><td>Message</td><td>Use your ability and get 4 gold for your noble districts.</td></tr>
+		</table>
+		
+		<div class = 'box'>
+			<div>PUT /games/{<i>gamename</i>}/ability/king/</div>
+			<div>
+				Response
+					<div>204 No Content</div>
+			</div>
+		</div>
+		
+		<h4>Bishop</h4>
+		<table class = 'object'>
+			<tr><th colspan = '2'>Option</th></tr>
+			<tr><td>Type</td><td><i>UseCharacterAbility</i></td></tr>
+			<tr><td>Message</td><td>Use your ability and get 2 gold for your religious districts.</td></tr>
+		</table>
+		
+		<div class = 'box'>
+			<div>PUT /games/{<i>gamename</i>}/ability/bishop/</div>
+			<div>
+				Response
+					<div>204 No Content</div>
+			</div>
+		</div>
+		
+		<h4>Merchant</h4>
+		<table class = 'object'>
+			<tr><th colspan = '2'>Option</th></tr>
+			<tr><td>Type</td><td><i>UseCharacterAbility</i></td></tr>
+			<tr><td>Message</td><td>Use your ability and get 5 gold for your trade districts.</td></tr>
+		</table>
+		
+		<div class = 'box'>
+			<div>PUT /games/{<i>gamename</i>}/ability/merchant/</div>
+			<div>
+				Response
+					<div>204 No Content</div>
+			</div>
+		</div>
+		
+		<h4>Architect</h4>
+		<b>NO DIRECT CHARACTER ABILITY</b>
+		
+		<h4>Warlord</h4>
+		<table class = 'object'>
+			<tr><th colspan = '2'>Option</th></tr>
+			<tr><td>Type</td><td><i>UseCharacterAbility</i></td></tr>
+			<tr><td>Message</td><td>Use your ability and get 1 gold for your military district.</td></tr>
+		</table>
+		
+		<div class = 'box'>
+			<div>PUT /games/{<i>gamename</i>}/ability/warlord/</div>
+			<div>
+				Response
+					<div>204 No Content</div>
+			</div>
+		</div>
+		
+		<table class = 'object'>
+			<tr><th colspan = '2'>Option</th></tr>
+			<tr><td>Type</td><td><i>UseCharacterAbility</i></td></tr>
+			<tr><td>Message</td><td>Use your ability and destroy an existing district.</td></tr>
+			<tr class = 'todo' title = 'I think this is most elegant, but it is not of type string...'><td>Choices</td>
+				<td>
+					[
+						turing: [church, castle],
+						ada: [dock, labaratory]
+					]
+				</td>
+			</tr>
+			<tr class = 'todo' title = 'This one matches the string type'><td>Choices</td>
+				<td>
+					[turing.church, turing.castle, ada.dock, ada.labaratory]
+				</td>
+			</tr>
+		</table>
+		
+		<div class = 'box'>
+			<div>PUT /games/{<i>gamename</i>}/ability/warlord/</div>
+			<div>
+				Data
+					<div><span class = 'todo' title = 'This one is most elegant, but then we need an extra field in AbilityInfo...'>{Target: turing, District: castle}</span></div>
+					<div><span class = 'todo' title = 'This one follows the original structure for AbilityInfo, but an array with one object is fuzzy...'>{Target: turing, Districts: [castle]}</span></div>
+				Response
+					<div>204 No Content</div>
+			</div>
+		</div>
+		
+		
+		<h4></h4>
 		
 	<!-- TEMPLATES -->
 	
