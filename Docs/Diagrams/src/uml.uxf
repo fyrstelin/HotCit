@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="11.4">
+  <zoom_level>9</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>324</x>
+      <y>252</y>
+      <w>189</w>
+      <h>135</h>
+    </coordinates>
+    <panel_attributes>*Server*
+--
+Responsibilties:
+*- Handle RESTful calls*
+- Find the right player (and
+  game) for at user</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>90</x>
+      <y>468</y>
+      <w>126</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>*User*
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>126</x>
+      <y>324</y>
+      <w>215</w>
+      <h>161</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2= *</panel_attributes>
+    <additional_attributes>198;27;27;27;27;144</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>324</x>
+      <y>576</y>
+      <w>189</w>
+      <h>135</h>
+    </coordinates>
+    <panel_attributes>*Resources*
+--
+Responsibilties:
+*- Provide the following:*
+  - Characters
+  - Districts
+  - Images</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>387</x>
+      <y>360</y>
+      <w>44</w>
+      <h>233</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>27;27;27;216</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>846</x>
+      <y>261</y>
+      <w>189</w>
+      <h>135</h>
+    </coordinates>
+    <panel_attributes>*Game*
+--
+Responsibilties:
+*- Provide handles to play the*
+*  game*</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>477</x>
+      <y>171</y>
+      <w>162</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>*CustomGameFactory*
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>486</x>
+      <y>189</y>
+      <w>125</w>
+      <h>107</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2= *</panel_attributes>
+    <additional_attributes>27;90;108;90;108;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>486</x>
+      <y>306</y>
+      <w>377</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2= *</panel_attributes>
+    <additional_attributes>27;27;360;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>612</x>
+      <y>405</y>
+      <w>117</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>*District*
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>738</x>
+      <y>648</y>
+      <w>117</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>*Character*
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>702</x>
+      <y>369</y>
+      <w>197</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2=*</panel_attributes>
+    <additional_attributes>180;27;180;63;27;63</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>828</x>
+      <y>369</y>
+      <w>179</w>
+      <h>323</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2=1...9</panel_attributes>
+    <additional_attributes>162;27;162;306;27;306</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>486</x>
+      <y>657</y>
+      <w>269</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2=*</panel_attributes>
+    <additional_attributes>27;27;252;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>486</x>
+      <y>441</y>
+      <w>161</w>
+      <h>179</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2= *</panel_attributes>
+    <additional_attributes>27;162;144;162;144;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>774</x>
+      <y>531</y>
+      <w>117</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>*Player*
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>864</x>
+      <y>369</y>
+      <w>89</w>
+      <h>215</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2=2...7</panel_attributes>
+    <additional_attributes>72;27;72;198;27;198</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>648</x>
+      <y>441</y>
+      <w>143</w>
+      <h>134</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2= *</panel_attributes>
+    <additional_attributes>126;117;27;117;27;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>792</x>
+      <y>567</y>
+      <w>44</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2= ?</panel_attributes>
+    <additional_attributes>27;27;27;81</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>765</x>
+      <y>189</y>
+      <w>98</w>
+      <h>125</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>81;108;27;108;27;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>720</x>
+      <y>171</y>
+      <w>162</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+*GameFactory*</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>612</x>
+      <y>171</y>
+      <w>125</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>108;27;27;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Package</type>
+    <coordinates>
+      <x>81</x>
+      <y>144</y>
+      <w>1125</w>
+      <h>576</h>
+    </coordinates>
+    <panel_attributes>HotCit
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1008</x>
+      <y>423</y>
+      <w>189</w>
+      <h>135</h>
+    </coordinates>
+    <panel_attributes>*GameStateVector*
+--
+Responsibilties:
+*- Struct representing the state*
+*  game*</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1008</x>
+      <y>306</y>
+      <w>116</w>
+      <h>134</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>27;27;99;27;99;117</additional_attributes>
+  </element>
+</diagram>
