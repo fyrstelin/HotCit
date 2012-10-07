@@ -1,0 +1,20 @@
++---------------+--------+--------------------------+-----------+------------+---------------------+
+| description	| method | uri						| username  | data       | Expected statuscode |
++---------------+--------+--------------------------+-----------+------------+---------------------+
+| A legal gamecreation sequence with all mutating calls.										   |
++---------------+--------+--------------------------+-----------+------------+---------------------+
+| create game	| POST	 | /lobby/mygame/			| ada       |			 | 201 Created   	   |
+| join game     | PUT    | /lobby/mygame/users/		| turing    |			 | 204 No content	   |
+| join game		| PUT	 | /lobby/mygame/users/		| hopper	|			 | 204 No content	   |
+| leave game	| DELETE | /lobby/mygame/users/		| turing	|			 | 204 No content	   |
+| I'm ready		| PUT	 | /lobby/mygame/ready/		| ada		|			 | 204 No content	   |
+| join game		| PUT	 | /lobby/mygame/users/		| wiener	|			 | 204 No content	   |
+| I'm ready		| PUT	 | /lobby/mygame/ready/		| wiener	|			 | 204 No content	   |
+| I'm not ready	| DELETE | /lobby/mygame/ready/		| ada		|			 | 204 No content	   |
+| I'm ready		| PUT	 | /lobby/mygame/ready/		| hopper	|			 | 204 No content	   |
+| I'm ready		| PUT	 | /lobby/mygame/ready/		| ada		|			 | 204 No content	   |
+| join game		| PUT	 | /lobby/mygame/users/		| turing	|			 | 404 Not found	   |
++---------------+--------+--------------------------+-----------+------------+---------------------+
+
+
+Note: The username is set in the header authorization.
