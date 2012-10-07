@@ -1,0 +1,19 @@
+MoSCoW analyse af HotCit Server 1.0
+
+Must have:
+- A playable game
+- 8 standard characters
+- all districts
+- User detection
+
+Should have:
+- Custom game creation
+- Multiple running games
+
+Could have:
+- User authentication
+
+Won't have:
+- Password protected games
+- Spectating
+- Secure connection
