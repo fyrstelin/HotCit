@@ -1,0 +1,150 @@
+Title: cathedral
+Price: 5
+Value: 5
+Color: blue
+-
+Title: church
+Price: 2
+Value: 2
+Color: blue
+-
+Title: monastery
+Price: 3
+Value: 3
+Color: blue
+-
+Title: temple
+Price: 1
+Value: 1
+Color: blue
+-
+Title: docks
+Price: 3
+Value: 3
+Color: green
+-
+Title: harbor
+Price: 4
+Value: 4
+Color: green
+-
+Title: market
+Price: 2
+Value: 2
+Color: green
+-
+Title: tavern
+Price: 1
+Value: 1
+Color: green
+-
+Title: town_hall
+Price: 5
+Value: 5
+Color: green
+-
+Title: trading_post
+Price: 2
+Value: 2
+Color: green
+-
+Title: battlefield
+Price: 3
+Value: 3
+Color: red
+-
+Title: fortress
+Price: 5
+Value: 5
+Color: red
+-
+Title: prison
+Price: 2
+Value: 2
+Color: red
+-
+Title: watchtower
+Price: 1
+Value: 1
+Color: red
+-
+Title: dragon_gate
+Price: 6
+Value: 8
+Color: purple
+Text: This district costs 6 gold to build, but is worth 8 points at the end of the game.
+-
+Title: graveyard
+Price: 5
+Value: 5
+Color: purple
+Text: When the Warlord destroys a district, you may pay one gold to take the destroyed districts into your hand. You may not do this if you are the Warlord.
+-
+Title: great_wall
+Price: 6
+Value: 6
+Color: purple
+Text: The cost for the Warlord to destroy any of your other districts is increased by on gold.
+-
+Title: haunted_city
+Price: 2
+Value: 2
+Color: purple
+Text: For purpose of victory points, the Haunted City is considered to be of the color of your choice. You cannot use this ability if you built it during the last round of the game.
+-
+Title: keep
+Price: 3
+Value: 3
+Color: purple
+Text: The Keep cannot be destroyed by the Warlord.
+-
+Title: laboratory
+Price: 5
+Value: 5
+Color: purple
+Text: Once during your turn, you may discard a district card form your hand and receive on gold from the bank.
+-
+Title: library
+Price: 6
+Value: 6
+Color: purple
+Text: If you choose to draw cards when you take an action, you keep both of the cards you have drawn.
+-
+Title: observatory
+Price: 5
+Value: 5
+Color: purple
+Text: If you choose to draw cards when you take an action, you draw three cards, keep on of your choice, and put the other two on the bottom of the deck.
+-
+Title: school_of_magic
+Price: 6
+Value: 6
+Color: purple
+Text: For purposes of income, the School is considered to be the color of your choice. If you are the King this round, for example, the School is considered to be a noble (yellow) district.
+-
+Title: smithy
+Price: 5
+Value: 5
+Color: purple
+Text: Once during your turn, you may pay two gold to draw three district cards.
+-
+Title: university
+Price: 6
+Value: 8
+Color: purple
+Text: This district costs 6 gold to build, but is worth 8 points at the end of the game.
+-
+Title: castle
+Price: 4
+Value: 4
+Color: yellow
+-
+Title: manor
+Price: 3
+Value: 3
+Color: yellow
+-
+Title: palace
+Price: 5
+Value: 5
+Color: yellow

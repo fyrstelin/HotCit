@@ -16,12 +16,23 @@ namespace HotCit
             public override void Configure(Container container)
             {
                 container.RegisterAutoWired<LobbyServer>();
+                container.RegisterAutoWired<JoinServer>();
+                container.RegisterAutoWired<ReadyServer>();
+
+                container.RegisterAutoWired<GameServer>();
+
+                container.RegisterAutoWired<ResourceServer>();
 
                 Routes.
                     Add<LobbyRequest>("/lobby/").
                     Add<LobbyRequest>("/lobby/{GameId}/").
                     Add<JoinRequest>("/lobby/{GameId}/users/").
-                    Add<ReadyRequest>("/lobby/{GameId}/ready/");
+                    Add<ReadyRequest>("/lobby/{GameId}/ready/").
+                    Add<GameRequest>("/games/").
+                    Add<GameRequest>("/games/{GameId}/").
+                    Add<ResourceRequest>("/resources/").
+                    Add<ResourceRequest>("/resources/{ResourceType}/").
+                    Add<ResourceRequest>("/resources/{ResourceType}/{ResourceId}/");
             }
         }
             
