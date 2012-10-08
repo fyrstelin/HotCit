@@ -6,7 +6,5 @@
 
     public interface IGame
     {
-        
     }
-
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using HotCit;
 using ServiceStack.Common.Web;
@@ -107,9 +108,15 @@ namespace HotCit
                 var id = request.GameId;
                 if (id == null) return new HttpError(HttpStatusCode.BadRequest, "Bad Request");
 
-                return GetFactory(id).SetReady(User, true) ?
-                    new HttpResult(HttpStatusCode.NotImplemented, "Everyone is ready") :
-                    new HttpResult(HttpStatusCode.NoContent, "");
+                var fac = GetFactory(id);
+
+                if (fac.SetReady(User, true)) //everyone is ready
+                {
+                    var game = new Game(fac);
+                    GameRepository.AddGame(id, game);
+                    FactoryRepository.RemoveGameFactory(id);
+                }
+                return new HttpResult(HttpStatusCode.NoContent, "");
             }
             catch (HttpError e)
             {
@@ -139,6 +146,58 @@ namespace HotCit
             }
         }
         
+    }
+
+    public class GameServer : AbstractServer<GameRequest>
+    {
+        public override object OnGet(GameRequest request)
+        {
+            try
+            {
+                var id = request.GameId;
+                if (id == null) return GameRepository.Games;
+                return GameRepository.GetGame(id);
+            }
+            catch (HttpError e)
+            {
+                return e;
+            }
+        }
+    }
+
+    public class ResourceServer : AbstractServer<ResourceRequest>
+    {
+        public override object OnGet(ResourceRequest request)
+        {
+            var type = request.ResourceType;
+            var id = request.ResourceId;
+            var all = id == null;
+            switch (type) {
+                case ResourceType.all:
+                    var map = new Dictionary<ResourceType, object>();
+                    map[ResourceType.characters] = Resources.Characters;
+                    map[ResourceType.districts] = Resources.Districts;
+                    return map;
+                case ResourceType.characters:
+                    if (all)
+                        return Resources.Characters;
+                    var ch = Resources.GetCharacter(id);
+                    if (ch == null) return HttpError.NotFound("Character " + id + " not found");
+                    return ch;
+                case ResourceType.districts:
+                    if (all)
+                        return Resources.Districts;
+                    var di = Resources.GetDistrict(id);
+                    if (di == null) return HttpError.NotFound("District " + id + " not found");
+                    return di;
+                case ResourceType.images:
+                    if (all) return new HttpError(HttpStatusCode.BadRequest, "");
+                    var img = Resources.GetImage(id, request.Dpi);
+                    if (img == null) return HttpError.NotFound("Image " + id + " not found");
+                    return new HttpResult(img, "image/png");;
+            }
+            return null;
+        }
     }
 
 }

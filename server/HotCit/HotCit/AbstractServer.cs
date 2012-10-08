@@ -8,6 +8,7 @@ namespace HotCit
     {
         protected readonly GameFactoryRepository FactoryRepository = GameFactoryRepository.GetInstance();
         protected readonly GameRepository GameRepository = GameRepository.GetInstance();
+        protected readonly Resources Resources = Resources.GetInstance();
 
         protected string User
         {
