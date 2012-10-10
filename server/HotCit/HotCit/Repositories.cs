@@ -2,21 +2,21 @@
 
 namespace HotCit
 {
-    public class GameFactoryRepository
+    public class GameSetupRepository
     {
-        public IDictionary<string, UserGameFactory> GameFactories
+        public IDictionary<string, GameSetup> GameSetups
         {
             get
             {
-                return new Dictionary<string, UserGameFactory>(_gameFactories); //data integrety
+                return new Dictionary<string, GameSetup>(_gameSetups); //data integrety
             }
         }
 
-        public UserGameFactory GetFactory(string id)
+        public GameSetup GetSetup(string id)
         {
             try
             {
-                return _gameFactories[id];    
+                return _gameSetups[id];    
             } catch(KeyNotFoundException)
             {
                 return null;
@@ -24,41 +24,41 @@ namespace HotCit
             
         }
 
-        public bool AddGameFactory(string id, UserGameFactory gameFactory)
+        public bool AddGameSetup(string id, GameSetup setup)
         {
-            if (_gameFactories.ContainsKey(id))
+            if (_gameSetups.ContainsKey(id))
                 return false;
-            _gameFactories[id] = gameFactory;
+            _gameSetups[id] = setup;
             return true;
         }
 
         public bool RemoveGameFactory(string id)
         {
-            return _gameFactories.Remove(id);
+            return _gameSetups.Remove(id);
         }
 
-        public static GameFactoryRepository GetInstance()
+        public static GameSetupRepository GetInstance()
         {
-            return _instance ?? (_instance = new GameFactoryRepository());
+            return _instance ?? (_instance = new GameSetupRepository());
         }
 
 
-        private GameFactoryRepository() {}
-        private readonly IDictionary<string, UserGameFactory> _gameFactories = new Dictionary<string, UserGameFactory>();
-        private static GameFactoryRepository _instance;
+        private GameSetupRepository() { }
+        private readonly IDictionary<string, GameSetup> _gameSetups = new Dictionary<string, GameSetup>();
+        private static GameSetupRepository _instance;
     }
 
     public class GameRepository
     {
-        public IDictionary<string, IGame> Games
+        public IEnumerable<string> Games
         {
             get
             {
-                return new Dictionary<string, IGame>(_games); //data integrety
+                return _games.Keys; //data integrety
             }
         } 
 
-        public bool AddGame(string id, IGame game)
+        public bool AddGame(string id, Game game)
         {
             if (_games.ContainsKey(id))
             {
@@ -68,7 +68,7 @@ namespace HotCit
             return true;
         }
 
-        public IGame GetGame(string id)
+        public Game GetGame(string id)
         {
             try
             {
@@ -85,10 +85,12 @@ namespace HotCit
         {
             return _instance ?? (_instance = new GameRepository());
         }
-        private GameRepository() { }
+        private GameRepository() {
+            _games["test"] = new Game(new SimpleGameFactory());
+        }
 
         private static GameRepository _instance;
-        private readonly IDictionary<string, IGame> _games = new Dictionary<string, IGame>();
+        private readonly IDictionary<string, Game> _games = new Dictionary<string, Game>();
 
 
 

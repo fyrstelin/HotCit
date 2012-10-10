@@ -1,10 +1,11 @@
-﻿namespace HotCit
+﻿using System.Collections.Generic;
+
+namespace HotCit
 {
     public interface IGameFactory
     {
-    }
-
-    public interface IGame
-    {
+        IList<Player> GetPlayers();
+        IList<Character> GetCharacters();
+        Stack<District> GetPile();
     }
 }

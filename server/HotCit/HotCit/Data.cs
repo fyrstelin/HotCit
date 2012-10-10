@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace HotCit
 {
-    public class Character
-    {
-        public string Name { get; set; }
-        public string Text { get; set; }
-        public string Color { get; set; }
-        public int No { get; set; }
-    }
 
     public class District
     {
@@ -20,5 +10,28 @@ namespace HotCit
         public int Value { get; set; }
         public string Color { get; set; }
         public string Text { get; set; }
+    }
+
+    public class Option
+    {
+        public OptionType Type { get; set; }
+        public string Message { get; set; }
+        public IEnumerable<string> Choices { get; set; }
+        public string Source { get; set; }
+        public int? Amount { get; set; }
+    }
+
+    public enum OptionType
+    {
+        Select, TakeAction, UseAbility, BuildDistrict, EndTurn
+    }
+
+    public class GameStateVector
+    {
+        public string Description { get; set; }
+        public int Round { get; set; }
+        public int Step { get; set; }
+        public string Turn { get; set; }
+        public string PlayerInTurn { get; set; }
     }
 }

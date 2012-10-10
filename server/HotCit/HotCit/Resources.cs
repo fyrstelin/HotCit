@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.IO;
 
 namespace HotCit
@@ -9,13 +7,13 @@ namespace HotCit
 
     public enum ImageQuality
     {
-        mdpi, xldpi, ldpi, hdpi, xhdpi
+        Mdpi, Xldpi, Ldpi, Hdpi, Xhdpi
     }
 
     public class Resources
     {
-        private const string resourcedir = "/Users/afk/Documents/GitHub/HotCit/resources/"; //TODO: Not good enough
-        private const string imagedir = resourcedir + "images/";
+        private static readonly string Resourcedir = Environment.GetEnvironmentVariable("HotCit", EnvironmentVariableTarget.Machine) + @"resources\";
+        private static readonly string Imagedir = Resourcedir + @"images\";
         
         public ICollection<string> Characters
         {
@@ -67,7 +65,7 @@ namespace HotCit
         {
             try
             {
-                var path = imagedir + quality + "/" + id + ".png";
+                var path = Imagedir + quality + "/" + id + ".png";
                 return new FileStream(path, FileMode.Open);
             }
             catch (FileNotFoundException)
@@ -76,9 +74,10 @@ namespace HotCit
             }
         }
 
-        private Resources() {
-            var reader = new StreamReader(resourcedir + "characters.txt");
-            var content = "";
+        private Resources()
+        {
+            var reader = new StreamReader(Resourcedir + "characters.txt");
+            string content;
             using(reader)
             {
                 content = reader.ReadToEnd();    
@@ -87,7 +86,7 @@ namespace HotCit
             foreach (var character in characters)
                 ParseAndStoreCharacter(character.Trim());
 
-            reader = new StreamReader(resourcedir + "districts.txt");
+            reader = new StreamReader(Resourcedir + "districts.txt");
             using (reader)
             {
                 content = reader.ReadToEnd();
@@ -104,7 +103,7 @@ namespace HotCit
             var res = new District();
             foreach (var arg in args)
             {
-                string[] t = arg.Split(':');
+                var t = arg.Split(':');
                 var key = t[0].Trim();
                 var value = t[1].Trim();
                 switch (key)
@@ -125,8 +124,6 @@ namespace HotCit
                     case "Text":
                         res.Color = value;
                         break;
-                    default:
-                        break;
                 }
             }
             if (id == null) return;
@@ -140,7 +137,7 @@ namespace HotCit
             string id = null;
             var res = new Character();
             foreach (var arg in args) {
-                string[] t = arg.Split(':');
+                var t = arg.Split(':');
                 var key = t[0].Trim();
                 var value = t[1].Trim();
                 switch (key)
@@ -148,6 +145,8 @@ namespace HotCit
                     case "Name":
                         id = value;
                         res.Name = value;
+                        res.CharcterAbility = GetCharacterAbility(value);
+                        res.RevealStrategy = GetRevealAbility(value);
                         break;
                     case "Number":
                         res.No = Int32.Parse(value);
@@ -158,16 +157,32 @@ namespace HotCit
                     case "Color":
                         res.Color = value;
                         break;
-                    default:
-                        break;
                 }
             }
             if (id == null) return;
             _characters[id] = res;
         }
 
+        private static IAbility GetCharacterAbility(string name)
+        {
+            switch (name)
+            {
+
+            }
+            return new NullAbility();
+        }
+
+        private static IRevealStrategy GetRevealAbility(string name)
+        {
+            switch (name)
+            {
+                case "king": return new KingRevealStrategy();
+            }
+            return new NullRevealStrategy();
+        }
+
         private static Resources _instance;
-        private IDictionary<string, Character> _characters = new Dictionary<string, Character>();
-        private IDictionary<string, District> _districts = new Dictionary<string, District>();
+        private readonly IDictionary<string, Character> _characters = new Dictionary<string, Character>();
+        private readonly IDictionary<string, District> _districts = new Dictionary<string, District>();
     }
 }
