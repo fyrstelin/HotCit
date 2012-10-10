@@ -30,6 +30,7 @@ namespace HotCit
                     Add<ReadyRequest>("/lobby/{GameId}/ready/").
                     Add<GameRequest>("/games/").
                     Add<GameRequest>("/games/{GameId}/").
+                    Add<OptionsRequest>("/games/{GameId}/my/options").
                     Add<ResourceRequest>("/resources/").
                     Add<ResourceRequest>("/resources/{ResourceType}/").
                     Add<ResourceRequest>("/resources/{ResourceType}/{ResourceId}/");

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
-using HotCit;
 using ServiceStack.Common.Web;
 
 namespace HotCit
@@ -14,8 +12,8 @@ namespace HotCit
             {
                 var id = request.GameId;
                 if (id == null)
-                    return FactoryRepository.GameFactories;
-                return GetFactory(id);
+                    return SetupRepository.GameSetups;
+                return GetGameSetup(id);
             }
             catch (HttpError e)
             {
@@ -32,10 +30,10 @@ namespace HotCit
                 var password = request.Password;
                 var user = User;
 
-                var gameFactory = new UserGameFactory(minPlayers, maxPlayers, password);
-                if (FactoryRepository.AddGameFactory(id, gameFactory))
+                var setup = new GameSetup(minPlayers, maxPlayers, password);
+                if (SetupRepository.AddGameSetup(id, setup))
                 {
-                    gameFactory.Join(user);
+                    setup.Join(user);
                     return new HttpResult(HttpStatusCode.Created, "");
                 }
                 return new HttpError(HttpStatusCode.Conflict, "Game already exists");
@@ -54,9 +52,9 @@ namespace HotCit
             try {
                 var id = request.GameId;
                 if (id == null) return new HttpError(HttpStatusCode.BadRequest, "Bad Request");
-                var fac = GetFactory(id);
+                var fac = GetGameSetup(id);
 
-                return fac.GetPlayers();
+                return fac.GetUsers();
             }
             catch (HttpError e)
             {
@@ -69,7 +67,7 @@ namespace HotCit
             try {
                 var id = request.GameId;
                 if (id == null) return new HttpError(HttpStatusCode.BadRequest, "Bad Request");
-                var fac = GetFactory(id);
+                var fac = GetGameSetup(id);
 
                 if (fac.Join(User))
                     return new HttpResult(HttpStatusCode.NoContent, "");
@@ -88,7 +86,7 @@ namespace HotCit
                 var id = request.GameId;
                 if (id == null) return new HttpError(HttpStatusCode.BadRequest, "Bad Request");
 
-                if (GetFactory(id).Leave(User))
+                if (GetGameSetup(id).Leave(User))
                     return new HttpResult(HttpStatusCode.NoContent, "");
 
                 return new HttpError(HttpStatusCode.NotModified, User + " is not part of the game");
@@ -108,13 +106,13 @@ namespace HotCit
                 var id = request.GameId;
                 if (id == null) return new HttpError(HttpStatusCode.BadRequest, "Bad Request");
 
-                var fac = GetFactory(id);
+                var fac = GetGameSetup(id);
 
                 if (fac.SetReady(User, true)) //everyone is ready
                 {
                     var game = new Game(fac);
                     GameRepository.AddGame(id, game);
-                    FactoryRepository.RemoveGameFactory(id);
+                    SetupRepository.RemoveGameFactory(id);
                 }
                 return new HttpResult(HttpStatusCode.NoContent, "");
             }
@@ -130,13 +128,13 @@ namespace HotCit
                 var id = request.GameId;
                 if (id == null) return new HttpError(HttpStatusCode.BadRequest, "Bad Request");
 
-                var fac = GetFactory(id);
+                var fac = GetGameSetup(id);
 
                 if (fac.SetReady(User, false)) //everyone is ready
                 {
                     var game = new Game(fac);
                     GameRepository.AddGame(id, game);
-                    FactoryRepository.RemoveGameFactory(id);
+                    SetupRepository.RemoveGameFactory(id);
                 }
                 return new HttpResult(HttpStatusCode.NoContent, "");
             }
@@ -156,12 +154,47 @@ namespace HotCit
             {
                 var id = request.GameId;
                 if (id == null) return GameRepository.Games;
-                return GameRepository.GetGame(id);
+                return GetGame(id);
             }
             catch (HttpError e)
             {
                 return e;
             }
+        }
+
+        public override object OnPut(GameRequest request)
+        {
+            try
+            {
+                var game = GetGame(request.GameId);
+                
+                if (request.Select != null)
+                {
+                    var select = request.Select[0];
+
+                    if (game.Select(User, select))
+                        return new HttpResult(HttpStatusCode.NoContent, "");
+                    return new HttpError(HttpStatusCode.Forbidden, "It is not your turn");
+                }
+
+                if (request.Action != null)
+                {
+                    switch (request.Action)
+                    {
+                        case Action.EndTurn:
+                            if (game.EndTurn(User))
+                                return new HttpResult(HttpStatusCode.NoContent, "");
+                            return new HttpError(HttpStatusCode.Forbidden, "It is not your turn");
+                    }
+                }
+
+                return new HttpError(HttpStatusCode.BadRequest, "");
+            }
+            catch (HttpError e)
+            {
+                return e;
+            }
+
         }
     }
 
@@ -173,31 +206,45 @@ namespace HotCit
             var id = request.ResourceId;
             var all = id == null;
             switch (type) {
-                case ResourceType.all:
+                case ResourceType.All:
                     var map = new Dictionary<ResourceType, object>();
-                    map[ResourceType.characters] = Resources.Characters;
-                    map[ResourceType.districts] = Resources.Districts;
+                    map[ResourceType.Characters] = Resources.Characters;
+                    map[ResourceType.Districts] = Resources.Districts;
                     return map;
-                case ResourceType.characters:
+                case ResourceType.Characters:
                     if (all)
                         return Resources.Characters;
                     var ch = Resources.GetCharacter(id);
                     if (ch == null) return HttpError.NotFound("Character " + id + " not found");
                     return ch;
-                case ResourceType.districts:
+                case ResourceType.Districts:
                     if (all)
                         return Resources.Districts;
                     var di = Resources.GetDistrict(id);
                     if (di == null) return HttpError.NotFound("District " + id + " not found");
                     return di;
-                case ResourceType.images:
+                case ResourceType.Images:
                     if (all) return new HttpError(HttpStatusCode.BadRequest, "");
                     var img = Resources.GetImage(id, request.Dpi);
                     if (img == null) return HttpError.NotFound("Image " + id + " not found");
-                    return new HttpResult(img, "image/png");;
+                    return new HttpResult(img, "image/png");
             }
             return null;
         }
     }
 
+    public class OptionServer : AbstractServer<OptionsRequest>
+    {
+        public override object OnGet(OptionsRequest request)
+        {
+            try
+            {
+                return GetGame(request.GameId).GetOptions(User);
+            }
+            catch (HttpError e)
+            {
+                return e;
+            }
+        }
+    }
 }

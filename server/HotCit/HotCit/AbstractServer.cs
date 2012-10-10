@@ -6,7 +6,7 @@ namespace HotCit
 {
     public abstract class AbstractServer<T> : RestServiceBase<T>
     {
-        protected readonly GameFactoryRepository FactoryRepository = GameFactoryRepository.GetInstance();
+        protected readonly GameSetupRepository SetupRepository = GameSetupRepository.GetInstance();
         protected readonly GameRepository GameRepository = GameRepository.GetInstance();
         protected readonly Resources Resources = Resources.GetInstance();
 
@@ -20,11 +20,18 @@ namespace HotCit
             }
         }
 
-        protected UserGameFactory GetFactory(string id)
+        protected GameSetup GetGameSetup(string id)
         {
-            var fac = FactoryRepository.GetFactory(id);
-            if (fac == null) throw new HttpError(HttpStatusCode.NotFound, "Game " + id + " not found");
-            return fac;
+            var setup = SetupRepository.GetSetup(id);
+            if (setup == null) throw new HttpError(HttpStatusCode.NotFound, "Game " + id + " not found");
+            return setup;
+        }
+
+        protected Game GetGame(string id)
+        {
+            var game = GameRepository.GetGame(id);
+            if (game == null) throw new HttpError(HttpStatusCode.NotFound, "Game " + id + " not found");
+            return game;
         }
 
     }

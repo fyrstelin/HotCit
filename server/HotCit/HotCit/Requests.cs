@@ -21,7 +21,14 @@
     public class GameRequest
     {
         public string GameId { get; set; }
+        public string[] Select { get; set; }
+        public Action? Action { get; set; }
     }
+
+    public class OptionsRequest : GameRequest
+    {
+    }
+
 
     public class ResourceRequest
     {
@@ -34,6 +41,11 @@
 
     public enum ResourceType
     {
-        all, characters, districts, images
+        All, Characters, Districts, Images
+    }
+
+    public enum Action
+    {
+        EndTurn
     }
 }
