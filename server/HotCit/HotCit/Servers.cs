@@ -30,7 +30,23 @@ namespace HotCit
                 var password = request.Password;
                 var user = User;
 
-                var setup = new GameSetup(minPlayers, maxPlayers, password);
+                ICharacterDiscardStrategy discardStrategy;
+                switch (request.Discard)
+                {
+                    case "fixed":
+                        discardStrategy = new FixedDiscardStrategy
+                            {
+                                CharacterNumber = 7 //discard architect each round
+                            };
+                        break;
+
+                    //case "random":
+                    default:
+                        discardStrategy = new RandomDiscardStrategy();
+                        break;
+                }
+
+                var setup = new GameSetup(minPlayers, maxPlayers, password, discardStrategy);
                 if (SetupRepository.AddGameSetup(id, setup))
                 {
                     setup.Join(user);

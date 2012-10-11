@@ -4,8 +4,10 @@
     {
         public string GameId { get; set; }
         public string Password { get; set; }
-        public int MinPlayers { get; set; }
-        public int MaxPlayers { get; set; }
+        public int? MinPlayers { get; set; }
+        public int? MaxPlayers { get; set; }
+
+        public string Discard { get; set; }
     }
 
     public class JoinRequest
