@@ -4,10 +4,10 @@
   <element>
     <type>com.umlet.element.custom.InteractionFrame</type>
     <coordinates>
-      <x>20</x>
+      <x>60</x>
       <y>10</y>
-      <w>1120</w>
-      <h>610</h>
+      <w>1350</w>
+      <h>730</h>
     </coordinates>
     <panel_attributes>HotCit::ReadyPhase</panel_attributes>
     <additional_attributes/>
@@ -15,7 +15,7 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>230</x>
+      <x>270</x>
       <y>20</y>
       <w>100</w>
       <h>30</h>
@@ -27,7 +27,7 @@ bg=yellow</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>250</x>
+      <x>290</x>
       <y>20</y>
       <w>50</w>
       <h>80</h>
@@ -38,7 +38,7 @@ bg=yellow</panel_attributes>
   <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
-      <x>270</x>
+      <x>310</x>
       <y>80</y>
       <w>20</w>
       <h>180</h>
@@ -49,7 +49,7 @@ bg=yellow</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>0</x>
+      <x>40</x>
       <y>30</y>
       <w>290</w>
       <h>70</h>
@@ -61,43 +61,43 @@ PUT /lobby/{gid}/ready/</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>730</x>
+      <x>770</x>
       <y>20</y>
       <w>160</w>
       <h>30</h>
     </coordinates>
-    <panel_attributes>_:CustomGameFactory_
+    <panel_attributes>_setup:GameSetup_
 bg=green</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>260</x>
+      <x>300</x>
       <y>40</y>
       <w>290</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
-GetGameFactory(gid);</panel_attributes>
+GetGameSetup(gid);</panel_attributes>
     <additional_attributes>270;50;30;50</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>470</x>
+      <x>510</x>
       <y>20</y>
       <w>160</w>
       <h>30</h>
     </coordinates>
-    <panel_attributes>_:GameRepository_
+    <panel_attributes>_:GameSetupRepository_
 bg=blue</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
-      <x>530</x>
+      <x>570</x>
       <y>90</y>
       <w>20</w>
       <h>60</h>
@@ -108,7 +108,7 @@ bg=blue</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>510</x>
+      <x>550</x>
       <y>20</y>
       <w>50</w>
       <h>90</h>
@@ -119,19 +119,19 @@ bg=blue</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>260</x>
+      <x>300</x>
       <y>90</y>
       <w>290</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;
-CustomGameFactory</panel_attributes>
+setup</panel_attributes>
     <additional_attributes>30;50;270;50</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>510</x>
+      <x>550</x>
       <y>210</y>
       <w>50</w>
       <h>120</h>
@@ -142,7 +142,7 @@ CustomGameFactory</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>260</x>
+      <x>300</x>
       <y>130</y>
       <w>550</w>
       <h>70</h>
@@ -154,7 +154,7 @@ Ready(uid, true);</panel_attributes>
   <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
-      <x>790</x>
+      <x>830</x>
       <y>180</y>
       <w>20</w>
       <h>50</h>
@@ -165,7 +165,7 @@ Ready(uid, true);</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>770</x>
+      <x>810</x>
       <y>20</y>
       <w>50</w>
       <h>180</h>
@@ -176,7 +176,7 @@ Ready(uid, true);</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>260</x>
+      <x>300</x>
       <y>170</y>
       <w>550</w>
       <h>94</h>
@@ -189,7 +189,7 @@ false
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>770</x>
+      <x>810</x>
       <y>200</y>
       <w>50</w>
       <h>220</h>
@@ -200,7 +200,7 @@ false
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>0</x>
+      <x>40</x>
       <y>200</y>
       <w>290</w>
       <h>70</h>
@@ -212,7 +212,7 @@ false
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>0</x>
+      <x>40</x>
       <y>250</y>
       <w>290</w>
       <h>70</h>
@@ -224,7 +224,7 @@ PUT /lobby/{gid}/ready/</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>250</x>
+      <x>290</x>
       <y>230</y>
       <w>50</w>
       <h>90</h>
@@ -235,10 +235,10 @@ PUT /lobby/{gid}/ready/</panel_attributes>
   <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
-      <x>270</x>
+      <x>310</x>
       <y>300</y>
       <w>20</w>
-      <h>310</h>
+      <h>430</h>
     </coordinates>
     <panel_attributes>bg=yellow</panel_attributes>
     <additional_attributes/>
@@ -246,7 +246,7 @@ PUT /lobby/{gid}/ready/</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>510</x>
+      <x>550</x>
       <y>120</y>
       <w>50</w>
       <h>60</h>
@@ -257,7 +257,7 @@ PUT /lobby/{gid}/ready/</panel_attributes>
   <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
-      <x>530</x>
+      <x>570</x>
       <y>310</y>
       <w>20</w>
       <h>60</h>
@@ -268,31 +268,31 @@ PUT /lobby/{gid}/ready/</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>260</x>
+      <x>300</x>
       <y>260</y>
       <w>290</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
-GetGameFactroy(gid);</panel_attributes>
+GetGameSetup(gid);</panel_attributes>
     <additional_attributes>270;50;30;50</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>260</x>
+      <x>300</x>
       <y>310</y>
       <w>290</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;
-CustomGameFactory</panel_attributes>
+setup</panel_attributes>
     <additional_attributes>30;50;270;50</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>260</x>
+      <x>300</x>
       <y>350</y>
       <w>550</w>
       <h>70</h>
@@ -304,7 +304,7 @@ Ready(uid, true);</panel_attributes>
   <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
-      <x>790</x>
+      <x>830</x>
       <y>400</y>
       <w>20</w>
       <h>50</h>
@@ -315,7 +315,7 @@ Ready(uid, true);</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>260</x>
+      <x>300</x>
       <y>390</y>
       <w>550</w>
       <h>94</h>
@@ -328,43 +328,43 @@ true
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>970</x>
+      <x>1010</x>
       <y>20</y>
       <w>160</w>
       <h>30</h>
     </coordinates>
-    <panel_attributes>_:Game_
+    <panel_attributes>_game:Game_
 bg=magenta</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>1020</x>
+      <x>1060</x>
       <y>20</y>
       <w>50</w>
-      <h>510</h>
+      <h>490</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>30;30;30;490</additional_attributes>
+    <additional_attributes>30;30;30;470</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>520</x>
-      <y>460</y>
-      <w>540</w>
+      <x>300</x>
+      <y>440</y>
+      <w>800</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
-new Game(CustomGameFactory)</panel_attributes>
-    <additional_attributes>520;50;30;50</additional_attributes>
+new Game(setup)</panel_attributes>
+    <additional_attributes>780;50;30;50</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
-      <x>1040</x>
-      <y>510</y>
+      <x>1080</x>
+      <y>490</y>
       <w>20</w>
       <h>50</h>
     </coordinates>
@@ -374,33 +374,46 @@ new Game(CustomGameFactory)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>520</x>
-      <y>520</y>
-      <w>540</w>
-      <h>50</h>
+      <x>300</x>
+      <y>480</y>
+      <w>800</w>
+      <h>70</h>
     </coordinates>
-    <panel_attributes>lt=&lt;</panel_attributes>
-    <additional_attributes>30;30;520;30</additional_attributes>
+    <panel_attributes>lt=&lt;
+game</panel_attributes>
+    <additional_attributes>30;50;780;50</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>30</x>
-      <y>550</y>
-      <w>260</w>
+      <x>40</x>
+      <y>670</y>
+      <w>290</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;
 204 No Content</panel_attributes>
-    <additional_attributes>30;50;240;50</additional_attributes>
+    <additional_attributes>30;50;270;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>300</x>
+      <y>610</y>
+      <w>290</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+RemoveGameSetup(gid);</panel_attributes>
+    <additional_attributes>270;50;30;50</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
-      <x>530</x>
-      <y>490</y>
+      <x>570</x>
+      <y>660</y>
       <w>20</w>
-      <h>80</h>
+      <h>60</h>
     </coordinates>
     <panel_attributes>bg=blue</panel_attributes>
     <additional_attributes/>
@@ -408,26 +421,83 @@ new Game(CustomGameFactory)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>260</x>
-      <y>440</y>
+      <x>300</x>
+      <y>680</y>
       <w>290</w>
-      <h>70</h>
+      <h>50</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
-StartGame(gid);</panel_attributes>
-    <additional_attributes>270;50;30;50</additional_attributes>
+    <panel_attributes>lt=&lt;
+</panel_attributes>
+    <additional_attributes>30;30;270;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1240</x>
+      <y>20</y>
+      <w>160</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>_:GameRepository_
+bg=orange</panel_attributes>
+    <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>260</x>
-      <y>520</y>
-      <w>290</w>
+      <x>300</x>
+      <y>530</y>
+      <w>1030</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+AddGame(gid, game);</panel_attributes>
+    <additional_attributes>1010;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1290</x>
+      <y>20</y>
+      <w>50</w>
+      <h>580</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;560</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.SeqObjectActive</type>
+    <coordinates>
+      <x>1310</x>
+      <y>580</y>
+      <w>20</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>bg=orange
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>300</x>
+      <y>570</y>
+      <w>1030</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;
-true
-</panel_attributes>
-    <additional_attributes>30;50;270;50</additional_attributes>
+true</panel_attributes>
+    <additional_attributes>30;50;1010;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>550</x>
+      <y>600</y>
+      <w>50</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;60</additional_attributes>
   </element>
 </diagram>

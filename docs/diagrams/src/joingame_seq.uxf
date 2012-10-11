@@ -66,7 +66,7 @@ PUT /lobby/{gid}/join/</panel_attributes>
       <w>160</w>
       <h>30</h>
     </coordinates>
-    <panel_attributes>_:CustomGameFactory_
+    <panel_attributes>_setup:GameSetup_
 bg=green</panel_attributes>
     <additional_attributes/>
   </element>
@@ -78,7 +78,7 @@ bg=green</panel_attributes>
       <w>160</w>
       <h>30</h>
     </coordinates>
-    <panel_attributes>_:GameRepository_
+    <panel_attributes>_:GameSetupRepository_
 bg=blue</panel_attributes>
     <additional_attributes/>
   </element>
@@ -102,7 +102,7 @@ bg=blue</panel_attributes>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
-GetGameFactory(gid)</panel_attributes>
+GetGameSetup(gid)</panel_attributes>
     <additional_attributes>270;50;30;50</additional_attributes>
   </element>
   <element>
@@ -155,12 +155,13 @@ true</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>280</x>
-      <y>200</y>
+      <y>180</y>
       <w>290</w>
-      <h>50</h>
+      <h>70</h>
     </coordinates>
-    <panel_attributes>lt=&lt;</panel_attributes>
-    <additional_attributes>30;30;270;30</additional_attributes>
+    <panel_attributes>lt=&lt;
+setup</panel_attributes>
+    <additional_attributes>30;50;270;50</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -228,7 +229,7 @@ DELETE /lobby/{gid}/join/</panel_attributes>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
-GetGameFactory(gid)</panel_attributes>
+GetGameSetup(gid)</panel_attributes>
     <additional_attributes>270;50;30;50</additional_attributes>
   </element>
   <element>
@@ -314,12 +315,13 @@ true</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>280</x>
-      <y>400</y>
+      <y>380</y>
       <w>290</w>
-      <h>50</h>
+      <h>70</h>
     </coordinates>
-    <panel_attributes>lt=&lt;</panel_attributes>
-    <additional_attributes>30;30;270;30</additional_attributes>
+    <panel_attributes>lt=&lt;
+setup</panel_attributes>
+    <additional_attributes>30;50;270;50</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
