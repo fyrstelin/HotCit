@@ -79,7 +79,7 @@ GetGameFactory(gid);</panel_attributes>
       <w>160</w>
       <h>30</h>
     </coordinates>
-    <panel_attributes>_:GameRepository_
+    <panel_attributes>_:GameSetupRepository_
 bg=blue</panel_attributes>
     <additional_attributes/>
   </element>
@@ -114,7 +114,7 @@ bg=blue</panel_attributes>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;
-CustomGameFactory</panel_attributes>
+GameSetup</panel_attributes>
     <additional_attributes>30;50;270;50</additional_attributes>
   </element>
   <element>

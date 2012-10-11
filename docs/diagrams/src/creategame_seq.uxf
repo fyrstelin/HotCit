@@ -56,7 +56,7 @@ POST /lobby/
       <w>180</w>
       <h>30</h>
     </coordinates>
-    <panel_attributes>_cgf:CustomGameFactory_
+    <panel_attributes>_setup:GameSetup_
 bg=green</panel_attributes>
     <additional_attributes/>
   </element>
@@ -69,7 +69,7 @@ bg=green</panel_attributes>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
-AddGameFactory(gid, cgf);</panel_attributes>
+AddGameFactory(gid, setup);</panel_attributes>
     <additional_attributes>270;50;30;50</additional_attributes>
   </element>
   <element>
@@ -80,7 +80,7 @@ AddGameFactory(gid, cgf);</panel_attributes>
       <w>180</w>
       <h>30</h>
     </coordinates>
-    <panel_attributes>_:GameFactoryRepository_
+    <panel_attributes>_:GameSetupRepository_
 bg=blue</panel_attributes>
     <additional_attributes/>
   </element>
@@ -196,7 +196,7 @@ new(data)</panel_attributes>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;
-cgf</panel_attributes>
+setup</panel_attributes>
     <additional_attributes>30;50;530;50</additional_attributes>
   </element>
   <element>
