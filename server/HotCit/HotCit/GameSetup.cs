@@ -11,6 +11,7 @@ namespace HotCit
         private readonly string _password;
         private readonly IList<string> _users = new List<string>();
         private readonly ISet<string> _readyUsers = new HashSet<string>();
+        private readonly ICharacterDiscardStrategy _discardStrategy;
 
 
         public int MinPlayers
@@ -33,11 +34,12 @@ namespace HotCit
             get { return _users.Count; }
         }
 
-        public GameSetup(int? minPlayers, int? maxPlayers, string password)
+        public GameSetup(int? minPlayers, int? maxPlayers, string password, ICharacterDiscardStrategy discardStrategy)
         {
             _minPlayers = minPlayers ?? StdMinPlayers;
             _maxPlayers = maxPlayers ?? StdMaxPlayers;
             _password = password;
+            _discardStrategy = discardStrategy;
         }
 
         public bool Join(string user)
@@ -92,6 +94,11 @@ namespace HotCit
             foreach (var d in Resources.GetInstance().Districts)
                 res.Push(Resources.GetInstance().GetDistrict(d));
             return res;
+        }
+
+        public ICharacterDiscardStrategy GetDiscardStrategy()
+        {
+            return _discardStrategy;
         }
 
         public IList<Character> GetCharacters()

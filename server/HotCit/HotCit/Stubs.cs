@@ -37,5 +37,10 @@ namespace HotCit
             }
             return res;
         }
+
+        public ICharacterDiscardStrategy GetDiscardStrategy()
+        {
+            return new RandomDiscardStrategy();
+        }
     }
 }

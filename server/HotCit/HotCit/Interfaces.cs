@@ -7,5 +7,8 @@ namespace HotCit
         IList<Player> GetPlayers();
         IList<Character> GetCharacters();
         Stack<District> GetPile();
+
+
+        ICharacterDiscardStrategy GetDiscardStrategy();
     }
 }

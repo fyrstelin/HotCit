@@ -29,9 +29,9 @@ namespace HotCit
             return _ability.UseAbility(owner, info, game);
         }
 
-        public bool OnReveal(string owner, Game game)
+        public void OnReveal(string owner, Game game)
         {
-            return _revealAbility.OnReveal(owner, game);
+            _revealAbility.OnReveal(owner, game);
         }
     }
 }

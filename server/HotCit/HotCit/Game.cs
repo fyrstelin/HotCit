@@ -28,13 +28,7 @@ namespace HotCit
             }
         }
 
-        public string King
-        {
-            get
-            {
-                return _king;
-            }
-        }
+        public string King { get; private set; }
 
         public IEnumerable<string> FaceupCharacters
         {
@@ -46,8 +40,10 @@ namespace HotCit
             _players = factory.GetPlayers();
             _characters = factory.GetCharacters();
             _pile = factory.GetPile();
+            _discardStrategy = factory.GetDiscardStrategy();
+
             NextStep();
-            _king = _players[0].Username;
+            King = _players[0].Username;
         }
 
         public Player GetPlayerInTurn()
@@ -55,7 +51,7 @@ namespace HotCit
             switch (_step)
             {
                 case 1:
-                    return _players.First(p => p.Username == _king);
+                    return _players.First(p => p.Username == King);
                 case 2:
                     return _players[(_count + _playerOffset) % _players.Count];
                 case 3:
@@ -67,7 +63,7 @@ namespace HotCit
                         return null;
                     }
                 case 4:
-                    return _players.First(p => p.Username == _king);
+                    return _players.First(p => p.Username == King);
             }
             return null;
         }
@@ -117,7 +113,7 @@ namespace HotCit
 
         public void SetKing(string king)
         {
-            _king = king;
+            King = king;
             _playerOffset = _players.IndexOf(GetPlayer(king)); //king has to be first
         }
 
@@ -148,6 +144,13 @@ namespace HotCit
 
                 player.AddCharacter(character);
                 _characterPile.Remove(character);
+
+                //
+                if (_characterPile.Count == 1)
+                {
+                    _characterPile.Add(_discardedCharacter);
+                    _discardedCharacter = null;
+                }
 
                 _count++;
 
@@ -180,20 +183,17 @@ namespace HotCit
 
                     var players = Players.Count;
 
-                    //discard one character for games with more than 3 players
-                    if (players > 3)
-                    {
-                        _characterPile.RemoveAt(_random.Next(_characterPile.Count));
-                    }
+                    //discard one character
+                    _discardedCharacter = _discardStrategy.DiscardCharacter(_characterPile);
+                    _characterPile.Remove(_discardedCharacter);
 
-                    //for 4 and 5 players: faceup characters
                     switch (players)
                     {
-                        case 5:
+                        case 4: //for 4 characters: 2 faceup characters
+                            FaceUpCharacter();
                             FaceUpCharacter();
                             break;
-                        case 4:
-                            FaceUpCharacter();
+                        case 5: //for 5 characters: 1 faceup character
                             FaceUpCharacter();
                             break;
                     }
@@ -221,7 +221,7 @@ namespace HotCit
         {
             _count = 0;
             _step++;
-            if (_step > 3) NextRound(); //TODO 3 should be 4
+            if (_step > 3) NextRound();
             BeforeStep();
         }
 
@@ -296,10 +296,14 @@ namespace HotCit
         private readonly IList<Character> _faceupCharacters = new List<Character>(); 
 
         private readonly Stack<District> _pile;
-        private string _king;
 
         private int _round, _step = 1, _count;
         private readonly Random _random = new Random();
         private int _playerOffset;
+        private Character _discardedCharacter;
+
+
+        //Fields for stubs
+        private readonly ICharacterDiscardStrategy _discardStrategy;
     }
 }

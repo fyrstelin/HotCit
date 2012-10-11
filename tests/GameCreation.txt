@@ -1,24 +1,37 @@
-+---------------+--------+------------------------------+-----------+------------+---------------------+
-| description	| method | uri			     			| username  | data       | Expected statuscode |
-+---------------+--------+------------------------------+-----------+------------+---------------------+
-| A legal gamecreation sequence with all mutating calls.											   |
-+------------------+--------+---------------------------+-----------+------------+---------------------+
-| get gamefactory  | GET    | /lobby/mygame/    		|			|			 | 404 Not found  	   |
-| get game   	   | GET    | /lobby/mygame/    		|			|			 | 404 Not found  	   |
-| create game	   | POST	| /lobby/mygame/			| ada       |			 | 201 Created   	   |
-| get gamefactory  | GET    | /lobby/mygame/    		|			|			 | 200 OK  			   |
-| join game        | PUT    | /lobby/mygame/users/		| turing    |			 | 204 No content	   |
-| join game		   | PUT	| /lobby/mygame/users/		| hopper	|			 | 204 No content	   |
-| leave game	   | DELETE | /lobby/mygame/users/		| turing	|			 | 204 No content	   |
-| I'm ready		   | PUT	| /lobby/mygame/ready/		| ada		|			 | 204 No content	   |
-| join game		   | PUT	| /lobby/mygame/users/		| wiener	|			 | 204 No content	   |
-| I'm ready		   | PUT	| /lobby/mygame/ready/		| wiener	|			 | 204 No content	   |
-| I'm not ready	   | DELETE | /lobby/mygame/ready/		| ada		|			 | 204 No content	   |
-| I'm ready		   | PUT	| /lobby/mygame/ready/		| hopper	|			 | 204 No content	   |
-| I'm ready		   | PUT	| /lobby/mygame/ready/		| ada		|			 | 204 No content	   |
-| get gamefactory  | GET    | /lobby/mygame/    		|			|			 | 404 Not found	   |
-| join game		   | PUT    | /lobby/mygame/users/		| turing	|			 | 404 Not found	   |
-+------------------+--------+---------------------------+-----------+------------+---------------------+
++------------------+--------+---------------------------+-----------+-----------------------------+---------------------+-----------------------------------------------------------------------------------+
+| description      | method | uri                       | username  | data                        | Expected statuscode | Expected output                                                                   |
++------------------+--------+---------------------------+-----------+-----------------------------+---------------------+-----------------------------------------------------------------------------------+
+| A legal gamecreation sequence with all mutating calls.                                                                                                                                                    |
++------------------+--------+---------------------------+-----------+-----------------------------+---------------------+-----------------------------------------------------------------------------------+
+| get lobby        | GET    | /lobby/                   |           |                             | 200 OK              | []                                                                                |
+| get gamesetup    | GET    | /lobby/mygame/            |           |                             | 404 Not found       |                                                                                   |
+| create gamesetup | POST   | /lobby/mygame/            | ada       | {"discard":"fixed"}         | 201 Created         |                                                                                   |
+| get lobby        | GET    | /lobby/                   |           |                             | 200 OK              | ["mygame"]                                                                        |
+| get gamesetup    | GET    | /lobby/mygame/            |           |                             | 200 OK              | {"MinPlayers": 3, "MaxPlayers": 7, "PasswordProtected": false, "PlayerCount": 1 } |
+| join game        | PUT    | /lobby/mygame/users/      | turing    |                             | 204 No content      |                                                                                   |
+| join game        | PUT    | /lobby/mygame/users/      | hopper    |                             | 204 No content      |                                                                                   |
+| leave game       | DELETE | /lobby/mygame/users/      | turing    |                             | 204 No content      |                                                                                   |
+| I'm ready        | PUT    | /lobby/mygame/ready/      | ada       |                             | 204 No content      |                                                                                   |
+| join game        | PUT    | /lobby/mygame/users/      | wiener    |                             | 204 No content      |                                                                                   |
+| I'm ready        | PUT    | /lobby/mygame/ready/      | wiener    |                             | 204 No content      |                                                                                   |
+| I'm not ready    | DELETE | /lobby/mygame/ready/      | ada       |                             | 204 No content      |                                                                                   |
+| I'm ready        | PUT    | /lobby/mygame/ready/      | hopper    |                             | 204 No content      |                                                                                   |
+| I'm ready        | PUT    | /lobby/mygame/ready/      | ada       |                             | 204 No content      |                                                                                   |
+| get gamesetup    | GET    | /lobby/mygame/            |           |                             | 404 Not found       |                                                                                   |
+| join game        | PUT    | /lobby/mygame/users/      | turing    |                             | 404 Not found       |                                                                                   |
++------------------+--------+---------------------------+-----------+-----------------------------+---------------------+-----------------------------------------------------------------------------------+
+| Choosing Characters (ada -> hopper -> wiener)                                                                                                                                                             |
++------------------+--------+---------------------------+-----------+-----------------------------+---------------------+-----------------------------------------------------------------------------------+
+| Choose Magician  | PUT    | /games/mygame/            | ada       | {"select": ["magician"]}    | 204 No content      |                                                                                   |
+| Choose King      | PUT    | /games/mygame/            | hopper    | {"select": ["king"]}        | 204 No content      |                                                                                   |
+| Choose Magician  | PUT    | /games/mygame/            | wiener    | {"select": ["magician"]}    | 403 Forbidden       |                                                                                   |
+| Choose Thief     | PUT    | /games/mygame/            | wiener    | {"select": ["thief"]}       | 204 No content      |                                                                                   |
+| Choose Warlord   | PUT    | /games/mygame/            | ada       | {"select": ["warlord"]}     | 204 No content      |                                                                                   |
+| Choose Assassin  | PUT    | /games/mygame/            | hopper    | {"select": ["assassin"]}    | 204 No content      |                                                                                   |
+| Choose Merchant  | PUT    | /games/mygame/            | wiener    | {"select": ["merchant"]}    | 204 No content      |                                                                                   |
++------------------+--------+---------------------------+-----------+-----------------------------+---------------------+-----------------------------------------------------------------------------------+
+
+
 
 
 Note: The username is set in the authorization header.
