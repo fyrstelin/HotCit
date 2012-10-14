@@ -1,6 +1,6 @@
 [
-        [description,         method,      uri,              data,          username, password,		expected statuscode,  	reason],
+        [description,         method,      url,              params,		username, 	password,		statuscode,  	reason, 		data],
         %-----------------------------------------------------------------------------------------------------------------------------------------------
-		[get gamefactory,     GET,         /lobby/mygame/,   "",            "", "",                 404,                  	Not found],
-		[get gamefactory,     POST,        /lobby/mygame/,   "",            "", "",                 404,                  	Not found]
+		[get gamefactory,     	GET,         /lobby/mygame/,   "",            "", 		"",                 404,		Not Found,		""],
+		[get gamefactorybb,     POST,        /lobby/mygame/,   "",            "", 		"",                 401,        Unauthorized,	""]
 ]
