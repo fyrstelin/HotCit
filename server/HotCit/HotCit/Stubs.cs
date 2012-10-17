@@ -9,10 +9,10 @@ namespace HotCit
         {
             return new List<Player>
                 {
-                    new Player("afk"),
-                    new Player("tugend"),
-                    new Player("rko"),
-                    new Player("mis")
+                    new Player("afk") {Gold = 2},
+                    new Player("tugend") {Gold = 2},
+                    new Player("rko") {Gold = 2},
+                    new Player("mis") {Gold = 2}
                 };
         }
 
@@ -33,14 +33,14 @@ namespace HotCit
                 res.Push(r.GetDistrict("castle"));
                 res.Push(r.GetDistrict("harbor"));
                 res.Push(r.GetDistrict("docks"));
-                res.Push(r.GetDistrict("battlefield"));
+                res.Push(r.GetDistrict("tavern"));
             }
             return res;
         }
 
         public ICharacterDiscardStrategy GetDiscardStrategy()
         {
-            return new RandomDiscardStrategy();
+            return new FixedDiscardStrategy {CharacterNumber = 7};
         }
     }
 }

@@ -201,7 +201,30 @@ namespace HotCit
                             if (game.EndTurn(User))
                                 return new HttpResult(HttpStatusCode.NoContent, "");
                             return new HttpError(HttpStatusCode.Forbidden, "It is not your turn");
+                        case Action.TakeGold:
+                            if (game.TakeGold(User))
+                                return new HttpResult(HttpStatusCode.NoContent, "");
+                            return new HttpError(HttpStatusCode.Forbidden, "It is not your turn");
+                        case Action.DrawDistricts:
+                            if (game.DrawDistricts(User))
+                                return new HttpResult(HttpStatusCode.NoContent, "");
+                            return new HttpError(HttpStatusCode.Forbidden, "It is not your turn");
+
                     }
+                }
+
+                if (request.Build != null)
+                {
+                    if (game.BuildDistrict(User, request.Build))
+                        return new HttpResult(HttpStatusCode.NoContent, "");
+                    return new HttpError(HttpStatusCode.Forbidden, "It is not your turn");
+                }
+
+                if (request.Ability != null)
+                {
+                    if (game.UseCharacterAbility(User, request.Ability))
+                        return new HttpResult(HttpStatusCode.NoContent, "");
+                    return new HttpError(HttpStatusCode.Forbidden, "It is not your turn");
                 }
 
                 return new HttpError(HttpStatusCode.BadRequest, "");
