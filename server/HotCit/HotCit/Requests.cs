@@ -24,7 +24,9 @@
     {
         public string GameId { get; set; }
         public string[] Select { get; set; }
+        public string Build { get; set; }
         public Action? Action { get; set; }
+        public AbilityInfo Ability { get; set; }
     }
 
     public class OptionsRequest : GameRequest
@@ -48,6 +50,6 @@
 
     public enum Action
     {
-        EndTurn
+        EndTurn, TakeGold, DrawDistricts
     }
 }

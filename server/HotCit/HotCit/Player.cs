@@ -20,7 +20,7 @@ namespace HotCit
         {
             get
             {
-                return _city.Select(d => d.Title);
+                return FullCity.Select(d => d.Title);
             }
         }
 
@@ -28,7 +28,7 @@ namespace HotCit
         {
             get
             {
-                return _hand.Count;
+                return Hand.Count;
             }
         }
 
@@ -36,15 +36,15 @@ namespace HotCit
         {
             get
             {
-                return _city.Sum(d => d.Value); //TODO: more complex
+                return FullCity.Sum(d => d.Value); //TODO: more complex
             }
         }
 
         public int Gold { get; set; }
 
-        public IEnumerable<string> Character
+        public IEnumerable<string> Characters
         {
-            get { return from c in _characters where c.Value select c.Key.Name; }
+            get { return _publicCharacters.Select(c => c.Name); }
         }
 
         public Player(string username)
@@ -55,23 +55,35 @@ namespace HotCit
         
         public bool AddCharacter(Character c)
         {
-            if (_characters.ContainsKey(c)) return false;
-            _characters[c] = false;
+            if (_hiddenCharacters.Contains(c)) return false;
+            _hiddenCharacters.Add(c);
             return true;
         }
 
         public void ClearCharacters()
         {
-            _characters.Clear();
+            _hiddenCharacters.Clear();
+            _publicCharacters.Clear();
         }
 
         public bool RevealCharacter(Game game)
         {
             try
             {
-                var c = _characters.First(p => !p.Value).Key;
+                var c = _hiddenCharacters.Min();
+                if (c == null) return false;
+
                 c.OnReveal(_username, game);
-                _characters[c] = true;
+                
+
+                if (c.Name == _victim)
+                {
+                    _thief.Gold += Gold;
+                    Gold = 0;
+                }
+
+                _hiddenCharacters.Remove(c);
+                _publicCharacters.Add(c);
                 return true;
             }
             catch (InvalidOperationException)
@@ -81,16 +93,51 @@ namespace HotCit
 
         }
 
-        public bool IsCharacter(int count)
+        public bool IsCharacter(int no)
         {
-            return _characters.Keys.Any(c => c.No == count);
+            return
+                _hiddenCharacters.Any(c => c.No == no) ||
+                _publicCharacters.Any(c => c.No == no);
+        }
+
+        public bool IsCharacter(string title)
+        {
+            return
+                _hiddenCharacters.Any(c => c.Name == title) ||
+                _publicCharacters.Any(c => c.Name == title);
+        }
+
+        public void RobbedBy(string character, Player owner)
+        {
+            _victim = character;
+            _thief = owner;
+        }
+
+        public void SwapHand(Player target)
+        {
+            var temp = Hand;
+            Hand = target.Hand;
+            target.Hand = temp;
+        }
+
+        public void SwapHand(IList<string> districts, Game game)
+        {
+            var d = districts.FirstOrDefault(d1 => Hand.All(d2 => d2.Title != d1));
+            if (d!=null) throw new IllegalAction("You do not have " + d + " in your hand, and therefore cannot swap it");    
+            foreach (var d1 in districts)
+            {
+                Hand.Remove(Hand.First(d2 => d2.Title == d1));
+            }
         }
 
 
         private readonly string _username;
-        private readonly IList<District> _city = new List<District>();
-        private readonly IList<District> _hand = new List<District>();
-        private readonly IDictionary<Character, bool> _characters = new Dictionary<Character, bool>();
+        public readonly IList<District> FullCity = new List<District>();
+        public IList<District> Hand = new List<District>();
+        private readonly ISet<Character> _hiddenCharacters = new SortedSet<Character>();
+        private readonly ISet<Character> _publicCharacters = new SortedSet<Character>(); 
+        private Player _thief;
+        private string _victim;
 
     }
 }

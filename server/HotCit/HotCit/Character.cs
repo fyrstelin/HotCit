@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace HotCit
 {
-    public class Character
+    public class Character : IComparable<Character>
     {
         public string Name { get; set; }
         public string Text { get; set; }
@@ -24,14 +22,32 @@ namespace HotCit
         private IAbility _ability;
         private IRevealStrategy _revealAbility;
 
-        public bool UseAbility(string owner, AbilityInfo info, Game game)
+        public bool UseAbility(Player owner, AbilityInfo info, Game game)
         {
             return _ability.UseAbility(owner, info, game);
+        }
+
+        public bool AbilityUsed()
+        {
+            return _ability.Used;
         }
 
         public void OnReveal(string owner, Game game)
         {
             _revealAbility.OnReveal(owner, game);
+            _ability.Reset();
+        }
+
+        public IEnumerable<Option> GetOptions(Game game)
+        {
+            return _ability.GetOptions(game);
+        }
+
+        public bool Dead { set; get; }
+
+        public int CompareTo(Character c)
+        {
+            return No - c.No;
         }
     }
 }

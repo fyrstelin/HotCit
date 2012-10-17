@@ -30,8 +30,19 @@ namespace HotCit
     {
         public string Description { get; set; }
         public int Round { get; set; }
-        public int Step { get; set; }
-        public string Turn { get; set; }
+        public Step Step { get; set; }
+        public Turn? Turn { get; set; }
+        public bool? AbilityUsed { get; set; }
         public string PlayerInTurn { get; set; }
+    }
+
+    public enum Step
+    {
+        RemoveCharacters, ChooseCharacter, PlayerTurns, EndOfRound
+    }
+
+    public enum Turn
+    {
+        TakeAnAction, BuildADistrict
     }
 }

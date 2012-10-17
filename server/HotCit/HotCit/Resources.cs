@@ -167,7 +167,13 @@ namespace HotCit
         {
             switch (name)
             {
-
+                case "assassin": return new AssassinAbility();
+                case "thief": return new ThiefAbility();
+                case "magician": return new MagicianAbility();
+                case "king": return new GoldAbility("noble", "yellow", "king");
+                case "bishop": return new GoldAbility("religuous", "blue", "bishop");
+                case "merchant": return new GoldAbility("trade", "green", "merchant");
+                case "warlord": return new WarlordAbilty();
             }
             return new NullAbility();
         }

@@ -15,17 +15,18 @@ namespace HotCit
                     PlayerInTurn = GetPlayerInTurn().Username,
                     Step = _step,
                     Round = _round,
-                    Description = GetDescription()
+                    Description = GetDescription(),
+                    Turn = _turn,
+                    AbilityUsed = (GetCharacterInTurn() == null) ?
+                        (bool?) null :
+                        GetCharacterInTurn().AbilityUsed()
                 };
             }
         }
 
-        public IList<Player> Players
+        public IEnumerable<Player> Players
         {
-            get
-            {
-                return _players;
-            }
+            get { return _players; }
         }
 
         public string King { get; private set; }
@@ -35,14 +36,25 @@ namespace HotCit
             get { return _faceupCharacters.Select(c => c.Name); }
         }
 
+
+        public ISelectStrategy OnSelect
+        {
+            set
+            {
+                if (_select == null) _select = value;
+                else throw new Exception("Games is waiting for another select");
+            }
+        }
+
         public Game(IGameFactory factory)
         {
             _players = factory.GetPlayers();
-            _characters = factory.GetCharacters();
+            Characters = factory.GetCharacters();
+            _characterPile = new List<Character>(Characters);
             _pile = factory.GetPile();
             _discardStrategy = factory.GetDiscardStrategy();
 
-            NextStep();
+            OnStep();
             King = _players[0].Username;
         }
 
@@ -50,71 +62,102 @@ namespace HotCit
         {
             switch (_step)
             {
-                case 1:
+                case Step.RemoveCharacters:
                     return _players.First(p => p.Username == King);
-                case 2:
-                    return _players[(_count + _playerOffset) % _players.Count];
-                case 3:
-                    try
-                    {
-                        return _players.First(p => p.IsCharacter(_count));
-                    } catch (InvalidOperationException)
-                    {
-                        return null;
-                    }
-                case 4:
+                case Step.ChooseCharacter:
+                    return _players[(_count + _playerOffset)%_players.Count];
+                case Step.PlayerTurns:
+                    return _players.FirstOrDefault(p => p.IsCharacter(_count));
+                case Step.EndOfRound:
                     return _players.First(p => p.Username == King);
             }
             return null;
         }
 
-        public bool IsPlayerInTurn(string pid)
+        public Character GetCharacterInTurn()
         {
-            return GetPlayerInTurn().Username == pid;
+            return _step == Step.PlayerTurns ? Characters.FirstOrDefault(c => c.No == _count) : null;
         }
 
-        public Player GetPlayer(string pid)
+        public Player GetPlayerByUsername(string username)
         {
-            return _players.First(p => p.Username == pid);
+            return _players.FirstOrDefault(p => p.Username == username);
         }
 
-        public bool Select(string pid, string card)
+        public Player GetPlayerByCharacter(string character)
         {
-            switch (_step)
+            return _players.FirstOrDefault(p => p.IsCharacter(character));
+        }
+
+        public bool Select(string pid, params string[] cards)
+        {
+            if (!HasOption(pid, OptionType.Select)) return false;
+            var res = _select.OnSelect(this, pid, cards);
+            if (res)
             {
-                case 1: return false;
-                case 2: return SelectCharacter(pid, card);
-                case 3: return false;
-                case 4: return false;
-                default: throw new InvalidOperationException("Cannot be in step " + _step);
+                var after = _select.AfterSelect();
+                _select = null;
+                after();
             }
+            return res;
+        }
+
+        private bool SelectCharacter(Game game, string pid, string[] cards)
+        {
+            var player = GetPlayerByUsername(pid);
+            var character = _characterPile.First(c => c.Name == cards[0]);
+
+            player.AddCharacter(character);
+            _characterPile.Remove(character);
+
+            //For 7 player game the last player should have two characters to choose from
+            if (_characterPile.Count == 1)
+            {
+                _characterPile.Add(_discardedCharacter);
+                _discardedCharacter = null;
+            }
+
+            _count++;
+
+            return true;
+        }
+
+        private void PossibleNextStep()
+        {
+            //for 3 player games, you can choose two characters
+            var max = (_players.Count == 3) ? 6 : _players.Count;
+            if (_count == max) NextStep();
+            else SetSelectCharacterStrategy();
+        }
+
+        private bool SelectDistrict(Game game, string pid, IEnumerable<string> cards)
+        {
+            var player = GetPlayerByUsername(pid);
+
+            foreach (var card in cards)
+            {
+                player.Hand.Add(Resources.GetInstance().GetDistrict(card));
+            }
+
+            return true;
         }
 
         public bool EndTurn(string pid)
         {
-            switch (_step)
-            {
-                case 1:
-                    return false;
-                case 2:
-                    return false;
-                case 3:
-                    if (IsPlayerInTurn(pid))
-                    {
-                        NextCharacter();
-                        return true;
-                    }
-                    return false;
-                case 4:
-                    return false;
-                default: throw new InvalidOperationException("Cannot be in step " + _step);
-            }
+            if (!HasOption(pid, OptionType.EndTurn)) return false;
+            NextCharacter();
+            return true;
+        }
+
+        public bool HasOption(string pid, OptionType type)
+        {
+            return GetOptions(pid).Any(o => o.Type == type);
         }
 
         public void SetKing(string king)
         {
             King = king;
-            _playerOffset = _players.IndexOf(GetPlayer(king)); //king has to be first
+            _playerOffset = _players.IndexOf(GetPlayerByUsername(king)); //king has to be first
         }
 
         private void NextCharacter()
@@ -123,96 +166,107 @@ namespace HotCit
             do
             {
                 _count++;
-                if (_count > _characters.Count)
+                if (_count > Characters.Count)
                 {
                     NextStep();
                     return;
                 }
                 p = GetPlayerInTurn();
             } while (p == null);
+            ResetTurn();
             p.RevealCharacter(this);
         }
 
-        private bool SelectCharacter(string pid, string card)
+        private void ResetTurn()
         {
-            if (pid != GetPlayerInTurn().Username) return false;
-
-            var player = GetPlayer(pid);
-            try
-            {
-                var character = _characterPile.First(c => c.Name == card);
-
-                player.AddCharacter(character);
-                _characterPile.Remove(character);
-
-                //
-                if (_characterPile.Count == 1)
-                {
-                    _characterPile.Add(_discardedCharacter);
-                    _discardedCharacter = null;
-                }
-
-                _count++;
-
-                //for 3 player games, you can choose two characters
-                var max = (_players.Count == 3) ? 6 : _players.Count;
-                if (_count == max) NextStep();
-
-                return true;
-            }
-            catch (InvalidOperationException)
-            {
-                return false;
-            }
-
+            _turn = Turn.TakeAnAction;
         }
 
-        private void BeforeStep()
+        private void RemoveCharacters()
+        {
+            var players = _players.Count;
+
+            //discard one character
+            _discardedCharacter = _discardStrategy.DiscardCharacter(_characterPile);
+            _characterPile.Remove(_discardedCharacter);
+
+            switch (players)
+            {
+                case 4: //for 4 characters: 2 faceup characters
+                    FaceUpCharacter();
+                    FaceUpCharacter();
+                    break;
+                case 5: //for 5 characters: 1 faceup character
+                    FaceUpCharacter();
+                    break;
+            }
+        }
+
+        private void SetSelectCharacterStrategy()
+        {
+            var option = new Option
+            {
+                Type = OptionType.Select,
+                Message = "Please select a character",
+                Choices = _characterPile.Select(c => c.Name),
+                Amount = 1
+            };
+            OnSelect = new StandardSelectStrategy(option, SelectCharacter, PossibleNextStep);
+        }
+
+        private void EndRound()
+        {
+            _turn = null;
+
+            //return characters to pile
+            _characterPile = new List<Character>(Characters);
+            _faceupCharacters.Clear();
+
+            //remove players characters
+            foreach (var p in _players)
+                p.ClearCharacters();
+
+
+            _step = Step.RemoveCharacters;
+        }
+
+        private void OnStep()
         {
             switch (_step)
             {
-                case 2:
-                    //return characters to pile
-                    _characterPile = new List<Character>(_characters);
-                    _faceupCharacters.Clear();
+                case Step.RemoveCharacters:
+                    
+                    //Round increased by one
+                    _round++;
 
-                    //remove playes characters
-                    foreach (var p in _players)
-                        p.ClearCharacters();
-
-
-                    var players = Players.Count;
-
-                    //discard one character
-                    _discardedCharacter = _discardStrategy.DiscardCharacter(_characterPile);
-                    _characterPile.Remove(_discardedCharacter);
-
-                    switch (players)
-                    {
-                        case 4: //for 4 characters: 2 faceup characters
-                            FaceUpCharacter();
-                            FaceUpCharacter();
-                            break;
-                        case 5: //for 5 characters: 1 faceup character
-                            FaceUpCharacter();
-                            break;
-                    }
+                    RemoveCharacters();
 
                     //no player interactions in sted 1
+                    NextStep();
                     break;
-                case 3:
+
+                case Step.ChooseCharacter:
+                    SetSelectCharacterStrategy();
+                    break;
+                case Step.PlayerTurns:
                     NextCharacter();
                     break;
+                case Step.EndOfRound:
+                    //clear up statevector
+                    EndRound();
+
+                    OnStep(); //recurse
+                    break;
+
             }
         }
 
         private void FaceUpCharacter()
         {
-            Character c;
-            do
-            {
-                c = _characterPile[_random.Next(_characterPile.Count)];
-            } while (c.No == 4); // king should not be faceup
+            var temp = _characterPile.Where(ch => ch.No != 4).ToList();
+
+            var c = temp[_random.Next(temp.Count - 1)];
+
             _characterPile.Remove(c);
             _faceupCharacters.Add(c);
         }
@@ -221,14 +275,7 @@ namespace HotCit
         {
             _count = 0;
             _step++;
-            if (_step > 3) NextRound();
-            BeforeStep();
-        }
-
-        private void NextRound()
-        {
-            _step = 2;
-            _round++;
+            OnStep();
         }
 
         private string GetDescription()
@@ -236,16 +283,16 @@ namespace HotCit
             var res = "Waiting for " + GetPlayerInTurn().Username + " ";
             switch (_step)
             {
-                case 1:
+                case Step.RemoveCharacters:
                     res += "to shuffle cards";
                     break;
-                case 2:
-                    res += "to select character";
+                case Step.ChooseCharacter:
+                    res += "to choose character";
                     break;
-                case 3:
+                case Step.PlayerTurns:
                     res += "to take turn";
                     break;
-                case 4:
+                case Step.EndOfRound:
                     res += "to collect characters";
                     break;
             }
@@ -255,55 +302,144 @@ namespace HotCit
         public IList<Option> GetOptions(string pid)
         {
             var res = new List<Option>();
-
-            switch (_step)
-            {
-                case 1:
-
-                case 2:
-                    if (pid == GetPlayerInTurn().Username)
+            if (pid == GetPlayerInTurn().Username)
+                if (_select == null)
+                    switch (_step)
                     {
-                        var opt = new Option
+                        case Step.RemoveCharacters:
+                            break;
+
+                        case Step.ChooseCharacter:
+                            break;
+                        case Step.PlayerTurns:
+                            var character = GetCharacterInTurn();
+                            res.AddRange(character.GetOptions(this));
+
+                            res.Add(new Option //always posible to end turn
+                                {
+                                    Type = OptionType.EndTurn,
+                                    Message = "End your turn"
+                                });
+                            switch (_turn)
                             {
-                                Type = OptionType.Select,
-                                Message = "Please select a character",
-                                Choices = _characterPile.Select(c => c.Name)
-                            };
-                        res.Add(opt);
+                                case Turn.TakeAnAction:
+                                    res.Add(new Option
+                                        {
+                                            Message = "Take 2 gold", //TODO merchant
+                                            Type = OptionType.TakeAction,
+                                        });
+                                    res.Add(new Option
+                                        {
+                                            Message = "Draw 2 districts and discard one of them", //TODO architect
+                                            Type = OptionType.TakeAction,
+                                        });
+                                    break;
+                                case Turn.BuildADistrict:
+                                    res.Add(new Option
+                                        {
+                                            Message = "Build a district",
+                                            Type = OptionType.BuildDistrict,
+                                            Choices = GetPlayerInTurn().Hand.
+                                                Where(d=>d.Price <= GetPlayerInTurn().Gold).
+                                                Select(d=>d.Title)
+                                        });
+                                    break;
+                            }
+                            break;
+                        case Step.EndOfRound:
+                            break;
                     }
-                    break;
-                case 3:
-                    if (pid == GetPlayerInTurn().Username)
-                    {
-                        var opt = new Option
-                            {
-                                Type = OptionType.EndTurn,
-                                Message = "End your turn"
-                            };
-                        res.Add(opt);
-                    }
-                    break;
-            }
+                else
+                    res.Add(_select.GetOption());
             return res;
         }
 
+        public bool UseCharacterAbility(string pid, AbilityInfo ability)
+        {
+            return HasOption(pid, OptionType.UseAbility) && GetCharacterInTurn().UseAbility(GetPlayerInTurn(), ability, this);
+        }
+
+        public bool TakeGold(string pid)
+        {
+            if (!HasOption(pid, OptionType.TakeAction)) return false;
+
+            var player = GetPlayerInTurn();
+
+            if (player.IsCharacter("merchant")) player.Gold += 3; //merchant gets an extra gold
+            else player.Gold += 2;
+
+            _turn = Turn.BuildADistrict;
+            return true;
+        }
+
+        public bool DrawDistricts(string pid)
+        {
+            if (!HasOption(pid, OptionType.TakeAction)) return false;
+
+            var choices = new List<District>();
+            for (var i = 0; i < 2; i++)
+                choices.Add(_pile.Pop());
+
+            var option = new Option
+                {
+                    Message = "Select a district and discard the other",
+                    Choices = choices.Select(c => c.Title),
+                    Amount = 1
+                };
+
+            _turn = Turn.BuildADistrict;
+            OnSelect = new StandardSelectStrategy(option, SelectDistrict);
+
+            return true;
+        }
+
+        public bool BuildDistrict(string pid, string did)
+        {
+            if (!HasOption(pid, OptionType.BuildDistrict)) return false;
+
+            var player = GetPlayerInTurn();
+
+            var district = player.Hand.FirstOrDefault(d => d.Price <= player.Gold && d.Title == did);
+
+            if (district == null) return false;
+
+            player.Gold -= district.Price;
+            player.Hand.Remove(district);
+            player.FullCity.Add(district);
+
+            _turn = null;
+
+            return true;
+        }
 
         private readonly IList<Player> _players;
-        
-        
-        private readonly IList<Character> _characters;
+
+        public readonly IList<Character> Characters;
         private IList<Character> _characterPile;
         private readonly IList<Character> _faceupCharacters = new List<Character>(); 
 
         private readonly Stack<District> _pile;
 
-        private int _round, _step = 1, _count;
+        private Step _step;
+        private int _round, _count;
         private readonly Random _random = new Random();
         private int _playerOffset;
         private Character _discardedCharacter;
-
+        private ISelectStrategy _select;
+        private Turn? _turn;
 
         //Fields for stubs
         private readonly ICharacterDiscardStrategy _discardStrategy;
+
+        internal bool SwapWithPile(Game game, string pid, string[] cards)
+        {
+            var player = GetPlayerByUsername(pid);
+            foreach (var d in cards.Select(card => player.Hand.First(c => c.Title == card)))
+            {
+                player.Hand.Remove(d);
+                player.Hand.Add(_pile.Pop());
+            }
+            return true;
+        }
     }
 }
