@@ -1,13 +1,17 @@
-google.com
-[
-	[description,         	method,     url,					statuscode],
-	%-----------------------------------------------------------------------------------------------------------------------------------------------
-	[GET GOOGLE TITTTIES, 	GET, 		/search?q=titties, 		301],
-	[POST GOOGLE TITTTIES, 	POST, 		/search?q=titties, 		301]
-]	
+localhost:53998
+%	www.google.dk
+%	[
+%	[description,         	method,     url,					statuscode],
+%	%-----------------------------------------------------------------------------------------------------------------------------------------------
+%	[GET GOOGLE TITTTIES, 	GET, 		/search?q=titties, 		200],
+%	[POST GOOGLE TITTTIES, 	POST, 		search?q=titties, 		411]
+%	]	
 
-localhost:8080
-[
-	[description, 	method, 	uri, 	username, 	param, 	statuscode, data]
 
+[
+	[description, 		method, 	url, 				username, 	params, 				statuscode, reason,		data 			],
+	[get lobby,			GET, 		/lobby/, 			,			,						200,		OK,							],			 
+	[get gamesetup,		GET,		/lobby/mygame10/,	,			,						404,		Not Found,					],
+	[create gamesetup,	POST,		/lobby/mygame10/,	ada,		"{'discard':'fixed'}",	201,		,							],
+	[get gamesetup,		GET,		/lobby/,			,			,						200,		,			"['mygame']"	]
 ]
