@@ -1,4 +1,8 @@
-import os, simplejson as json
+import os, re
+try:
+    import simplejson as json
+except:
+    import json
 
 # http://jsonlint.com/
 def parse(path):
@@ -26,12 +30,19 @@ def parse(path):
     with open(path, 'rb') as f:
         raws = f.readlines()
 
+    server, raws = raws[0].strip(), raws[1:]
     fraw = _prune_comments(raws)
+    fraw = _prune_sp_tokens(fraw)
     valid_json = _commentify(fraw)
-    json_list = decoder.decode(valid_json)
-    kwargs = _extract_kwargs(json_list)
-   
-    return kwargs
+
+    try:
+        json_list = decoder.decode(valid_json)
+        kwargs = _extract_kwargs(json_list)
+    except Exception as e:
+        print 'uuuups, not valid json!'
+        print valid_json
+        raise
+    return server, kwargs
 
 
 def _extract_kwargs(json_list):
@@ -59,44 +70,79 @@ def _prune_comments(raws):
     return raw
 
 
+def _prune_sp_tokens(fraw):
+    return re.sub('[\t\s]+',' ',fraw)
+
+
 def _commentify(raw):
     '''
     inputs the " for the raw to be valid JSON,
     '''
 
+    escaping = False
     search_wstart = True
     search_wend = False
+    last_char = None
         
     formatted_raw = ''
     for char in raw:
-        if char and search_wstart and _is_digit_or_number(char):
-            formatted_raw += '"'+char
-            search_wstart = False
-            search_wend = True
+        new_last_char = char
+        
+        if not char or char == ' ':
+            pass
+        
+        elif char == '"':
+            escaping = not escaping
+            pass
             
-        elif search_wend and char in [',', ']'] :
-            formatted_raw +=  '"' + char
+
+        elif char != '"' and escaping:
+            pass
+
+        elif char == '[':
+            search_wend = False
+            search_wstart = True
+
+        elif char == ']':
+            if search_wend:
+                char = '"' + char
+            elif search_wstart:
+                if last_char == ']':
+                    pass
+                else:
+                    char = '""' + char
+
             search_wend = False
             search_wstart = True
             
-        else:
-            formatted_raw += char
+        elif char == ',' :
+            if last_char == ']':
+                pass
+            elif last_char == '"':
+                pass
+            elif search_wend:
+                char = '"' + char
+            elif search_wstart:
+                char = '""' + char
+            
+            search_wend = False
+            search_wstart = True
+
+        elif search_wstart:
+            char = '"' + char
+              
+            search_wstart = False
+            search_wend = True
+
+
+        formatted_raw += char
+        if char != ' ':
+            last_char = new_last_char
             
     return formatted_raw
 
-def _is_digit_or_number(char):
-    od = ord(char)
-    return  (od >= 97 and od <= 122 or
-            od >= 65 and od <= 90 or
-            char.isdigit() or char in ['/'])
-
-def _tester(description, method, uri, data, username, password, expected_statuscode, reason):
-    print description
-    print method
-    print uri
-
 if __name__ == '__main__':
-    _tester(**parse('example.test')[1])
+    print parse('example.test')
     
 
 # TODO:
