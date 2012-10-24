@@ -1,6 +1,13 @@
+google.com
 [
-        [description,         method,      url,              params,		username, 	password,		statuscode,  	reason, 		data],
-        %-----------------------------------------------------------------------------------------------------------------------------------------------
-		[get gamefactory,     	GET,         /lobby/mygame/,   "",            "", 		"",                 404,		Not Found,		""],
-		[get gamefactorybb,     POST,        /lobby/mygame/,   "",            "", 		"",                 401,        Unauthorized,	""]
+	[description,         	method,     url,					statuscode],
+	%-----------------------------------------------------------------------------------------------------------------------------------------------
+	[GET GOOGLE TITTTIES, 	GET, 		/search?q=titties, 		301],
+	[POST GOOGLE TITTTIES, 	POST, 		/search?q=titties, 		301]
+]	
+
+localhost:8080
+[
+	[description, 	method, 	uri, 	username, 	param, 	statuscode, data]
+
 ]

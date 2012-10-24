@@ -2,13 +2,12 @@ import httplib, urllib, json, base64
 import unittest
 from test_parser import parse
 
-timeout = 10
-port = 53998
-server = "localhost"
+
 content_type = 'application/json'
 accept = 'application/json'
 
-def send_request(method, username, url, params): 
+
+def send_request(server, method, username, url, params):
     #auth_type = 'Basic'
     #password = 'secret'
     #auth_hash = username + ':' + password
@@ -19,13 +18,12 @@ def send_request(method, username, url, params):
 
     #set headers
     headers = {}
-    headers['Content-Type'] = content_type
-    headers['Authorization'] = username
-    headers['Accept'] = accept
-
+    if content_type: headers['Content-Type'] = content_type
+    if username: headers['Authorization'] = username
+    if accept: headers['Accept'] = accept
 
     #send request
-    conn = httplib.HTTPConnection(server, port, timeout)
+    conn = httplib.HTTPConnection(server)
     conn.request(method, url, params, headers)
     res = conn.getresponse()
     conn.close()
@@ -36,46 +34,74 @@ def send_request(method, username, url, params):
     data = res.read()
 
 
-    return {
-                'status':str(status),
-                'reason':reason,
-                'data':data,
-            }
+    return (status, reason, data)
 
-def create_test(testno, description, username, password, url, params, method, statuscode, reason, data):
-    def test(self):
-        response = send_request(method, username, url, params)
-        print '-'*80 
-        print 'test', testno, ':', description,
-        try:
-            if statuscode:  self.assertEqual(statuscode, response.get('status'))
-            if reason:      self.assertEqual(reason, response.get('reason'))
-            print '\tCHECK'
-        except:
-            print '\tERROR'
-            print '-'*80
-            raise
 
-        finally:
-            print '-'*80
+class AssertExc(Exception):
+    pass
 
-    return test
+
+def assertEquals(value, expected, key):
+    if (value) != str(expected):
+        msg = 'expected %s to be %s, not %s' % (key, expected, value)
+        raise AssertExc(msg)
+    
+
+def run_test(testno, server, description=None, username=None, password=None, url=None, reason=None, params=None, method='GET', statuscode=200, data=None):   
+    (rstatus, rreason, rdata) = send_request(server, method, username, url, params)
+    
+    print 'TEST', testno, ':', description.ljust(20),':', 
+    try:
+        if statuscode:  assertEquals(statuscode, rstatus, 'statuscode')
+        if reason:      assertEquals(reason, rreason, 'reason')
+        if data:        assertEquals(data, rdata, 'data')
+        print '\tCHECK'
+        return True
+    
+    except AssertExc as e:
+        print '\tERROR'
+        print e.message
+        return False
 
             
 if __name__ == '__main__':
+    import sys
     from sys import argv
-    if len(argv) > 1:
-        path = argv[1]
-        del argv[1]
     
-        tests = parse(path)
+    if len(argv) < 2:
+        print 'you\'re doing it wrong sir. I need a file to parse as input...'
+        sys.exit(1)
+    
+    path = argv[1]
+    server, tests = parse(path)
 
-        class Example(unittest.TestCase):
-            pass
+    tlength = len(tests)
+    
+    print
+    print 'Executing %d tests using %s' % (tlength, server)
+
+    completed = 0
+    for i, test in enumerate(tests):
+        i += 1
         
-        for i, test in enumerate(tests):
-            i += 1
-            test_method = create_test(i, **test)
-            setattr(Example, 'test '+str(i), test_method) 
+        #for key, value in test.iteritems():
+        #    print key, ' = ', value
 
-        unittest.main(exit=False, verbosity=0)
+        print '-'*80 
+        success = run_test(i, server, **test)
+
+        if not success:
+            break
+        else:
+            completed += 1
+
+
+    print '-'*80
+    print
+    if completed != tlength: 
+        print 'Suite failed after completing %d/%d tests' % (completed, tlength)
+
+    else:
+        print 'Suite finished. %d/%d tests succeeded.' % (completed, tlength)
+
+    
