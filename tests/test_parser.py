@@ -16,12 +16,13 @@ def parse(path):
 
     the order of the columns is not significant
 
-    [
-        [description,         method,      uri,              data,          username, password,		expected statuscode,  	reason],
-        %-----------------------------------------------------------------------------------------------------------------------------------------------
-        [get gamefactory,     GET,         /lobby/mygame/,   "",            "", "",                 404,                  	Not found],
-	[get gamefactory,     POST,         /lobby/mygame/,   "",            "", "",                 404,                  	Not found]
-    ]
+	www.google.dk
+	[
+	[description,         	method,     url,					statuscode],
+	%-----------------------------------------------------------------------------------------------------------------------------------------------
+	[GET GOOGLE TITTTIES, 	GET, 		/search?q=titties, 		200],
+	[POST GOOGLE TITTTIES, 	POST, 		search?q=titties, 		411]
+	]	
 
     '''
    
@@ -40,7 +41,10 @@ def parse(path):
         kwargs = _extract_kwargs(json_list)
     except Exception as e:
         print 'uuuups, not valid json!'
-        print valid_json
+        print
+        print re.sub('],', '],\n', valid_json)
+        print
+        print
         raise
     return server, kwargs
 
@@ -53,7 +57,7 @@ def _extract_kwargs(json_list):
         kwargs = {}
         for i, value in enumerate(test):
             if not value: None
-            kwargs[kwarg_names[i].replace(' ', '_')] = value
+            kwargs[kwarg_names[i].strip().replace(' ', '_')] = value
 
         res.append(kwargs)
     return res
@@ -94,7 +98,6 @@ def _commentify(raw):
         elif char == '"':
             escaping = not escaping
             pass
-            
 
         elif char != '"' and escaping:
             pass
@@ -107,7 +110,7 @@ def _commentify(raw):
             if search_wend:
                 char = '"' + char
             elif search_wstart:
-                if last_char == ']':
+                if last_char == ']' or last_char == '"':
                     pass
                 else:
                     char = '""' + char
@@ -143,8 +146,3 @@ def _commentify(raw):
 
 if __name__ == '__main__':
     print parse('example.test')
-    
-
-# TODO:
-# read keyword names
-# use these coupled with each column, as input to testfunction
