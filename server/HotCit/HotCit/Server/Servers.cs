@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Net;
 using HotCit.Data;
+using HotCit.Lobby;
+using HotCit.Strategies;
 using ServiceStack.Common.Web;
 using ServiceStack.ServiceInterface;
 using Action = HotCit.Data.Action;
@@ -127,26 +129,7 @@ namespace HotCit.Server
         {
             var id = request.GameId;
             if (id == null) return GameRepository.Games;
-            var game = GetGame(id);
-            switch (request.GameInfo)
-            {
-                case GameInfo.State:
-                    return game.State;
-                case GameInfo.Players:
-                    if (request.Id == null)
-                        return game.Players;
-                    return game.GetPlayerByUsername(request.Id);
-                case GameInfo.FaceUp:
-                    return game.FaceupCharacters;
-                case GameInfo.Updates:
-                    if (request.Id == null) throw new HttpError(HttpStatusCode.BadRequest, "");
-                    return GameRepository.GetUpdates(id, Convert.ToInt32(request.Id));
-                case GameInfo.MyOptions:
-                    return game.GetOptions(User);
-                case GameInfo.MyHand:
-                    return game.GetHand(User);
-            }
-            return game;
+            return GetGame(id);
         }
 
         public override object OnPut(GameRequest request)

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HotCit.Data;
+using HotCit.Strategies;
+using HotCit.Util;
 
 namespace HotCit.Test
 {

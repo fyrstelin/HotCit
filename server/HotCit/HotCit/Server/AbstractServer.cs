@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net;
+using HotCit.Lobby;
+using HotCit.Util;
 using ServiceStack.Common.Web;
 using ServiceStack.ServiceInterface;
 

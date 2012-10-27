@@ -1,4 +1,7 @@
-﻿namespace HotCit.Data
+﻿using HotCit.Strategies;
+using HotCit.Util;
+
+namespace HotCit.Data
 {
     public class LobbyRequest
     {
@@ -23,10 +26,7 @@
     public class GameRequest
     {
         public string GameId { get; set; }
-
-        //for get requests
-        public GameInfo? GameInfo { get; set; }
-        public string Id { get; set; }
+        public int? LastSeenUpdate { get; set; }
 
         //for put requests
         public string[] Select { get; set; }

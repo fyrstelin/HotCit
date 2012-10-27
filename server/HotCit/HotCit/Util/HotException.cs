@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace HotCit
+namespace HotCit.Util
 {
     public class HotCitException : Exception
     {

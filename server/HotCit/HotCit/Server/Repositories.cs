@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using HotCit.Lobby;
 using HotCit.Test;
+using HotCit.Util;
 
-namespace HotCit
+namespace HotCit.Server
 {
     public class GameSetupRepository
     {

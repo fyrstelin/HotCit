@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Linq;
 using HotCit.Data;
+using HotCit.Strategies;
+using HotCit.Util;
 
-namespace HotCit
+namespace HotCit.Lobby
 {
     public class GameSetup : IGameFactory
     {
@@ -81,12 +84,7 @@ namespace HotCit
 
         public IList<Player> GetPlayers()
         {
-            var res = new List<Player>();
-            foreach (var user in _users)
-            {
-                res.Add(new Player(user));
-            }
-            return res;
+            return _users.Select(user => new Player(user)).ToList();
         }
 
         public Stack<District> GetPile()
@@ -104,10 +102,7 @@ namespace HotCit
 
         public IList<Character> GetCharacters()
         {
-            var res = new List<Character>();
-            foreach (var c in Resources.GetInstance().Characters)
-                res.Add(Resources.GetInstance().GetCharacter(c));
-            return res;
+            return Resources.GetInstance().Characters.Select(c => Resources.GetInstance().GetCharacter(c)).ToList();
         }
     }
 }
