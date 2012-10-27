@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using HotCit.Data;
 
 namespace HotCit
 {
@@ -27,13 +28,8 @@ namespace HotCit
             _option = option;
             _onSelect = onSelect;
             if (afterSelect == null)
-                afterSelect = Dummy;
+                afterSelect = () => { };
             _afterSelect = afterSelect;
-        }
-
-        private static void Dummy()
-        {
-            
         }
 
         public bool OnSelect(Game game, string pid, string[] cards)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HotCit.Data;
 
 namespace HotCit
 {
@@ -40,7 +41,16 @@ namespace HotCit
             }
         }
 
-        public int Gold { get; set; }
+        private int _gold;
+        public int Gold
+        {
+            get { return _gold; }
+            set
+            {
+                if (value < 0) throw new HotCitException(ExceptionType.NotEnoughGold);
+                _gold = Gold;
+            }
+        }
 
         public IEnumerable<string> Characters
         {
@@ -52,7 +62,7 @@ namespace HotCit
             _username = username;
 
         }
-        
+
         public bool AddCharacter(Character c)
         {
             if (_hiddenCharacters.Contains(c)) return false;
@@ -60,8 +70,12 @@ namespace HotCit
             return true;
         }
 
-        public void ClearCharacters()
+        public void Reset()
         {
+            foreach (var c in _publicCharacters)
+                c.Reset();
+            foreach (var d in FullCity)
+                d.Reset();
             _hiddenCharacters.Clear();
             _publicCharacters.Clear();
         }
@@ -74,7 +88,7 @@ namespace HotCit
                 if (c == null) return false;
 
                 c.OnReveal(_username, game);
-                
+
 
                 if (c.Name == _victim)
                 {
@@ -123,7 +137,7 @@ namespace HotCit
         public void SwapHand(IList<string> districts, Game game)
         {
             var d = districts.FirstOrDefault(d1 => Hand.All(d2 => d2.Title != d1));
-            if (d!=null) throw new IllegalAction("You do not have " + d + " in your hand, and therefore cannot swap it");    
+            if (d != null) throw new HotCitException(ExceptionType.BadAction, "You do not have " + d + " in your hand, and therefore cannot swap it");
             foreach (var d1 in districts)
             {
                 Hand.Remove(Hand.First(d2 => d2.Title == d1));
@@ -135,7 +149,7 @@ namespace HotCit
         public readonly IList<District> FullCity = new List<District>();
         public IList<District> Hand = new List<District>();
         private readonly ISet<Character> _hiddenCharacters = new SortedSet<Character>();
-        private readonly ISet<Character> _publicCharacters = new SortedSet<Character>(); 
+        private readonly ISet<Character> _publicCharacters = new SortedSet<Character>();
         private Player _thief;
         private string _victim;
 

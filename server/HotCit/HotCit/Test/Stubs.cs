@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using HotCit.Data;
 
-namespace HotCit
+namespace HotCit.Test
 {
     public class SimpleGameFactory : IGameFactory
     {
@@ -40,7 +41,12 @@ namespace HotCit
 
         public ICharacterDiscardStrategy GetDiscardStrategy()
         {
-            return new FixedDiscardStrategy {CharacterNumber = 7};
+            return new FixedDiscardStrategy
+            {
+                CharacterNumber = 7,
+                FirstFaceUp = 1,
+                SecondFaceUp = 2
+            };
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace HotCit
+﻿namespace HotCit.Data
 {
     public class LobbyRequest
     {
@@ -23,14 +23,32 @@
     public class GameRequest
     {
         public string GameId { get; set; }
+
+        //for get requests
+        public GameInfo? GameInfo { get; set; }
+        public string Id { get; set; }
+
+        //for put requests
         public string[] Select { get; set; }
         public string Build { get; set; }
         public Action? Action { get; set; }
         public AbilityInfo Ability { get; set; }
+
     }
 
-    public class OptionsRequest : GameRequest
+    public enum GameInfo
     {
+        State, Players, FaceUp, Updates, MyHand, MyOptions
+    }
+
+    public class SecretRequest : GameRequest
+    {
+        public Secret? Secret { get; set; }
+    }
+
+    public enum Secret
+    {
+        Options, Hand
     }
 
 

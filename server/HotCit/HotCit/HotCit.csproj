@@ -81,14 +81,15 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractServer.cs" />
+    <Compile Include="Data\Districts.cs" />
+    <Compile Include="Server\AbstractServer.cs" />
     <Compile Include="Abilities.cs" />
     <Compile Include="Character.cs" />
-    <Compile Include="Data.cs" />
+    <Compile Include="Data\Data.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="Requests.cs" />
+    <Compile Include="Data\Requests.cs" />
     <Compile Include="Repositories.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -98,10 +99,10 @@
     <Compile Include="Resources.cs" />
     <Compile Include="RevealStrategies.cs" />
     <Compile Include="SelectStrategies.cs" />
-    <Compile Include="Servers.cs" />
+    <Compile Include="Server\Servers.cs" />
     <Compile Include="GameSetup.cs" />
     <Compile Include="Strategies.cs" />
-    <Compile Include="Stubs.cs" />
+    <Compile Include="Test\Stubs.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

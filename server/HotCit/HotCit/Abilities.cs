@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using HotCit.Data;
 
 namespace HotCit
 {
     public class AbilityInfo
     {
         public string Target { get; set; }
-        public string District { get; set; }  
+        public string District { get; set; }
+        public string Source { get; set; }
     }
 
     public interface IAbility
@@ -14,7 +16,7 @@ namespace HotCit
         void Reset();
 
         bool UseAbility(Player owner, AbilityInfo info, Game game);
-        
+
         IEnumerable<Option> GetOptions(Game game);
         bool Used { get; }
     }
@@ -24,7 +26,7 @@ namespace HotCit
         public bool UseAbility(Player owner, AbilityInfo info, Game game)
         {
             if (Used) return false;
-            if (!CheckInfo(info)) throw new IllegalRequest();
+            if (!CheckInfo(info)) throw new HotCitException(ExceptionType.IllegalInput);
             UseUnusedAbility(owner, info, game);
             Used = true;
             return true;
@@ -59,7 +61,7 @@ namespace HotCit
         }
     }
 
-    public class AssassinAbility : AbstractAbility, ICurse
+    public class AssassinAbility : AbstractAbility
     {
         private const string Description = "Choose a character to assasin";
 
@@ -81,7 +83,7 @@ namespace HotCit
         protected override void UseUnusedAbility(Player owner, AbilityInfo info, Game game)
         {
             var target = game.Characters.FirstOrDefault(c => c.Name == info.Target);
-            if (target == null) throw new IllegalRequest(info.Target + " is not a character in the game");
+            if (target == null) throw new HotCitException(ExceptionType.IllegalInput, info.Target + " is not a character in the game");
             target.Dead = true;
         }
 
@@ -91,7 +93,7 @@ namespace HotCit
         }
     }
 
-    public class ThiefAbility : AbstractAbility, ICurse
+    public class ThiefAbility : AbstractAbility
     {
         private const string Description = "Choose a character to steal from";
 
@@ -151,14 +153,14 @@ namespace HotCit
             if (info.Target != null) //swap with player
             {
                 owner.SwapHand(game.GetPlayerByUsername(info.Target));
-            } 
+            }
             else
             {
                 var option = new Option
-                    {
-                        Message = "Discard any number of cards and draw an equal number of cards.",
-                        Choices = owner.Hand.Select(c => c.Title)
-                    };
+                {
+                    Message = "Discard any number of cards and draw an equal number of cards.",
+                    Choices = owner.Hand.Select(c => c.Title)
+                };
                 game.OnSelect = new StandardSelectStrategy(option, game.SwapWithPile);
             }
         }
@@ -241,7 +243,8 @@ namespace HotCit
             return res;
         }
 
-        public bool Used {
+        public bool Used
+        {
             get { return _goldAbility.Used && _destroyAbility.Used; }
         }
     }
@@ -268,11 +271,11 @@ namespace HotCit
                 }
 
                 res.Add(new Option
-                    {
-                        Type = OptionType.UseAbility,
-                        Message = Description,
-                        Choices = choices
-                    });
+                {
+                    Type = OptionType.UseAbility,
+                    Message = Description,
+                    Choices = choices
+                });
             }
             return res;
         }
@@ -281,14 +284,14 @@ namespace HotCit
         {
             var target = game.GetPlayerByUsername(info.Target);
 
-            if (target.IsCharacter(5)) throw new IllegalAction("Cannot destroy bishops districts");
+            if (target.IsCharacter(5)) throw new HotCitException(ExceptionType.BadAction, "Cannot destroy bishops districts");
 
             var district = target.FullCity.FirstOrDefault(d => d.Title == info.District);
-            
-            if (district == null) throw new IllegalRequest("District not found");
 
-            if (owner.Gold < district.Value - 1) throw new IllegalRequest("District to expensive to destory");
-            
+            if (district == null) throw new HotCitException(ExceptionType.NotFound, info.District + " not found at " + info.Target);
+
+            if (owner.Gold < district.Value - 1) throw new HotCitException(ExceptionType.BadAction, "District to expensive to destory");
+
             target.FullCity.Remove(district);
         }
 
@@ -298,8 +301,67 @@ namespace HotCit
         }
     }
 
-    public interface ICurse
+    public class LaboratoryAbility : AbstractAbility
     {
-        
+        public override IEnumerable<Option> GetOptions(Game game)
+        {
+            return new List<Option>
+                {
+                    new Option
+                        {
+                            Type = OptionType.UseAbility,
+                            Source = "laboratory",
+                            Message = "You may discard a district card form your hand and receive on gold from the bank."
+                        }
+                };
+        }
+
+        protected override void UseUnusedAbility(Player owner, AbilityInfo info, Game game)
+        {
+            game.OnSelect = new StandardSelectStrategy(GetOption(owner), (game1, s, cards) => OnSelect(game1, s, cards, owner));
+        }
+
+        protected override bool CheckInfo(AbilityInfo info)
+        {
+            return info.Target == null && info.District == null;
+        }
+
+        public bool OnSelect(Game game, string pid, string[] cards, Player owner)
+        {
+            owner.Hand.Remove(owner.Hand.First(d => d.Title == cards[0]));
+            owner.Gold++;
+            return true;
+        }
+
+        public Option GetOption(Player owner)
+        {
+            return new Option
+            {
+                Type = OptionType.Select,
+                Amount = 1,
+                Message = "Discard one card and recieve one gold",
+                Choices = owner.Hand.Select(d => d.Title)
+            };
+        }
+    }
+
+    public class SmithyAbility : AbstractAbility
+    {
+        public override IEnumerable<Option> GetOptions(Game game)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void UseUnusedAbility(Player owner, AbilityInfo info, Game game)
+        {
+            owner.Gold -= 2;
+            for (var i = 0; i < 3; i++)
+                owner.Hand.Add(game.TakeDistrict());
+        }
+
+        protected override bool CheckInfo(AbilityInfo info)
+        {
+            return info.Target == null && info.District == null;
+        }
     }
 }
