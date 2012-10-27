@@ -1,4 +1,4 @@
-﻿namespace HotCit
+namespace HotCit.Strategies
 {
     public interface IRevealStrategy
     {

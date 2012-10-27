@@ -1,4 +1,7 @@
-﻿namespace HotCit.Data
+﻿using HotCit.Strategies;
+using HotCit.Util;
+
+namespace HotCit.Data
 {
     public class District
     {

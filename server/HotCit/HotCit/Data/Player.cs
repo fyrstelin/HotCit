@@ -1,12 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using HotCit.Data;
+using HotCit.Util;
 
-namespace HotCit
+namespace HotCit.Data
 {
-
-
     public class Player
     {
         public string Username

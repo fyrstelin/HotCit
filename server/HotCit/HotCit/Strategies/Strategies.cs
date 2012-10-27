@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using HotCit.Data;
 
-namespace HotCit
+namespace HotCit.Strategies
 {
     public interface ICharacterDiscardStrategy
     {

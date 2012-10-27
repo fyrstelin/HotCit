@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HotCit.Data;
+using HotCit.Strategies;
+using HotCit.Util;
 
 namespace HotCit
 {
@@ -10,6 +12,7 @@ namespace HotCit
         /*      Properties send to client                                                                   */
         /****************************************************************************************************/
 
+        /* The game state vector should just be fields on the game */
         public GameStateVector State
         {
             get
@@ -28,14 +31,39 @@ namespace HotCit
             }
         }
 
-        public IList<Player> Players { get; private set; }
 
-        public string King { get; private set; }
+        //This property never changes
+        public IList<Player> Players
+        {
+            get; private set;
+        }
 
+        public string King
+        {
+            get { return _king; }
+            private set
+            {
+                _king = value;
+                GameUpdated(new Update
+                    {
+                        Message = value + " is now king",
+                        Player = value,
+                        Type = UpdateType.NewKing
+                    });
+            }
+        }
+
+        //update for this property is handled in void FaceupCharacter()
         public IEnumerable<string> FaceupCharacters
         {
             get { return _faceupCharacters.Select(c => c.Name); }
         }
+
+
+
+        /****************************************************************************************************/
+        /*                   Properties used by other classes                                               */
+        /****************************************************************************************************/
 
         public ISelectStrategy OnSelect
         {
@@ -298,12 +326,6 @@ namespace HotCit
         {
             King = king;
             _playerOffset = Players.IndexOf(GetPlayerByUsername(king)); //king has to be first
-            GameUpdated(new Update
-            {
-                Type = UpdateType.NewKing,
-                Player = king,
-                Message = king + " is now king."
-            });
         }
 
         private bool HasOption(string pid, OptionType type)
@@ -569,6 +591,13 @@ namespace HotCit
         private Turn? _turn;
         private IList<Character> _characterPile;
 
+
+
+        /****************************************************************************************************/
+        /*                   field for properies                                                            */
+        /****************************************************************************************************/
+
+        private string _king;
 
 
         /****************************************************************************************************/

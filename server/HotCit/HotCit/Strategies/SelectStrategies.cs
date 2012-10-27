@@ -1,7 +1,7 @@
-﻿using System.Linq;
+using System.Linq;
 using HotCit.Data;
 
-namespace HotCit
+namespace HotCit.Strategies
 {
     public delegate bool OnSelect(Game game, string pid, string[] cards);
 

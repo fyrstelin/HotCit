@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using HotCit.Data;
+using HotCit.Util;
 
-namespace HotCit
+namespace HotCit.Strategies
 {
     public class AbilityInfo
     {

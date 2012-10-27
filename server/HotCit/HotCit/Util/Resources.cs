@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using HotCit.Data;
+using HotCit.Strategies;
 
-namespace HotCit
+namespace HotCit.Util
 {
 
     public enum ImageQuality

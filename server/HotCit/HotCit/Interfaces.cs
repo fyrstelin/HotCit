@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using HotCit.Data;
+using HotCit.Strategies;
 
 namespace HotCit
 {
