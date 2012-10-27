@@ -4,28 +4,22 @@ namespace HotCit
 {
     public class HotCitException : Exception
     {
-        public readonly string Mes;
+        public string Mes { get; private set; }
+        public ExceptionType Type { get; private set; }
 
-        public HotCitException(string mes)
+        public HotCitException(ExceptionType type, string mes = "")
         {
             Mes = mes;
+            Type = type;
         }
     }
 
-    public class IllegalAction : HotCitException
+    public enum ExceptionType
     {
-        public IllegalAction(string mes) : base(mes)
-        {
-            
-        }
+        Timeout, IllegalInput,
+        BadAction,
+        IllegalState,
+        NotFound,
+        NotEnoughGold
     }
-
-    public class IllegalRequest : HotCitException
-    {
-        public IllegalRequest(string mes = "Illegal Request") : base(mes)
-        {
-            
-        }
-    }
-
 }

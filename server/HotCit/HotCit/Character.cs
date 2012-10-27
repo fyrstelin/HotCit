@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using HotCit.Data;
 
 namespace HotCit
 {
@@ -10,37 +11,28 @@ namespace HotCit
         public string Color { get; set; }
         public int No { get; set; }
 
-        public IAbility CharcterAbility
-        {
-            set { _ability = value; }
-        }
-        public IRevealStrategy RevealStrategy
-        {
-            set { _revealAbility = value; }
-        }
+        public IAbility Ability { private get; set; }
 
-        private IAbility _ability;
-        private IRevealStrategy _revealAbility;
+        public IRevealStrategy RevealStrategy { private get; set; }
 
         public bool UseAbility(Player owner, AbilityInfo info, Game game)
         {
-            return _ability.UseAbility(owner, info, game);
+            return Ability.UseAbility(owner, info, game);
         }
 
         public bool AbilityUsed()
         {
-            return _ability.Used;
+            return Ability.Used;
         }
 
         public void OnReveal(string owner, Game game)
         {
-            _revealAbility.OnReveal(owner, game);
-            _ability.Reset();
+            RevealStrategy.OnReveal(owner, game);
         }
 
         public IEnumerable<Option> GetOptions(Game game)
         {
-            return _ability.GetOptions(game);
+            return Ability.GetOptions(game);
         }
 
         public bool Dead { set; get; }
@@ -48,6 +40,11 @@ namespace HotCit
         public int CompareTo(Character c)
         {
             return No - c.No;
+        }
+
+        internal void Reset()
+        {
+            Ability.Reset();
         }
     }
 }

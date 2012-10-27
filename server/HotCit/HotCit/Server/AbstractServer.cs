@@ -1,8 +1,9 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using ServiceStack.Common.Web;
 using ServiceStack.ServiceInterface;
 
-namespace HotCit
+namespace HotCit.Server
 {
     public abstract class AbstractServer<T> : RestServiceBase<T>
     {
@@ -34,5 +35,32 @@ namespace HotCit
             return game;
         }
 
+        protected override object HandleException(T request, Exception ex)
+        {
+            var e = ex as HotCitException;
+            if (e == null) return HttpError(HttpStatusCode.InternalServerError, ex);
+            var code = HttpStatusCode.InternalServerError;
+            switch (e.Type)
+            {
+                case ExceptionType.Timeout:
+                    code = HttpStatusCode.RequestTimeout;
+                    break;
+                case ExceptionType.IllegalInput:
+                    code = HttpStatusCode.BadRequest;
+                    break;
+                case ExceptionType.BadAction:
+                    code = HttpStatusCode.Forbidden;
+                    break;
+                case ExceptionType.NotFound:
+                    code = HttpStatusCode.NotFound;
+                    break;
+            }
+            return HttpError(code, e.Mes);
+        }
+
+        private static object HttpError(HttpStatusCode code, object o)
+        {
+            return new HttpError(o, code, "", "");
+        }
     }
 }

@@ -1,16 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace HotCit
+namespace HotCit.Data
 {
-
-    public class District
-    {
-        public string Title { get; set; }
-        public int Price { get; set; }
-        public int Value { get; set; }
-        public string Color { get; set; }
-        public string Text { get; set; }
-    }
 
     public class Option
     {

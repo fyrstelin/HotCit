@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using HotCit.Data;
 
 namespace HotCit
 {
@@ -12,9 +13,9 @@ namespace HotCit
 
     public class Resources
     {
-        private static readonly string Resourcedir = Environment.GetEnvironmentVariable("HotCit", EnvironmentVariableTarget.Machine) + @"\resources\";
+        private static readonly string Resourcedir = Environment.GetEnvironmentVariable("HotCit", EnvironmentVariableTarget.Machine) + @"resources\";
         private static readonly string Imagedir = Resourcedir + @"images\";
-        
+
         public ICollection<string> Characters
         {
             get
@@ -78,9 +79,9 @@ namespace HotCit
         {
             var reader = new StreamReader(Resourcedir + "characters.txt");
             string content;
-            using(reader)
+            using (reader)
             {
-                content = reader.ReadToEnd();    
+                content = reader.ReadToEnd();
             }
             var characters = content.Split('-');
             foreach (var character in characters)
@@ -136,7 +137,8 @@ namespace HotCit
             var args = character.Split('\n');
             string id = null;
             var res = new Character();
-            foreach (var arg in args) {
+            foreach (var arg in args)
+            {
                 var t = arg.Split(':');
                 var key = t[0].Trim();
                 var value = t[1].Trim();
@@ -145,7 +147,7 @@ namespace HotCit
                     case "Name":
                         id = value;
                         res.Name = value;
-                        res.CharcterAbility = GetCharacterAbility(value);
+                        res.Ability = GetCharacterAbility(value);
                         res.RevealStrategy = GetRevealAbility(value);
                         break;
                     case "Number":

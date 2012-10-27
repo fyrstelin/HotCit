@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using HotCit.Test;
 
 namespace HotCit
 {
@@ -16,12 +17,13 @@ namespace HotCit
         {
             try
             {
-                return _gameSetups[id];    
-            } catch(KeyNotFoundException)
-            {
-                return null;
+                return _gameSetups[id];
             }
-            
+            catch (KeyNotFoundException)
+            {
+                throw new HotCitException(ExceptionType.NotFound, "GameSetup " + id + " not found.");
+            }
+
         }
 
         public bool AddGameSetup(string id, GameSetup setup)
@@ -56,7 +58,7 @@ namespace HotCit
             {
                 return _games.Keys; //data integrety
             }
-        } 
+        }
 
         public bool AddGame(string id, Game game)
         {
@@ -65,6 +67,7 @@ namespace HotCit
                 return false;
             }
             _games[id] = game;
+            //_listeners[id] = new BlockingGameListener(game);
             return true;
         }
 
@@ -74,7 +77,7 @@ namespace HotCit
             {
                 return _games[id];
             }
-            catch(KeyNotFoundException)
+            catch (KeyNotFoundException)
             {
                 return null;
             }
@@ -85,14 +88,21 @@ namespace HotCit
         {
             return _instance ?? (_instance = new GameRepository());
         }
-        private GameRepository() {
-            _games["test"] = new Game(new SimpleGameFactory());
+        private GameRepository()
+        {
+            AddGame("test", new Game(new SimpleGameFactory()));
+        }
+
+
+        public IDictionary<int, Update> GetUpdates(string id, int lastSeenUpdate)
+        {
+            //var listener = _listeners[id];
+            //return listener.GetUpdatesAfterOrWait(lastSeenUpdate);
+            return null;
         }
 
         private static GameRepository _instance;
         private readonly IDictionary<string, Game> _games = new Dictionary<string, Game>();
-
-
-
+        //private readonly IDictionary<string, BlockingGameListener> _listeners = new Dictionary<string, BlockingGameListener>();
     }
 }
