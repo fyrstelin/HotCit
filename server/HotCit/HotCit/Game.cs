@@ -9,25 +9,25 @@ namespace HotCit
     public class Game
     {
         /****************************************************************************************************/
-        /*      Properties send to client                                                                   */
+        /*      Properties that courses game change                                                         */
         /****************************************************************************************************/
 
-        /* The game state vector should just be fields on the game */
-        public GameStateVector State
+        public Player PlayerInTurn
         {
             get
             {
-                return new GameStateVector
+                switch (Step)
                 {
-                    PlayerInTurn = GetPlayerInTurn().Username,
-                    Step = _step,
-                    Round = _round,
-                    Description = GetDescription(),
-                    Turn = _turn,
-                    AbilityUsed = (GetCharacterInTurn() == null) ?
-                        (bool?)null :
-                        GetCharacterInTurn().AbilityUsed()
-                };
+                    case Step.RemoveCharacters:
+                        return King;
+                    case Step.ChooseCharacter:
+                        return Players[(_count + _playerOffset) % Players.Count];
+                    case Step.PlayerTurns:
+                        return Players.FirstOrDefault(p => p.IsCharacter(_count));
+                    case Step.EndOfRound:
+                        return King;
+                }
+                throw new HotCitException(ExceptionType.IllegalState, "No player in turn");
             }
         }
 
@@ -38,27 +38,53 @@ namespace HotCit
             get; private set;
         }
 
-        public string King
+        private Player _king;
+        public Player King
         {
             get { return _king; }
-            private set
+            internal set
             {
                 _king = value;
-                GameUpdated(new Update
-                    {
-                        Message = value + " is now king",
-                        Player = value,
-                        Type = UpdateType.NewKing
-                    });
+                _playerOffset = Players.IndexOf(GetPlayerByUsername(value.Username)); //king has to be first
+                PropertyChanged(PropertyChange.King);
             }
         }
 
-        //update for this property is handled in void FaceupCharacter()
-        public IEnumerable<string> FaceupCharacters
+        //PropertyChanged for this property is handled in void FaceupCharacter()
+        public IList<Character> FaceupCharacters { get; private set; }
+
+        private Turn? _turn;
+        public Turn? Turn
         {
-            get { return _faceupCharacters.Select(c => c.Name); }
+            get { return _turn; }
+            private set
+            {
+                PropertyChanged(PropertyChange.Turn);
+                _turn = value;
+            }
         }
 
+        private Step _step;
+        public Step Step
+        {
+            get { return _step; }
+            private set
+            {
+                PropertyChanged(PropertyChange.Step);
+                _step = value;
+            }
+        }
+
+        private int _round;
+        public int Round
+        {
+            get { return _round; }
+            private set
+            {
+                PropertyChanged(PropertyChange.Round);
+                _round = value;
+            }
+        }
 
 
         /****************************************************************************************************/
@@ -82,15 +108,17 @@ namespace HotCit
 
         public Game(IGameFactory factory)
         {
-            GameUpdated += NullUpdate;
+            FaceupCharacters = new List<Character>();
+
             Players = factory.GetPlayers();
+            PropertyChanged += factory.GetPropertyChanged();
             Characters = factory.GetCharacters();
             _characterPile = new List<Character>(Characters);
             _pile = factory.GetPile();
             _discardStrategy = factory.GetDiscardStrategy();
 
             OnStep();
-            King = Players[0].Username;
+            King = Players[0];
 
         }
 
@@ -99,35 +127,20 @@ namespace HotCit
         /*  Public methods for getting state                                                                */
         /****************************************************************************************************/
 
-        public Player GetPlayerInTurn()
-        {
-            switch (_step)
-            {
-                case Step.RemoveCharacters:
-                    return Players.First(p => p.Username == King);
-                case Step.ChooseCharacter:
-                    return Players[(_count + _playerOffset) % Players.Count];
-                case Step.PlayerTurns:
-                    return Players.First(p => p.IsCharacter(_count));
-                case Step.EndOfRound:
-                    return Players.First(p => p.Username == King);
-            }
-            throw new HotCitException(ExceptionType.IllegalState, "No player in turn");
-        }
 
         public Character GetCharacterInTurn()
         {
-            return _step == Step.PlayerTurns ? Characters.First(c => c.No == _count) : null;
+            return Step == Step.PlayerTurns ? Characters.First(c => c.No == _count) : null;
         }
 
         public Player GetPlayerByUsername(string username)
         {
-            return Players.First(p => p.Username == username);
+            return Players.FirstOrDefault(p => p.Username == username);
         }
 
         public Player GetPlayerByCharacter(string character)
         {
-            return Players.First(p => p.IsCharacter(character));
+            return Players.FirstOrDefault(p => p.IsCharacter(character));
         }
 
 
@@ -139,10 +152,10 @@ namespace HotCit
         public IList<Option> GetOptions(string pid)
         {
             var res = new List<Option>();
-            if (pid == GetPlayerInTurn().Username)
+            if (pid == PlayerInTurn.Username)
                 if (_select == null)
                 {
-                    if (_step == Step.PlayerTurns)
+                    if (Step == Step.PlayerTurns)
                     {
                         var character = GetCharacterInTurn();
                         res.AddRange(character.GetOptions(this));
@@ -152,9 +165,9 @@ namespace HotCit
                             Type = OptionType.EndTurn,
                             Message = "End your turn"
                         });
-                        switch (_turn)
+                        switch (Turn)
                         {
-                            case Turn.TakeAnAction:
+                            case Data.Turn.TakeAnAction:
                                 res.Add(new Option
                                 {
                                     Message = "Take 2 gold", //TODO merchant
@@ -166,13 +179,13 @@ namespace HotCit
                                     Type = OptionType.TakeAction,
                                 });
                                 break;
-                            case Turn.BuildADistrict:
+                            case Data.Turn.BuildADistrict:
                                 res.Add(new Option
                                 {
                                     Message = "Build a district",
                                     Type = OptionType.BuildDistrict,
-                                    Choices = GetPlayerInTurn().Hand.
-                                        Where(d => d.Price <= GetPlayerInTurn().Gold).
+                                    Choices = PlayerInTurn.Hand.
+                                        Where(d => d.Price <= PlayerInTurn.Gold).
                                         Select(d => d.Title)
                                 });
                                 break;
@@ -194,44 +207,31 @@ namespace HotCit
         /*  Public methods for playing the game                                                             */
         /****************************************************************************************************/
 
-        public bool Select(string pid, params string[] cards)
+        public void Select(string pid, params string[] cards)
         {
-            if (!HasOption(pid, OptionType.Select)) throw new HotCitException(ExceptionType.BadAction, pid + " is not allowed to select cards");
-            var res = _select.OnSelect(this, pid, cards);
-            if (res)
-            {
-                var after = _select.AfterSelect();
-                _select = null;
-                after();
-            }
-            return res;
+            CheckOption(pid, OptionType.Select);
+            _select.OnSelect(this, pid, cards);
+            var after = _select.AfterSelect();
+            _select = null;
+            after();
         }
 
-        public bool EndTurn(string pid)
+        public void EndTurn(string pid)
         {
-            if (!HasOption(pid, OptionType.EndTurn)) return false;
+            CheckOption(pid, OptionType.EndTurn);
             NextCharacter();
-            return true;
         }
 
 
         public void UseAbility(string pid, AbilityInfo ability)
         {
-            HasOption(pid, OptionType.UseAbility);
+            CheckOption(pid, OptionType.UseAbility);
             var source = ability.Source;
             var character = GetCharacterInTurn();
-            var player = GetPlayerInTurn();
+            var player = PlayerInTurn;
             if (source == character.Name)
             {
-                if (character.UseAbility(player, ability, this))
-                {
-                    GameUpdated(new Update
-                    {
-                        Type = UpdateType.Player,
-                        Player = pid,
-                        Message = pid + " used his character ability."
-                    });
-                }
+                character.UseAbility(player, ability, this);
             }
             else
             {
@@ -240,30 +240,21 @@ namespace HotCit
             }
         }
 
-        public bool TakeGold(string pid)
+        public void TakeGold(string pid)
         {
-            if (!HasOption(pid, OptionType.TakeAction)) return false;
+            CheckOption(pid, OptionType.TakeAction);
 
-            var player = GetPlayerInTurn();
+            var player = PlayerInTurn;
 
             if (player.IsCharacter("merchant")) player.Gold += 3; //merchant gets an extra gold
             else player.Gold += 2;
 
-            _turn = Turn.BuildADistrict;
-
-            GameUpdated(new Update
-            {
-                Type = UpdateType.Player,
-                Player = pid,
-                Message = pid + " used his action to take gold."
-            });
-
-            return true;
+            Turn = Data.Turn.BuildADistrict;
         }
 
-        public bool DrawDistricts(string pid)
+        public void DrawDistricts(string pid)
         {
-            if (!HasOption(pid, OptionType.TakeAction)) return false;
+            CheckOption(pid, OptionType.TakeAction);
 
             var choices = new List<District>();
             for (var i = 0; i < 2; i++)
@@ -276,44 +267,27 @@ namespace HotCit
                 Amount = 1
             };
 
-            _turn = Turn.BuildADistrict;
+            Turn = Data.Turn.BuildADistrict;
             OnSelect = new StandardSelectStrategy(option, SelectDistrict);
 
-
-            GameUpdated(new Update
-            {
-                Type = UpdateType.Player,
-                Player = pid,
-                Message = pid + " used his action to draw districts."
-            });
-
-            return true;
         }
 
-        public bool BuildDistrict(string pid, string did)
+        public void BuildDistrict(string pid, string did)
         {
-            if (!HasOption(pid, OptionType.BuildDistrict)) return false;
+            CheckOption(pid, OptionType.BuildDistrict);
 
-            var player = GetPlayerInTurn();
+            var player = PlayerInTurn;
 
-            var district = player.Hand.FirstOrDefault(d => d.Price <= player.Gold && d.Title == did);
+            var district = player.Hand.FirstOrDefault(d => d.Title == did);
 
-            if (district == null) return false;
+            if (district == null) throw new HotCitException(ExceptionType.NotFound, "District '"+ did +"' not found");
+            if (district.Price > player.Gold) throw new HotCitException(ExceptionType.NotEnoughGold, did + " is to expensive");
 
             player.Gold -= district.Price;
             player.Hand.Remove(district);
-            player.FullCity.Add(district);
+            player.City.Add(district);
 
-            _turn = null;
-
-            GameUpdated(new Update
-            {
-                Type = UpdateType.CityAndHand,
-                Player = pid,
-                Message = pid + " builded a " + did
-            });
-
-            return true;
+            Turn = null;
         }
 
 
@@ -322,15 +296,14 @@ namespace HotCit
         /*  Private and internal helper methods                                                             */
         /****************************************************************************************************/
 
-        internal void SetKing(string king) //TODO delegate?
+        internal void SetKing(Player king) //TODO delegate?
         {
-            King = king;
-            _playerOffset = Players.IndexOf(GetPlayerByUsername(king)); //king has to be first
         }
 
-        private bool HasOption(string pid, OptionType type)
+        private void CheckOption(string pid, OptionType type)
         {
-            return GetOptions(pid).Any(o => o.Type == type);
+            if (GetOptions(pid).Any(o => o.Type == type)) return;
+            throw new HotCitException(ExceptionType.BadAction, "You do not have the option: " + type);
         }
 
         private void NextCharacter()
@@ -344,21 +317,16 @@ namespace HotCit
                     NextStep();
                     return;
                 }
-                p = GetPlayerInTurn();
+                p = PlayerInTurn;
             } while (p == null);
             ResetTurn();
             p.RevealCharacter(this);
-            GameUpdated(new Update
-            {
-                Type = UpdateType.PlayerInTurn,
-                Message = p.Username + " revealed that he is the " + GetCharacterInTurn().Name,
-                Player = p.Username
-            });
+            PropertyChanged(PropertyChange.PlayerInTurn);
         }
 
         private void ResetTurn()
         {
-            _turn = Turn.TakeAnAction;
+            Turn = Data.Turn.TakeAnAction;
         }
 
         private void RemoveCharacters()
@@ -392,39 +360,33 @@ namespace HotCit
             };
             OnSelect = new StandardSelectStrategy(option, SelectCharacter, PossibleNextStep);
 
-            var playerInTurn = GetPlayerInTurn().Username;
-            GameUpdated(new Update
-            {
-                Type = UpdateType.PlayerInTurn,
-                Player = playerInTurn,
-                Message = playerInTurn + " is now in turn."
-            });
+            PropertyChanged(PropertyChange.PlayerInTurn);
         }
 
         private void EndRound()
         {
-            _turn = null;
+            Turn = null;
 
             //return characters to pile
             _characterPile = new List<Character>(Characters);
-            _faceupCharacters.Clear();
+            FaceupCharacters.Clear();
 
             //remove players characters
             foreach (var p in Players)
                 p.Reset();
 
 
-            _step = Step.RemoveCharacters;
+            Step = Step.RemoveCharacters;
         }
 
         private void OnStep()
         {
-            switch (_step)
+            switch (Step)
             {
                 case Step.RemoveCharacters:
 
                     //Round increased by one
-                    _round++;
+                    Round++;
 
                     RemoveCharacters();
 
@@ -453,26 +415,22 @@ namespace HotCit
             var c = _discardStrategy.FaceupCharacter(_characterPile);
 
             _characterPile.Remove(c);
-            _faceupCharacters.Add(c);
+            FaceupCharacters.Add(c);
 
-            GameUpdated(new Update
-            {
-                Type = UpdateType.FaceupCharacters,
-                Message = c.Name + " is discarded faceup"
-            });
+            PropertyChanged(PropertyChange.FaceupCharacters);
         }
 
         private void NextStep()
         {
             _count = 0;
-            _step++;
+            Step++;
             OnStep();
         }
 
         private string GetDescription()
         {
-            var res = "Waiting for " + GetPlayerInTurn().Username + " ";
-            switch (_step)
+            var res = "Waiting for " + PlayerInTurn.Username + " ";
+            switch (Step)
             {
                 case Step.RemoveCharacters:
                     res += "to shuffle cards";
@@ -496,7 +454,7 @@ namespace HotCit
         /****************************************************************************************************/
 
 
-        internal bool SwapWithPile(Game game, string pid, string[] cards)
+        internal void SwapWithPile(Game game, string pid, string[] cards)
         {
             var player = GetPlayerByUsername(pid);
             foreach (var d in cards.Select(card => player.Hand.First(c => c.Title == card)))
@@ -504,14 +462,6 @@ namespace HotCit
                 player.Hand.Remove(d);
                 player.Hand.Add(_pile.Pop());
             }
-
-            GameUpdated(new Update
-            {
-                Type = UpdateType.Hand,
-                Player = pid,
-                Message = pid + " swapped " + cards.Length + " districts with the pile."
-            });
-            return true;
         }
 
 
@@ -521,7 +471,7 @@ namespace HotCit
         }
 
 
-        private bool SelectCharacter(Game game, string pid, string[] cards)
+        private void SelectCharacter(Game game, string pid, string[] cards)
         {
             var player = GetPlayerByUsername(pid);
             var character = _characterPile.First(c => c.Name == cards[0]);
@@ -537,8 +487,6 @@ namespace HotCit
             }
 
             _count++;
-
-            return true;
         }
 
 
@@ -550,7 +498,7 @@ namespace HotCit
             else SetSelectCharacterStrategy();
         }
 
-        private bool SelectDistrict(Game game, string pid, string[] cards)
+        private void SelectDistrict(Game game, string pid, string[] cards)
         {
             var player = GetPlayerByUsername(pid);
 
@@ -558,53 +506,38 @@ namespace HotCit
             {
                 player.Hand.Add(Resources.GetInstance().GetDistrict(card));
             }
-
-            GameUpdated(new Update
-            {
-                Type = UpdateType.Hand,
-                Player = pid,
-                Message = pid + " kept " + cards.Length + " district(s) "
-            });
-
-            return true;
-        }
-
-
-        private static void NullUpdate(Update update)
-        {
         }
 
 
         /****************************************************************************************************/
-        /*                   fields                                                                         */
+        /* Fields                                                                                           */
         /****************************************************************************************************/
 
         public readonly IList<Character> Characters;
-        private readonly IList<Character> _faceupCharacters = new List<Character>();
         private readonly Stack<District> _pile;
 
-        private Step _step;
-        private int _round, _count;
+        private int _count;
         private int _playerOffset;
         private Character _discardedCharacter;
         private ISelectStrategy _select;
-        private Turn? _turn;
         private IList<Character> _characterPile;
 
-
-
-        /****************************************************************************************************/
-        /*                   field for properies                                                            */
-        /****************************************************************************************************/
-
-        private string _king;
 
 
         /****************************************************************************************************/
         /*                   Delegates                                                                      */
         /****************************************************************************************************/
 
-        public GameUpdated GameUpdated;
+        private PropertyChanged _propertyChanged;
+        public PropertyChanged PropertyChanged
+        {
+            get { return _propertyChanged; }
+            set
+            {
+                foreach (var p in Players) p.PropertyChanged = value;
+                _propertyChanged = value;
+            }
+        }
 
 
         /****************************************************************************************************/

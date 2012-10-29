@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using HotCit.Util;
 
@@ -7,37 +9,14 @@ namespace HotCit.Data
 {
     public class Player
     {
-        public string Username
-        {
-            get
-            {
-                return _username;
-            }
-        }
+        /****************************************************************************************************/
+        /* Properties                                                                                       */
+        /****************************************************************************************************/
+        public string Username { get; private set; }
 
-        public IEnumerable<string> City
-        {
-            get
-            {
-                return FullCity.Select(d => d.Title);
-            }
-        }
+        public IList<District> City { get; private set; }
 
-        public int NumberOfCards
-        {
-            get
-            {
-                return Hand.Count;
-            }
-        }
-
-        public int Points
-        {
-            get
-            {
-                return FullCity.Sum(d => d.Value); //TODO: more complex
-            }
-        }
+        public IList<District> Hand {get; private set;}
 
         private int _gold;
         public int Gold
@@ -46,46 +25,70 @@ namespace HotCit.Data
             set
             {
                 if (value < 0) throw new HotCitException(ExceptionType.NotEnoughGold);
-                _gold = Gold;
+                PropertyChanged(PropertyChange.PlayerGold, Username);
+                _gold = value;
             }
         }
 
-        public IEnumerable<string> Characters
-        {
-            get { return _publicCharacters.Select(c => c.Name); }
-        }
+        public IList<Character> Characters { get; private set; }
+
+        public ISet<Character> HiddenCharacters { get; private set; }
+
+
+        /****************************************************************************************************/
+        /* Constructor                                                                                      */
+        /****************************************************************************************************/
 
         public Player(string username)
         {
-            _username = username;
+            PropertyChanged = (type, player) => { };
+            Username = username;
+            
+            var city = new ObservableCollection<District>();
+            city.CollectionChanged += CityChanged;
+            City = city;
 
+            var characters = new ObservableCollection<Character>();
+            characters.CollectionChanged += CharactersChanged;
+            Characters = characters;
+
+            var hand = new ObservableCollection<District>();
+            hand.CollectionChanged += HandChanged;
+            Hand = hand;
+
+            HiddenCharacters = new SortedSet<Character>();
         }
+
+
+        /****************************************************************************************************/
+        /* Public methods                                                                                   */
+        /****************************************************************************************************/
 
         public bool AddCharacter(Character c)
         {
-            if (_hiddenCharacters.Contains(c)) return false;
-            _hiddenCharacters.Add(c);
+            if (HiddenCharacters.Contains(c)) return false;
+            HiddenCharacters.Add(c);
             return true;
         }
 
         public void Reset()
         {
-            foreach (var c in _publicCharacters)
+            foreach (var c in Characters)
                 c.Reset();
-            foreach (var d in FullCity)
+            foreach (var d in City)
                 d.Reset();
-            _hiddenCharacters.Clear();
-            _publicCharacters.Clear();
+            HiddenCharacters.Clear();
+            Characters.Clear();
         }
 
         public bool RevealCharacter(Game game)
         {
             try
             {
-                var c = _hiddenCharacters.Min();
+                var c = HiddenCharacters.Min();
                 if (c == null) return false;
 
-                c.OnReveal(_username, game);
+                c.OnReveal(this, game);
 
 
                 if (c.Name == _victim)
@@ -94,8 +97,8 @@ namespace HotCit.Data
                     Gold = 0;
                 }
 
-                _hiddenCharacters.Remove(c);
-                _publicCharacters.Add(c);
+                HiddenCharacters.Remove(c);
+                Characters.Add(c);
                 return true;
             }
             catch (InvalidOperationException)
@@ -108,16 +111,20 @@ namespace HotCit.Data
         public bool IsCharacter(int no)
         {
             return
-                _hiddenCharacters.Any(c => c.No == no) ||
-                _publicCharacters.Any(c => c.No == no);
+                HiddenCharacters.Any(c => c.No == no) ||
+                Characters.Any(c => c.No == no);
         }
 
         public bool IsCharacter(string title)
         {
             return
-                _hiddenCharacters.Any(c => c.Name == title) ||
-                _publicCharacters.Any(c => c.Name == title);
+                HiddenCharacters.Any(c => c.Name == title) ||
+                Characters.Any(c => c.Name == title);
         }
+
+        /****************************************************************************************************/
+        /* Public helper methods                                                                            */
+        /****************************************************************************************************/
 
         public void RobbedBy(string character, Player owner)
         {
@@ -128,28 +135,45 @@ namespace HotCit.Data
         public void SwapHand(Player target)
         {
             var temp = Hand;
-            Hand = target.Hand;
-            target.Hand = temp;
-        }
+            Hand.Clear();
+            foreach (var d in target.Hand)
+                Hand.Add(d);
 
-        public void SwapHand(IList<string> districts, Game game)
-        {
-            var d = districts.FirstOrDefault(d1 => Hand.All(d2 => d2.Title != d1));
-            if (d != null) throw new HotCitException(ExceptionType.BadAction, "You do not have " + d + " in your hand, and therefore cannot swap it");
-            foreach (var d1 in districts)
+            target.Hand.Clear();
+            foreach (var d in temp)
             {
-                Hand.Remove(Hand.First(d2 => d2.Title == d1));
+                target.Hand.Add(d);
             }
         }
 
 
-        private readonly string _username;
-        public readonly IList<District> FullCity = new List<District>();
-        public IList<District> Hand = new List<District>();
-        private readonly ISet<Character> _hiddenCharacters = new SortedSet<Character>();
-        private readonly ISet<Character> _publicCharacters = new SortedSet<Character>();
+        /****************************************************************************************************/
+        /* Fields                                                                                           */
+        /****************************************************************************************************/
+
         private Player _thief;
         private string _victim;
 
+
+        /****************************************************************************************************/
+        /* PropertyChanged                                                                                  */
+        /****************************************************************************************************/
+
+        public PropertyChanged PropertyChanged;
+
+        private void CharactersChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            PropertyChanged(PropertyChange.PlayerCharacters, Username);
+        }
+
+        private void CityChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            PropertyChanged(PropertyChange.PlayerCity, Username);
+        }
+
+        private void HandChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            PropertyChanged(PropertyChange.PlayerHand, Username);
+        }
     }
 }

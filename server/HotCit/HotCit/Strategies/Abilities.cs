@@ -76,7 +76,7 @@ namespace HotCit.Strategies
                     Message = Description,
                     Choices = game.Characters.Where(c =>
                         c.No > 1 &&
-                        !game.FaceupCharacters.Contains(c.Name)).Select(c => c.Name)
+                        !game.FaceupCharacters.Contains(c)).Select(c => c.Name)
                 });
             return res;
         }
@@ -109,7 +109,7 @@ namespace HotCit.Strategies
                     Choices = game.Characters.Where(c =>
                         c.No > 2 &&
                         !c.Dead &&
-                        !game.FaceupCharacters.Contains(c.Name)).Select(c => c.Name)
+                        !game.FaceupCharacters.Contains(c)).Select(c => c.Name)
                 });
             return res;
         }
@@ -138,7 +138,7 @@ namespace HotCit.Strategies
                 {
                     Type = OptionType.UseAbility,
                     Message = "Swap your hand with another player",
-                    Choices = game.Players.Where(p => p != game.GetPlayerInTurn()).Select(p => p.Username)
+                    Choices = game.Players.Where(p => p != game.PlayerInTurn).Select(p => p.Username)
                 });
                 res.Add(new Option
                 {
@@ -196,14 +196,14 @@ namespace HotCit.Strategies
                     Message = Description.
                         Replace("{desc}", _desc).
                         Replace("{color}", _color).
-                        Replace("{count}", game.GetPlayerByCharacter(_character).FullCity.Count(c => c.Color == _color) + "")
+                        Replace("{count}", game.GetPlayerByCharacter(_character).City.Count(c => c.Color == _color) + "")
                 });
             return res;
         }
 
         protected override void UseUnusedAbility(Player owner, AbilityInfo info, Game game)
         {
-            owner.Gold += owner.FullCity.Count(c => c.Color == _color);
+            owner.Gold += owner.City.Count(c => c.Color == _color);
         }
 
         protected override bool CheckInfo(AbilityInfo info)
@@ -266,7 +266,7 @@ namespace HotCit.Strategies
                     var player = game.GetPlayerByCharacter(c.Name);
                     if (player == null) continue;
 
-                    var ds = player.FullCity.Where(d => d.Price - 1 <= gold);
+                    var ds = player.City.Where(d => d.Price - 1 <= gold);
 
                     choices.AddRange(ds.Select(d => player + "/" + d.Title));
                 }
@@ -287,13 +287,13 @@ namespace HotCit.Strategies
 
             if (target.IsCharacter(5)) throw new HotCitException(ExceptionType.BadAction, "Cannot destroy bishops districts");
 
-            var district = target.FullCity.FirstOrDefault(d => d.Title == info.District);
+            var district = target.City.FirstOrDefault(d => d.Title == info.District);
 
             if (district == null) throw new HotCitException(ExceptionType.NotFound, info.District + " not found at " + info.Target);
 
             if (owner.Gold < district.Value - 1) throw new HotCitException(ExceptionType.BadAction, "District to expensive to destory");
 
-            target.FullCity.Remove(district);
+            target.City.Remove(district);
         }
 
         protected override bool CheckInfo(AbilityInfo info)

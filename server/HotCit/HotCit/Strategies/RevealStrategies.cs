@@ -1,21 +1,23 @@
+using HotCit.Data;
+
 namespace HotCit.Strategies
 {
     public interface IRevealStrategy
     {
-        void OnReveal(string owner, Game game);
+        void OnReveal(Player owner, Game game);
     }
 
     public class KingRevealStrategy : IRevealStrategy
     {
-        public void OnReveal(string owner, Game game)
+        public void OnReveal(Player owner, Game game)
         {
-            game.SetKing(owner);
+            game.King = owner;
         }
     }
 
     public class NullRevealStrategy : IRevealStrategy
     {
-        public void OnReveal(string owner, Game game)
+        public void OnReveal(Player owner, Game game)
         {
         }
     }

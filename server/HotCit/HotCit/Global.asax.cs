@@ -35,13 +35,12 @@ namespace HotCit
 
                     Add<GameRequest>("/games/").
                     Add<GameRequest>("/games/{GameId}/").
-                    Add<GameRequest>("/games/{GameId}/{GameInfo}/").
-                    Add<GameRequest>("/games/{GameId}/{GameInfo}/{Id}/").
+
+                    Add<SecretRequest>("/games/{GameId}/secrets/").
 
                     Add<ResourceRequest>("/resources/").
                     Add<ResourceRequest>("/resources/{ResourceType}/").
-                    Add<ResourceRequest>("/resources/{ResourceType}/{ResourceId}/").
-                    Add<DummyRequest>("/dummy/");
+                    Add<ResourceRequest>("/resources/{ResourceType}/{ResourceId}/");
             }
         }
 

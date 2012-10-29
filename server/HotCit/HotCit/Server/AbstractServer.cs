@@ -40,24 +40,36 @@ namespace HotCit.Server
         protected override object HandleException(T request, Exception ex)
         {
             var e = ex as HotCitException;
-            if (e == null) return HttpError(HttpStatusCode.InternalServerError, ex);
             var code = HttpStatusCode.InternalServerError;
-            switch (e.Type)
+            string message;
+            if (e != null)
             {
-                case ExceptionType.Timeout:
-                    code = HttpStatusCode.RequestTimeout;
-                    break;
-                case ExceptionType.IllegalInput:
-                    code = HttpStatusCode.BadRequest;
-                    break;
-                case ExceptionType.BadAction:
-                    code = HttpStatusCode.Forbidden;
-                    break;
-                case ExceptionType.NotFound:
-                    code = HttpStatusCode.NotFound;
-                    break;
+                switch (e.Type)
+                {
+                    case ExceptionType.Timeout:
+                        code = HttpStatusCode.RequestTimeout;
+                        break;
+                    case ExceptionType.IllegalInput:
+                        code = HttpStatusCode.BadRequest;
+                        break;
+                    case ExceptionType.BadAction:
+                        code = HttpStatusCode.Forbidden;
+                        break;
+                    case ExceptionType.NotFound:
+                        code = HttpStatusCode.NotFound;
+                        break;
+                }
+                message = e.Mes;
+            } else
+            {
+                var er = ex as HttpError;
+                if (er != null)
+                {
+                    code = er.StatusCode;
+                }
+                message = ex.Message;
             }
-            return HttpError(code, e.Mes);
+            return HttpError(code, message);
         }
 
         private static object HttpError(HttpStatusCode code, object o)

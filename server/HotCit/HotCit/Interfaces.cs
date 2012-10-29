@@ -11,21 +11,25 @@ namespace HotCit
         IList<Character> GetCharacters();
         Stack<District> GetPile();
         ICharacterDiscardStrategy GetDiscardStrategy();
+        PropertyChanged GetPropertyChanged();
     }
 
-    public delegate void GameUpdated(Update update);
+    public delegate void PropertyChanged(PropertyChange type, string player = null);
 
-    public class Update
+    public enum PropertyChange
     {
-        public UpdateType Type { get; set; }
-        public string Message { get; set; }
-        public string Player { get; set; }
-    }
+        //Game properties
+        King,
+        PlayerInTurn,
+        FaceupCharacters,
+        Turn,
+        Step,
+        Round,
 
-    public enum UpdateType
-    {
-        Full, Player, CityAndHand, Hand, Character, PlayerInTurn,
-        NewKing,
-        FaceupCharacters
+        //Player properties
+        PlayerGold,
+        PlayerCharacters,
+        PlayerCity,
+        PlayerHand
     }
 }
