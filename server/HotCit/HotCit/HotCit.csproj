@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Data\Character.cs" />
     <Compile Include="Data\Districts.cs" />
+    <Compile Include="Data\Responses.cs" />
     <Compile Include="Data\Player.cs" />
     <Compile Include="Lobby\GameSetup.cs" />
     <Compile Include="Server\AbstractServer.cs" />

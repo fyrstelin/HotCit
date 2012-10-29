@@ -36,21 +36,15 @@ namespace HotCit.Data
 
     }
 
-    public enum GameInfo
+    public class SecretRequest
     {
-        State, Players, FaceUp, Updates, MyHand, MyOptions
+        public string GameId { get; set; }
     }
 
-    public class SecretRequest : GameRequest
+    public enum Action
     {
-        public Secret? Secret { get; set; }
+        EndTurn, TakeGold, DrawDistricts
     }
-
-    public enum Secret
-    {
-        Options, Hand
-    }
-
 
     public class ResourceRequest
     {
@@ -66,8 +60,4 @@ namespace HotCit.Data
         All, Characters, Districts, Images
     }
 
-    public enum Action
-    {
-        EndTurn, TakeGold, DrawDistricts
-    }
 }

@@ -100,6 +100,15 @@ namespace HotCit.Lobby
             return _discardStrategy;
         }
 
+        public PropertyChanged GetPropertyChanged()
+        {
+            return NullChanged;
+        }
+
+        private static void NullChanged(PropertyChange type, string player)
+        {
+        }
+
         public IList<Character> GetCharacters()
         {
             return Resources.GetInstance().Characters.Select(c => Resources.GetInstance().GetCharacter(c)).ToList();

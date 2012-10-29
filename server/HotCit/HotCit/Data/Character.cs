@@ -25,7 +25,7 @@ namespace HotCit.Data
             return Ability.Used;
         }
 
-        public void OnReveal(string owner, Game game)
+        public void OnReveal(Player owner, Game game)
         {
             RevealStrategy.OnReveal(owner, game);
         }

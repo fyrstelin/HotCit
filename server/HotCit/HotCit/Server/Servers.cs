@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using HotCit.Data;
 using HotCit.Lobby;
 using HotCit.Strategies;
 using ServiceStack.Common.Web;
-using ServiceStack.ServiceInterface;
 using Action = HotCit.Data.Action;
 
 namespace HotCit.Server
@@ -129,7 +127,13 @@ namespace HotCit.Server
         {
             var id = request.GameId;
             if (id == null) return GameRepository.Games;
-            return GetGame(id);
+            try
+            {
+                return new GameResponse(GetGame(id), User);
+            } catch (HttpError)
+            {
+                return new GameResponse(GetGame(id));
+            }
         }
 
         public override object OnPut(GameRequest request)
@@ -138,11 +142,8 @@ namespace HotCit.Server
 
             if (request.Select != null)
             {
-                var select = request.Select[0];
-
-                if (game.Select(User, select))
-                    return new HttpResult(HttpStatusCode.NoContent, "");
-                return new HttpError(HttpStatusCode.Forbidden, "It is not your turn");
+                game.Select(User, request.Select);
+                return new HttpResult(HttpStatusCode.NoContent, "");
             }
 
             if (request.Action != null)
@@ -150,26 +151,21 @@ namespace HotCit.Server
                 switch (request.Action)
                 {
                     case Action.EndTurn:
-                        if (game.EndTurn(User))
-                            return new HttpResult(HttpStatusCode.NoContent, "");
-                        return new HttpError(HttpStatusCode.Forbidden, "It is not your turn");
+                        game.EndTurn(User);
+                        return new HttpResult(HttpStatusCode.NoContent, "");
                     case Action.TakeGold:
-                        if (game.TakeGold(User))
-                            return new HttpResult(HttpStatusCode.NoContent, "");
-                        return new HttpError(HttpStatusCode.Forbidden, "It is not your turn");
+                        game.TakeGold(User);
+                        return new HttpResult(HttpStatusCode.NoContent, "");
                     case Action.DrawDistricts:
-                        if (game.DrawDistricts(User))
-                            return new HttpResult(HttpStatusCode.NoContent, "");
-                        return new HttpError(HttpStatusCode.Forbidden, "It is not your turn");
-
+                        game.DrawDistricts(User);
+                        return new HttpResult(HttpStatusCode.NoContent, "");
                 }
             }
 
             if (request.Build != null)
             {
-                if (game.BuildDistrict(User, request.Build))
-                    return new HttpResult(HttpStatusCode.NoContent, "");
-                return new HttpError(HttpStatusCode.Forbidden, "It is not your turn");
+                game.BuildDistrict(User, request.Build);
+                return new HttpResult(HttpStatusCode.NoContent, "");
             }
 
             if (request.Ability != null)
@@ -218,21 +214,11 @@ namespace HotCit.Server
         }
     }
 
-    public class TestServer : RestServiceBase<DummyRequest>
+    public class SecretServer : AbstractServer<SecretRequest>
     {
-        public override object OnGet(DummyRequest request)
+        public override object OnGet(SecretRequest request)
         {
-            throw new HttpError(HttpStatusCode.MethodNotAllowed, "Dummy not found");
+            return GetGame(request.GameId).GetOptions(User);
         }
-
-        protected override object HandleException(DummyRequest request, Exception ex)
-        {
-            return new HttpError("Monkey is everybody", HttpStatusCode.Conflict, "Dummy not found", "");
-        }
-    }
-
-    public class DummyRequest
-    {
-
     }
 }

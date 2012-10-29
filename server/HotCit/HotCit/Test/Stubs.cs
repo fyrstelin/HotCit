@@ -10,13 +10,16 @@ namespace HotCit.Test
     {
         public IList<Player> GetPlayers()
         {
-            return new List<Player>
+            var players = new List<Player>
                 {
-                    new Player("afk") {Gold = 2},
+                    new Player("afk")    {Gold = 2},
                     new Player("tugend") {Gold = 2},
-                    new Player("rko") {Gold = 2},
-                    new Player("mis") {Gold = 2}
+                    new Player("rko")    {Gold = 2},
+                    new Player("mis")    {Gold = 2}
                 };
+            foreach (var p in players)
+                p.Hand.Add(Resources.GetInstance().GetDistrict("temple"));
+            return players;
         }
 
         public IList<Character> GetCharacters()
@@ -49,6 +52,11 @@ namespace HotCit.Test
                 FirstFaceUp = 1,
                 SecondFaceUp = 2
             };
+        }
+
+        public PropertyChanged GetPropertyChanged()
+        {
+            return (type, player) => { };
         }
     }
 }

@@ -1,15 +1,16 @@
 using System.Linq;
 using HotCit.Data;
+using HotCit.Util;
 
 namespace HotCit.Strategies
 {
-    public delegate bool OnSelect(Game game, string pid, string[] cards);
+    public delegate void OnSelect(Game game, string pid, string[] cards);
 
     public delegate void AfterSelect();
 
     public interface ISelectStrategy
     {
-        bool OnSelect(Game game, string pid, string[] cards);
+        void OnSelect(Game game, string pid, string[] cards);
 
 
         AfterSelect AfterSelect();
@@ -32,12 +33,15 @@ namespace HotCit.Strategies
             _afterSelect = afterSelect;
         }
 
-        public bool OnSelect(Game game, string pid, string[] cards)
+        public void OnSelect(Game game, string pid, string[] cards)
         {
-            return
-                cards.All(c1 => _option.Choices.Any(c2 => c1 == c2)) &&
-                (_option.Amount == null || cards.Length == _option.Amount) &&
-                _onSelect(game, pid, cards);
+            var c = cards.FirstOrDefault(c1 => _option.Choices.All(c2 => c1 != c2));
+
+            if (c!=null) throw new HotCitException(ExceptionType.BadAction, "You did not have the option to select " + c);
+
+            if (_option.Amount != null && cards.Length != _option.Amount) throw new HotCitException(ExceptionType.BadAction, "You have selected " + cards.Length + " cards, but should select " + _option.Amount + " cards");
+            
+            _onSelect(game, pid, cards);
         }
 
         public AfterSelect AfterSelect()

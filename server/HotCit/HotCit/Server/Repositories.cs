@@ -69,7 +69,6 @@ namespace HotCit.Server
                 return false;
             }
             _games[id] = game;
-            //_listeners[id] = new BlockingGameListener(game);
             return true;
         }
 
@@ -96,15 +95,7 @@ namespace HotCit.Server
         }
 
 
-        public IDictionary<int, Update> GetUpdates(string id, int lastSeenUpdate)
-        {
-            //var listener = _listeners[id];
-            //return listener.GetUpdatesAfterOrWait(lastSeenUpdate);
-            return null;
-        }
-
         private static GameRepository _instance;
         private readonly IDictionary<string, Game> _games = new Dictionary<string, Game>();
-        //private readonly IDictionary<string, BlockingGameListener> _listeners = new Dictionary<string, BlockingGameListener>();
     }
 }
