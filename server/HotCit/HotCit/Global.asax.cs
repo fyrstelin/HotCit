@@ -19,11 +19,20 @@ namespace HotCit
             public override void Configure(Container container)
             {
                 //This may not be neccesary since repositories are using singleton pattern
-                container.RegisterAutoWired<LobbyServer>();
+                /*container.RegisterAutoWired<LobbyServer>();
                 container.RegisterAutoWired<JoinServer>();
                 container.RegisterAutoWired<ReadyServer>();
                 container.RegisterAutoWired<GameServer>();
-                container.RegisterAutoWired<ResourceServer>();
+                container.RegisterAutoWired<ResourceServer>();*/
+
+                SetConfig(new EndpointHostConfig
+                    {
+                        GlobalResponseHeaders =
+                            {
+                                {"X-XXS-Protection","0"},
+                                {"Access-Control-Allow-Origin", "*"}
+                            }
+                    });
 
                 Routes.
                     Add<LobbyRequest>("/lobby/").
