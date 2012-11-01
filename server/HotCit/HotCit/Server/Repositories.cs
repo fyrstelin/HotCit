@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.Net;
 using HotCit.Data;
 using HotCit.Lobby;
 using HotCit.Test;
 using HotCit.Util;
-using ServiceStack.Common.Web;
 
 namespace HotCit.Server
 {
@@ -111,6 +109,12 @@ namespace HotCit.Server
 
         private static GameRepository _instance;
         private readonly IDictionary<string, Game> _games = new Dictionary<string, Game>();
-        private readonly IDictionary<string, BlockingGameListener> _listeners = new Dictionary<string, BlockingGameListener>(); 
+        private readonly IDictionary<string, BlockingGameListener> _listeners = new Dictionary<string, BlockingGameListener>();
+
+        public void RemoveGame(string id)
+        {
+            _games.Remove(id);
+            _listeners.Remove(id);
+        }
     }
 }

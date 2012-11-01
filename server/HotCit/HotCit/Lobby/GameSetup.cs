@@ -46,25 +46,21 @@ namespace HotCit.Lobby
             _discardStrategy = discardStrategy;
         }
 
-        public bool Join(string user)
+        public void Join(string user)
         {
-            if (_users.Count < _maxPlayers)
-            {
-                if (!_users.Contains(user))
-                    _users.Add(user);
-                return true;
-            }
-            return false;
+            if (_users.Count >= _maxPlayers) throw new HotCitException(ExceptionType.Impossible, "This game is full");
+            if (!_users.Contains(user))
+                _users.Add(user);
         }
 
-        public bool Leave(string user)
+        public void Leave(string user)
         {
-            return _users.Remove(user);
+            _users.Remove(user);
         }
 
         public bool SetReady(string user, bool ready)
         {
-            if (!_users.Contains(user)) return false;
+            if (!_users.Contains(user)) throw new HotCitException(ExceptionType.Impossible, user + " not part of this game");
             if (ready)
                 _readyUsers.Add(user);
             else

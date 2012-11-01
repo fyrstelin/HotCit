@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using HotCit.Data;
 using HotCit.Lobby;
 using HotCit.Strategies;
+using HotCit.Util;
 using ServiceStack.Common.Web;
 using Action = HotCit.Data.Action;
 
@@ -48,7 +50,7 @@ namespace HotCit.Server
                 setup.Join(user);
                 return new HttpResult(HttpStatusCode.Created, "");
             }
-            return new HttpError(HttpStatusCode.Conflict, "Game already exists");
+            return Succeeded;
         }
     }
 
@@ -57,31 +59,27 @@ namespace HotCit.Server
         public override object OnGet(JoinRequest request)
         {
             var id = request.GameId;
-            if (id == null) return new HttpError(HttpStatusCode.BadRequest, "Bad Request");
+            if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
             return GetGameSetup(id);
         }
 
         public override object OnPut(JoinRequest request)
         {
             var id = request.GameId;
-            if (id == null) return new HttpError(HttpStatusCode.BadRequest, "Bad Request");
+            if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
             var fac = GetGameSetup(id);
 
-            if (fac.Join(User))
-                return new HttpResult(HttpStatusCode.NoContent, "");
-
-            return new HttpError(HttpStatusCode.Conflict, "Game is full");
+            fac.Join(User);
+            return Succeeded;
         }
 
         public override object OnDelete(JoinRequest request)
         {
             var id = request.GameId;
-            if (id == null) return new HttpError(HttpStatusCode.BadRequest, "Bad Request");
+            if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
 
-            if (GetGameSetup(id).Leave(User))
-                return new HttpResult(HttpStatusCode.NoContent, "");
-
-            return new HttpError(HttpStatusCode.NotModified, User + " is not part of the game");
+            GetGameSetup(id).Leave(User);
+            return Succeeded;
         }
     }
 
@@ -90,7 +88,7 @@ namespace HotCit.Server
         public override object OnPut(ReadyRequest request)
         {
             var id = request.GameId;
-            if (id == null) return new HttpError(HttpStatusCode.BadRequest, "Bad Request");
+            if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
 
             var fac = GetGameSetup(id);
 
@@ -100,23 +98,18 @@ namespace HotCit.Server
                 GameRepository.AddGame(id, game);
                 SetupRepository.RemoveGameFactory(id);
             }
-            return new HttpResult(HttpStatusCode.NoContent, "");
+            return Succeeded;
         }
 
         public override object OnDelete(ReadyRequest request)
         {
             var id = request.GameId;
-            if (id == null) return new HttpError(HttpStatusCode.BadRequest, "Bad Request");
+            if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
 
             var fac = GetGameSetup(id);
 
-            if (fac.SetReady(User, false)) //everyone is ready
-            {
-                var game = new Game(fac);
-                GameRepository.AddGame(id, game);
-                SetupRepository.RemoveGameFactory(id);
-            }
-            return new HttpResult(HttpStatusCode.NoContent, "");
+            fac.SetReady(User, false);
+            return Succeeded;
         }
 
     }
@@ -147,29 +140,41 @@ namespace HotCit.Server
                 {
                     case Action.EndTurn:
                         game.EndTurn(User);
-                        return new HttpResult(HttpStatusCode.NoContent, "");
+                        return Succeeded;
                     case Action.TakeGold:
                         game.TakeGold(User);
-                        return new HttpResult(HttpStatusCode.NoContent, "");
+                        return Succeeded;
                     case Action.DrawDistricts:
                         game.DrawDistricts(User);
-                        return new HttpResult(HttpStatusCode.NoContent, "");
+                        return Succeeded;
                 }
             }
 
             if (request.Build != null)
             {
                 game.BuildDistrict(User, request.Build);
-                return new HttpResult(HttpStatusCode.NoContent, "");
+                return Succeeded;
             }
 
             if (request.Ability != null)
             {
                 game.UseAbility(User, request.Ability);
-                return new HttpResult(HttpStatusCode.NoContent, "");
+                return Succeeded;
             }
 
-            return new HttpError(HttpStatusCode.BadRequest, "");
+            throw new HotCitException(ExceptionType.IllegalInput);
+        }
+
+        public override object OnDelete(GameRequest request)
+        {
+            var id = request.GameId;
+            if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
+            if (GetGame(id).Players.Any(p => p.Username == User))
+            {
+                GameRepository.RemoveGame(id);
+                return Succeeded;
+            }
+            throw new HotCitException(ExceptionType.BadAction, "You are not a part of the game, and therefore cannot delete it");
         }
     }
 
@@ -205,7 +210,7 @@ namespace HotCit.Server
                     if (img == null) return HttpError.NotFound("Image " + id + " not found");
                     return new HttpResult(img, "image/png");
             }
-            return null;
+            throw new HotCitException(ExceptionType.IllegalInput);
         }
     }
 
