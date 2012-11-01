@@ -18,12 +18,6 @@ namespace HotCit
 
             public override void Configure(Container container)
             {
-                //This may not be neccesary since repositories are using singleton pattern
-                /*container.RegisterAutoWired<LobbyServer>();
-                container.RegisterAutoWired<JoinServer>();
-                container.RegisterAutoWired<ReadyServer>();
-                container.RegisterAutoWired<GameServer>();
-                container.RegisterAutoWired<ResourceServer>();*/
                 
                 SetConfig(new EndpointHostConfig
                     {
@@ -35,6 +29,7 @@ namespace HotCit
                                 {"Access-Control-Allow-Headers", "Content-Type, Authorization, If-Range, Accept, Origin"}
                             }
                     });
+
 
                 Routes.
                     Add<LobbyRequest>("/lobby/").
