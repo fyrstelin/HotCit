@@ -35,22 +35,19 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="ServiceStack">
-      <HintPath>..\..\..\..\..\..\..\..\servicestack\lib\ServiceStack.dll</HintPath>
+      <HintPath>lib\ServiceStack.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Common">
-      <HintPath>..\..\..\..\..\..\..\..\servicestack\lib\ServiceStack.Common.dll</HintPath>
+      <HintPath>lib\ServiceStack.Common.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Interfaces">
-      <HintPath>..\..\..\..\..\..\..\..\servicestack\lib\ServiceStack.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.OrmLite.Sqlite">
-      <HintPath>..\..\..\..\..\..\..\..\servicestack\lib\ServiceStack.OrmLite.Sqlite.dll</HintPath>
+      <HintPath>lib\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.ServiceInterface">
-      <HintPath>..\..\..\..\..\..\..\..\servicestack\lib\ServiceStack.ServiceInterface.dll</HintPath>
+      <HintPath>lib\ServiceStack.ServiceInterface.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text">
-      <HintPath>..\..\..\..\..\..\..\..\servicestack\lib\ServiceStack.Text.dll</HintPath>
+      <HintPath>lib\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
