@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net;
 using HotCit.Data;
-using HotCit.Lobby;
 using HotCit.Strategies;
 using HotCit.Util;
 using ServiceStack.Common.Web;
