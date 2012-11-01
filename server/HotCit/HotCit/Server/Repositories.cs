@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.Net;
+using HotCit.Data;
 using HotCit.Lobby;
 using HotCit.Test;
 using HotCit.Util;
+using ServiceStack.Common.Web;
 
 namespace HotCit.Server
 {
@@ -69,7 +72,19 @@ namespace HotCit.Server
                 return false;
             }
             _games[id] = game;
+            _listeners[id] = new BlockingGameListener(game);
             return true;
+        }
+
+        public KeyValuePair<int, GameResponse> GetPartialGame(string id, int lastSeenGame)
+        {
+            try
+            {
+                return _listeners[id].GetGame(lastSeenGame);
+            } catch(KeyNotFoundException)
+            {
+                throw new HotCitException(ExceptionType.NotFound, "Game " + id + " not found");
+            }
         }
 
         public Game GetGame(string id)
@@ -77,10 +92,9 @@ namespace HotCit.Server
             try
             {
                 return _games[id];
-            }
-            catch (KeyNotFoundException)
+            } catch(KeyNotFoundException)
             {
-                return null;
+                throw new HotCitException(ExceptionType.NotFound, "Game " + id + " not found");
             }
         }
 
@@ -97,5 +111,6 @@ namespace HotCit.Server
 
         private static GameRepository _instance;
         private readonly IDictionary<string, Game> _games = new Dictionary<string, Game>();
+        private readonly IDictionary<string, BlockingGameListener> _listeners = new Dictionary<string, BlockingGameListener>(); 
     }
 }

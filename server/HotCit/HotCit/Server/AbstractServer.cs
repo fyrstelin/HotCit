@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using HotCit.Data;
 using HotCit.Lobby;
 using HotCit.Util;
 using ServiceStack.Common.Web;
@@ -23,6 +24,22 @@ namespace HotCit.Server
             }
         }
 
+        protected int IfRange
+        {
+            get {
+                var res = Request.Headers["If-Range"];
+                return res == null ? -1 : Convert.ToInt32(res);
+            }
+        }
+
+        private int ETag
+        {
+            set
+            {
+                Response.AddHeader(HttpHeaders.ETag, value + "");
+            }
+        }
+
         protected GameSetup GetGameSetup(string id)
         {
             var setup = SetupRepository.GetSetup(id);
@@ -30,11 +47,16 @@ namespace HotCit.Server
             return setup;
         }
 
+        protected GameResponse GetPartialGame(string id, int lastSeenGame)
+        {
+            var pair = GameRepository.GetPartialGame(id, lastSeenGame);
+            ETag = pair.Key;
+            return pair.Value;
+        }
+
         protected Game GetGame(string id)
         {
-            var game = GameRepository.GetGame(id);
-            if (game == null) throw new HttpError(HttpStatusCode.NotFound, "Game " + id + " not found");
-            return game;
+            return GameRepository.GetGame(id);
         }
 
         protected override object HandleException(T request, Exception ex)
@@ -76,5 +98,6 @@ namespace HotCit.Server
         {
             return new HttpError(o, code, "", "");
         }
+
     }
 }
