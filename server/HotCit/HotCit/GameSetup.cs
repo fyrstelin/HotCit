@@ -4,7 +4,7 @@ using HotCit.Data;
 using HotCit.Strategies;
 using HotCit.Util;
 
-namespace HotCit.Lobby
+namespace HotCit
 {
     public class GameSetup : IGameFactory
     {

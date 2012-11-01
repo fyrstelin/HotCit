@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using HotCit.Data;
-using HotCit.Lobby;
 using HotCit.Test;
 using HotCit.Util;
 

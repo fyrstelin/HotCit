@@ -85,7 +85,7 @@
     <Compile Include="Data\Districts.cs" />
     <Compile Include="Data\Responses.cs" />
     <Compile Include="Data\Player.cs" />
-    <Compile Include="Lobby\GameSetup.cs" />
+    <Compile Include="GameSetup.cs" />
     <Compile Include="Server\AbstractServer.cs" />
     <Compile Include="Data\Data.cs" />
     <Compile Include="Game.cs" />
