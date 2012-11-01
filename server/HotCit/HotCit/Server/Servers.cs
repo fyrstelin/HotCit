@@ -127,13 +127,8 @@ namespace HotCit.Server
         {
             var id = request.GameId;
             if (id == null) return GameRepository.Games;
-            try
-            {
-                return new GameResponse(GetGame(id), User);
-            } catch (HttpError)
-            {
-                return new GameResponse(GetGame(id));
-            }
+            var statusCode = IfRange == -1 ? HttpStatusCode.OK : HttpStatusCode.PartialContent;
+            return new HttpResult(GetPartialGame(request.GameId, IfRange), statusCode);
         }
 
         public override object OnPut(GameRequest request)

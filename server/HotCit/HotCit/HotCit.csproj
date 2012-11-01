@@ -95,6 +95,7 @@
     </Compile>
     <Compile Include="Interfaces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\BlockingGameListener.cs" />
     <Compile Include="Server\Repositories.cs" />
     <Compile Include="Server\Servers.cs" />
     <Compile Include="Strategies\Abilities.cs" />

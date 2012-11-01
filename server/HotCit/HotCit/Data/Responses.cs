@@ -5,7 +5,7 @@ namespace HotCit.Data
 {
     public class GameResponse
     {
-        public IEnumerable<PlayerResponse> Players { get; set; }
+        public IList<PlayerResponse> Players { get; set; }
         public string King { get; set; }
         public string PlayerInTurn { get; set; }
         public Turn? Turn { get; set; }
@@ -16,7 +16,7 @@ namespace HotCit.Data
 
         public GameResponse(Game game, string user = null)
         {
-            Players = game.Players.Select(p => new PlayerResponse(p));
+            Players = game.Players.Select(p => new PlayerResponse(p)).ToList();
             King = game.King.Username;
             FaceUpCharacters = game.FaceupCharacters.Select(c => c.Name);
             PlayerInTurn = game.PlayerInTurn.Username;
@@ -29,6 +29,19 @@ namespace HotCit.Data
 
         public GameResponse()
         {
+            
+        }
+
+        public PlayerResponse AddPlayer(string username)
+        {
+            if (Players == null) Players = new List<PlayerResponse>();
+            var player = Players.FirstOrDefault(p => p.Username == username);
+            if (player == null)
+            {
+                player = new PlayerResponse{Username = username};
+                Players.Add(player);
+            }
+            return player;
         }
     }
 

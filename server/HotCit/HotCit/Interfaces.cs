@@ -18,6 +18,8 @@ namespace HotCit
 
     public enum PropertyChange
     {
+        All,
+
         //Game properties
         King,
         PlayerInTurn,
