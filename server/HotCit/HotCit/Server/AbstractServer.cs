@@ -13,6 +13,7 @@ namespace HotCit.Server
         protected readonly GameSetupRepository SetupRepository = GameSetupRepository.GetInstance();
         protected readonly GameRepository GameRepository = GameRepository.GetInstance();
         protected readonly Resources Resources = Resources.GetInstance();
+        protected readonly HttpResult Succeeded = new HttpResult(HttpStatusCode.NoContent, "");
 
         protected string User
         {
@@ -43,7 +44,7 @@ namespace HotCit.Server
         protected GameSetup GetGameSetup(string id)
         {
             var setup = SetupRepository.GetSetup(id);
-            if (setup == null) throw new HttpError(HttpStatusCode.NotFound, "Game " + id + " not found");
+            if (setup == null) throw new HotCitException(ExceptionType.NotFound, "Game " + id + " not found");
             return setup;
         }
 
@@ -79,6 +80,9 @@ namespace HotCit.Server
                         break;
                     case ExceptionType.NotFound:
                         code = HttpStatusCode.NotFound;
+                        break;
+                    case ExceptionType.Impossible:
+                        code = HttpStatusCode.Conflict;
                         break;
                 }
                 message = e.Mes;

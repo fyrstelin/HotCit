@@ -20,6 +20,7 @@ namespace HotCit.Util
         BadAction,
         IllegalState,
         NotFound,
-        NotEnoughGold
+        NotEnoughGold,
+        Impossible
     }
 }
