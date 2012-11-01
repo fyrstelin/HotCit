@@ -24,7 +24,7 @@ namespace HotCit
                 container.RegisterAutoWired<ReadyServer>();
                 container.RegisterAutoWired<GameServer>();
                 container.RegisterAutoWired<ResourceServer>();*/
-                /*
+                
                 SetConfig(new EndpointHostConfig
                     {
                         GlobalResponseHeaders =
@@ -35,7 +35,7 @@ namespace HotCit
                                 {"Access-Control-Allow-Headers", "Content-Type, Authorization, If-Range, Accept, Origin"}
                             }
                     });
-                */
+
                 Routes.
                     Add<LobbyRequest>("/lobby/").
                     Add<LobbyRequest>("/lobby/{GameId}/").
