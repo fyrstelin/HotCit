@@ -44,12 +44,9 @@ namespace HotCit.Server
             }
 
             var setup = new GameSetup(minPlayers, maxPlayers, password, discardStrategy);
-            if (SetupRepository.AddGameSetup(id, setup))
-            {
-                setup.Join(user);
-                return new HttpResult(HttpStatusCode.Created, "");
-            }
-            return Succeeded;
+            SetupRepository.AddGameSetup(id, setup);
+            setup.Join(user);
+            return new HttpResult(HttpStatusCode.Created, "");
         }
     }
 
@@ -59,7 +56,7 @@ namespace HotCit.Server
         {
             var id = request.GameId;
             if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
-            return GetGameSetup(id);
+            return GetGameSetup(id).GetUsers();
         }
 
         public override object OnPut(JoinRequest request)
@@ -77,7 +74,11 @@ namespace HotCit.Server
             var id = request.GameId;
             if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
 
-            GetGameSetup(id).Leave(User);
+            var game = GetGameSetup(id);
+            game.Leave(User);
+
+            if (game.GetUsers().Count == 0)
+                SetupRepository.RemoveGameFactory(id);
             return Succeeded;
         }
     }

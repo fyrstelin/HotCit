@@ -28,12 +28,11 @@ namespace HotCit.Server
 
         }
 
-        public bool AddGameSetup(string id, GameSetup setup)
+        public void AddGameSetup(string id, GameSetup setup)
         {
             if (_gameSetups.ContainsKey(id))
-                return false;
+                throw new HotCitException(ExceptionType.Impossible);
             _gameSetups[id] = setup;
-            return true;
         }
 
         public bool RemoveGameFactory(string id)
