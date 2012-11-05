@@ -46,7 +46,11 @@ namespace HotCit.Server
             var setup = new GameSetup(minPlayers, maxPlayers, password, discardStrategy);
             SetupRepository.AddGameSetup(id, setup);
             setup.Join(user);
-            return new HttpResult(HttpStatusCode.Created, "");
+            return new HttpResult
+                {
+                    StatusCode = HttpStatusCode.Created,
+                    Response = setup
+                };
         }
     }
 
