@@ -23,12 +23,11 @@ namespace HotCit
                     {
                         GlobalResponseHeaders =
                             {
-                                {"X-XXS-Protection","0"},
                                 {"Access-Control-Allow-Origin", "*"},
                                 {"Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS"},
                                 {"Access-Control-Allow-Headers", "Content-Type, Authorization, If-Range, Accept, Origin"}
                             },
-                            
+                        DebugMode = true
                     });
 
 
@@ -56,6 +55,8 @@ namespace HotCit
         {
             new ServerHost().Init();
         }
+
+        
 
     }
 }

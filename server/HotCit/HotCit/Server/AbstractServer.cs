@@ -24,6 +24,11 @@ namespace HotCit.Server
             }
         }
 
+        public override object Options(T request)
+        {
+            return "Apples are green";
+        }
+
         protected int IfRange
         {
             get {
