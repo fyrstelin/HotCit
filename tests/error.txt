@@ -1,0 +1,1 @@
+ [ [ "description ", "method ", "url ", "username ", "params ", "statuscode ", "reason ", "data "], [ "get gamesetup ", "GET ", "/lobby/mygame/ ","","", "200 ", "OK ", {"MinPlayers": 3, "MaxPlayers": 7, "PasswordProtected": false, "PlayerCount": 1 }]]

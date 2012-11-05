@@ -1,8 +1,5 @@
 import os, re
-try:
-    import simplejson as json
-except:
-    import json
+import json
 
 # http://jsonlint.com/
 def parse(path):
@@ -26,7 +23,7 @@ def parse(path):
 
     '''
    
-    decoder = json.JSONDecoder(parse_int=True, strict=True)
+    decoder = json.JSONDecoder()
 
     with open(path, 'rb') as f:
         raws = f.readlines()
@@ -40,10 +37,9 @@ def parse(path):
         json_list = decoder.decode(valid_json)
         kwargs = _extract_kwargs(json_list)
     except Exception as e:
-        print 'uuuups, not valid json!'
-        print
-        print re.sub('],', '],\n', valid_json)
-        print
+        print 'hmm. sure this is valid json? Try looking in error.txt.'
+        with open('error.txt', 'w') as f:
+            f.write(valid_json)
         print
         raise
     return server, kwargs
@@ -94,12 +90,11 @@ def _commentify(raw):
         
         if not char or char == ' ':
             pass
-        
-        elif char == '"':
+                
+        elif char == '@':
             escaping = not escaping
-            pass
 
-        elif char != '"' and escaping:
+        elif char != '@' and escaping:
             pass
 
         elif char == '[':
@@ -110,7 +105,7 @@ def _commentify(raw):
             if search_wend:
                 char = '"' + char
             elif search_wstart:
-                if last_char == ']' or last_char == '"':
+                if last_char == ']' or last_char == '@':
                     pass
                 else:
                     char = '""' + char
@@ -121,7 +116,7 @@ def _commentify(raw):
         elif char == ',' :
             if last_char == ']':
                 pass
-            elif last_char == '"':
+            elif last_char == '@':
                 pass
             elif search_wend:
                 char = '"' + char
@@ -142,7 +137,7 @@ def _commentify(raw):
         if char != ' ':
             last_char = new_last_char
             
-    return formatted_raw
+    return formatted_raw.replace('@','')
 
 if __name__ == '__main__':
     print parse('example.test')

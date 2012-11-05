@@ -27,7 +27,7 @@ def send_request(server, method, username, url, params, debug):
     if debug:
         conn.set_debuglevel(DEBUG)
 
-    conn.request(method, url, params, headers)
+    conn.request(method, url, json.dumps(params), headers)
     res = conn.getresponse()
     conn.close()
 
@@ -46,7 +46,7 @@ class AssertExc(Exception):
 
 def assertEquals(value, expected, key):
     if str(value).lower().strip() != str(expected).lower().strip():
-        msg = "expected %s to be '%s', not '%s'" % (key, expected, value)
+        msg = "  expected %s to be \r\n\t> %s <\r\n\t  and not \r\n\t> %s <" % (key, expected, value)
         raise AssertExc(msg)
     
 
