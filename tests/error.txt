@@ -1,1 +1,18 @@
- [ [ "description ", "method ", "url ", "username ", "params ", "statuscode ", "reason ", "data "], [ "get gamesetup ", "GET ", "/lobby/mygame/ ","","", "200 ", "OK ", {"MinPlayers": 3, "MaxPlayers": 7, "PasswordProtected": false, "PlayerCount": 1 }]]
+	ERROR
+
+Statuscode:
+	Expected    : 404
+	Actual      : 200
+
+Uri: GET  localhost:53998/lobby/mygame20/
+
+Headers:
+	Content-Type: application/json
+	Accept: application/json
+
+
+Content body:
+	MinPlayers:3
+	PasswordProtected:false
+	MaxPlayers:7
+	PlayerCount:1

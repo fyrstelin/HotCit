@@ -1,17 +1,8 @@
 localhost:53998
-%	www.google.dk
-%	[
-%	[description,         	method,     url,					statuscode],
-%	%-----------------------------------------------------------------------------------------------------------------------------------------------
-%	[GET GOOGLE TITTTIES, 	GET, 		/search?q=titties, 		200],
-%	[POST GOOGLE TITTTIES, 	POST, 		search?q=titties, 		411]
-%	]	
 
-
-[
-	[description, 		method, 	url, 				username, 	params, 				statuscode, reason,		data 			],
-	[get lobby,			GET, 		/lobby/, 			,			,						200,		OK,							],			 
-	[get gamesetup,		GET,		/lobby/mygame10/,	,			,						404,		Not Found,					],
-	[create gamesetup,	POST,		/lobby/mygame10/,	ada,		"{'discard':'fixed'}",	201,		,							],
-	[get gamesetup,		GET,		/lobby/,			,			,						200,		,			"['mygame']"	]
-]
+	[description        , method    , url               , username  , params                , statuscode, reason        , data ]
+    
+	[get lobby          , GET       , /lobby/           ,           ,			            , 200	    , OK            ,		]	 
+	[get gamesetup      , GET       , /lobby/mygame200/  ,	        ,			            , 404		, Not Found     ,		]
+	[create gamesetup   , POST      , /lobby/mygame200/  , ada       , @{"discard":"fixed"}@ , 201		,				,		]
+	[get gamesetup      , GET       , /lobby/			,			,						, 200		,               ,       ]
