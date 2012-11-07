@@ -87,8 +87,8 @@ def run_test(testno, debug, server, description=None, username=None, password=No
         return True
     
     except AssertExc as e:
+        print '\tERROR'
         response = ''
-        response += '\tERROR' + '\n'
         response += e.message + '\n'
         response += '\n'
         response += 'Uri: %s' % method + '  ' + server+url + '\n'
