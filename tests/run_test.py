@@ -93,6 +93,8 @@ def run_test(testno, debug, server, description=None, username=None, password=No
         response += '\n'
         response += 'Uri: %s' % method + '  ' + server+url + '\n'
         response += '\n'
+        response += 'Status: %s %s' % (rstatus, rreason)
+        response += '\n'
         if headers:
             response += 'Headers:' + '\n'
             for key, value in headers.iteritems():
