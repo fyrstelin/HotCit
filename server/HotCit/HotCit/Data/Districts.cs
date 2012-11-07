@@ -29,7 +29,7 @@ namespace HotCit.Data
 
         public void Reset()
         {
-            Ability.Reset();
+            if (Ability!= null) Ability.Reset();
         }
     }
 

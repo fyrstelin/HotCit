@@ -80,7 +80,7 @@ namespace HotCit
 
         public IList<Player> GetPlayers()
         {
-            return _users.Select(user => new Player(user)).ToList();
+            return _users.Select(user => new Player(user){Gold = 4}).ToList();
         }
 
         public Stack<District> GetPile()

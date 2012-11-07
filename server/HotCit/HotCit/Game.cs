@@ -235,7 +235,7 @@ namespace HotCit
             }
             else
             {
-                var district = player.Hand.First(d => d.Title == source);
+                var district = player.Hand.First(d => d.Title == source); //TODO throw hotcit exception?
                 district.UseAbility(player, ability, this);
             }
         }

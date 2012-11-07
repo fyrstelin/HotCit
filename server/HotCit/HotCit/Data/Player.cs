@@ -73,10 +73,6 @@ namespace HotCit.Data
 
         public void Reset()
         {
-            foreach (var c in Characters)
-                c.Reset();
-            foreach (var d in City)
-                d.Reset();
             HiddenCharacters.Clear();
             Characters.Clear();
         }
@@ -99,6 +95,11 @@ namespace HotCit.Data
 
                 HiddenCharacters.Remove(c);
                 Characters.Add(c);
+
+                foreach (var ch in Characters)
+                    ch.Reset();
+                foreach (var d in City)
+                    d.Reset();
                 return true;
             }
             catch (InvalidOperationException)

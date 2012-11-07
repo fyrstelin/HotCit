@@ -1,18 +1,18 @@
-	ERROR
 
 Statuscode:
-	Expected    : 404
-	Actual      : 200
+	Expected    : 204
+	Actual      : 500
 
-Uri: GET  localhost:53998/lobby/mygame20/
+Uri: PUT  localhost:53998/games/mygame/
 
+Status: 500 Internal Server Error
 Headers:
 	Content-Type: application/json
+	Authorization: hopper
 	Accept: application/json
 
+Params:
+	action:"endturn"
 
 Content body:
-	MinPlayers:3
-	PasswordProtected:false
-	MaxPlayers:7
-	PlayerCount:1
+	Object reference not set to an instance of an object.
