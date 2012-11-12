@@ -59,7 +59,7 @@ localhost:53998
   % ---
     [ Draw districts   , PUT    , /games/mygame/            , wiener    , @{"action": "drawdistricts"}@, 204        , No content        , ]
     [ Select manor     , PUT    , /games/mygame/            , wiener    , @{"select": ["manor"]}@      , 204        , No content        , ]
-    [ Steal gold       , PUT    , /games/mygame/            , wiener    , @{"ability": {"source": "thief", "target": "warlord"}}@, 204, No content, ]
+    [ Steal gold       , PUT    , /games/mygame/            , wiener    , @{"ability": {"source": "thief", "target": "magician"}}@, 204, No content, ]
     [ Steal more gold  , PUT    , /games/mygame/            , wiener    , @{"ability": {"source": "thief", "target": "bishop"}}@, 403, Forbidden, ]
     [ Build manor      , PUT    , /games/mygame/            , wiener    , @{"build": "manor"}@        , 204         , No content        , ]
     [ End turn         , PUT    , /games/mygame/            , wiener    , @{"action": "endturn"}@     , 204         , No content        , ]
@@ -68,15 +68,23 @@ localhost:53998
   % ---
   % Adas turn
   % --- 
-     [ Take gold       , PUT    , /games/mygame/            , ada       , @{"action": "takegold"}@    , 204         , No content        , ]
-     [ End turn        , PUT    , /games/mygame/            , ada       , @{"action": "endturn"}@     , 204         , No content        , ]
+    [ Take gold       , PUT    , /games/mygame/             , ada       , @{"action": "takegold"}@    , 204         , No content        , ]
+    [ End turn        , PUT    , /games/mygame/             , ada       , @{"action": "endturn"}@     , 204         , No content        , ]
   % ---
   % [ Hoppers turn     , GET    , /games/mygame/            ,           ,                             , 200         , OK                , ?{"PlayerInTurn": "hopper"}?]
   % ---
   % Hoppers turn
   % --- 
-     [ Draw districts  , PUT    , /games/mygame/            , hopper       , @{"action": "drawdistricts"}@, 204        , No content        , ]
-     [ Select castle   , PUT    , /games/mygame/            , hopper       , @{"select": ["castle"]}@     , 204        , No content        , ]
-     [ Build castle    , PUT    , /games/mygame/            , hopper       , @{"build": "castle"}@        , 204        , No content        , ]
-     [ Use ability     , PUT    , /games/mygame/            , hopper       , @{"ability": {"source": "king"}}@, 204    , No content        , ]
-     [ End turn        , PUT    , /games/mygame/            , hopper       , @{"action": "endturn"}@      , 204        , No content        , ]
+    [ Draw districts  , PUT    , /games/mygame/            , hopper     , @{"action": "drawdistricts"}@, 204        , No content        , ]
+    [ Select castle   , PUT    , /games/mygame/            , hopper     , @{"select": ["castle"]}@    , 204         , No content        , ]
+    [ Build castle    , PUT    , /games/mygame/            , hopper     , @{"build": "castle"}@       , 204         , No content        , ]
+    [ Use ability     , PUT    , /games/mygame/            , hopper     , @{"ability": {"source": "king"}}@, 204    , No content        , ]
+    [ End turn        , PUT    , /games/mygame/            , hopper     , @{"action": "endturn"}@     , 204         , No content        , ]
+  % ---
+  % [ Adas turn       , GET    , /games/mygame/            ,            ,                             , 200         , OK                , ?{"PlayerInTurn": "ada"}?]
+  % ---
+  % Adas turn (since Merchant aka. Hopper is assassinated
+  % --- 
+    [ Take gold       , PUT    , /games/mygame/            , ada        , @{"action": "takegold"}@    , 204         , No content        , ]
+    [ Use ability     , PUT    , /games/mygame/            , ada        , @{"ability": {"source": "warlord", "target": "hopper", "district": "castle"}}@, 204, No content, ]
+    [ End turn        , PUT    , /games/mygame/            , ada        , @{"action": "endturn"}@     , 204         , No content        , ]
