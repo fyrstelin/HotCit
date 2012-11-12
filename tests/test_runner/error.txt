@@ -1,0 +1,17 @@
+
+Statuscode:
+	Expected    : 204
+	Actual      : 404
+
+Uri: DELETE  localhost:53998/lobby/barbaz/ready
+
+Status: 404 Not Found
+
+Headers:
+	Content-Type: application/json
+	Authorization: Alice
+	Accept: application/json
+
+
+Content body:
+	GameSetup barbaz not found.

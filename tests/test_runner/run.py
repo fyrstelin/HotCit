@@ -1,5 +1,10 @@
 import httplib, urllib, json, base64
 from test_parser import parse
+
+# TODO: how to get rid of unicode chars!
+#import unicodedata
+#unicodedata.normalize('NFKD', title).encode('ascii','ignore')
+
 import sys
 from sys import argv
 
@@ -68,7 +73,7 @@ def run_test(testno, debug, server, description=None, username=None, password=No
          # and to get rid of all sugar spaces
 
         try:
-            data = json.dumps(data)
+            if not isinstance(data, str) and not isinstance(data, unicode): data = json.dumps(data)
         except:
             pass
             
@@ -93,18 +98,22 @@ def run_test(testno, debug, server, description=None, username=None, password=No
         response += '\n'
         response += 'Uri: %s' % method + '  ' + server+url + '\n'
         response += '\n'
-        response += 'Status: %s %s' % (rstatus, rreason)
-        response += '\n'
+        response += 'Status: %s %s' % (rstatus, rreason) 
+        response += '\n\n'
         if headers:
             response += 'Headers:' + '\n'
             for key, value in headers.iteritems():
                 response += '\t' + key + ': ' + value + '\n'
         response += '\n'
+        
         if params:
             response += 'Params:' + '\n'
-            for key, value in params.iteritems():
-                response += '\t' + key + ':' + json.dumps(value) + '\n'
-        
+            if isinstance(params, dict):
+                for key, value in params.iteritems():
+                    response += '\t' + key + ':' + json.dumps(value) + '\n'
+            else:
+                response += params
+            
         response += '\n'
         if rdata:
             response += 'Content body:' + '\n'
@@ -128,19 +137,29 @@ def run_test(testno, debug, server, description=None, username=None, password=No
 
             
 if __name__ == '__main__':
+    help =  'python run_tests.py <inputfile> [-b [testnumber]] [-l [* | <testnumber>*]]'
 
+    #TODO: cleanup options
+    argv.pop(0)
     
-    if len(argv) < 2:
+    if not argv:
         print 'you\'re doing it wrong sir. I need a file to parse as input...'
+        print help
         sys.exit(1)
-
-    if len(argv) > 2:
-        debug_testno = argv[2:]
-        print debug_testno
     else:
-        debug_testno = [-1]
+        path = argv.pop(0)
+
+    debug_testno = [-1]
+    breakAt = -1
     
-    path = argv[1]
+    while argv:
+        arg = argv.pop(0)
+        if arg == '-b':
+            if argv: breakAt = int(argv.pop(0))
+            else: breakAt = 1
+        elif arg == '-l': debug_testno = argv[1:]
+        else: raise Exception('unknown flag')
+        
     server, tests = parse(path)
 
     tlength = len(tests)
@@ -160,13 +179,16 @@ if __name__ == '__main__':
             print 'DEBUGMODE ENABLED', '*'*80
             for key, value in test.iteritems():
                 print key, ' = ', value
-
+        
+        if breakAt == i:
+            t = raw_input()
+            try: breakAt = int(t)
+            except: breakAt = i + 1 # break next time too
+        
         success = run_test(i, debug, server, **test)
 
-        if not success:
-            break
-        else:
-            completed += 1
+        if not success: break
+        else: completed += 1
 
 
     print '-'*80

@@ -1,15 +1,17 @@
 import os, re
 import json
 
-def extractServer(lines):
-    server, lines = lines[0].strip(), lines[1:]
-    return server, lines
-  
-def extractKeysNames(lines):
+def extractKeysNamesAndServer(lines):
     valid_json_lists = []
+    server = None
     for i, line in enumerate(lines):
         line = line.strip()
         if line and not line.startswith('%'):
+            
+            if not server:
+                server = line
+                continue
+        
             # first line that is not empty or a comment, should be keyword names
             keys = _prune_sp_tokens(line)
             keys = _commentify(keys)
@@ -17,7 +19,7 @@ def extractKeysNames(lines):
 
             try:
                 keys = json.loads(keys)
-                return keys, lines[i+1:]
+                return server, keys, lines[i+1:]
             except ValueError:
                 with open('error.txt', 'w') as f:
                     f.write(keys)
@@ -181,8 +183,7 @@ def parse(path):
     with open(path, 'rb') as f:
         lines = f.readlines()
     
-    server, lines = extractServer(lines)
-    keys, lines = extractKeysNames(lines)
+    server, keys, lines = extractKeysNamesAndServer(lines)
     tests = extractTests(lines, keys)
     return server, tests
 

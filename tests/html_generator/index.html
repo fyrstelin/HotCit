@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html class="no-js">
+<head>
+    <title>HotCit</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script src="js/underscore-1.1.6.js"></script>
+    <script src="js/backbone.js"></script>
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="js/hotcit.js"></script>
+    <script>
+    $(document).ready(function() {
+        var controller = setup_controller();
+    });
+    </script>
+    <style>
+
+    /* MAIN WRAPPER */
+    #main_wrapper { width:1200px }
+
+    /* CONTROLLER SECTION */
+    #controller {
+        min-height: 686px;
+
+    }
+    #controller label {
+        min-width: 50px;
+    }
+
+    #controller gameid, 
+    #controller userid {
+        position: relative; 
+        top:5px;
+    }
+
+    #controller button {
+        height: 30px; 
+        width: 110px;
+    }
+
+    #controller .input-default {
+        width: 110px;
+    }
+
+    /* TO FROM SECTION */
+    #to_from {
+        min-height: 686px;
+    }
+
+    #to_from #from_server_view #body {
+        overflow: auto;
+    }
+
+    /* LOBBY SECTION */
+    #lobby {}
+
+    #lobby #numGames {
+        font-size: small;
+        vertical-align: middle;
+    }
+
+    #lobby_view {
+        margin-top: 33px;
+        overflow: auto;
+        padding-right: 10px;
+        height: 600px;
+    }
+
+    /* RECORD SECTION */
+    #record {}
+    #record #record_view textarea {
+        width: 100%;
+        min-height: 300px;
+    }
+
+    /* MISCELLANEOUS */
+    .well {
+        padding-top: 5px;
+        padding-bottom:5px;
+    }
+    .game.well h5 {
+        text-decoration: underline;
+    }
+
+
+
+    </style>
+
+</head>
+<body>
+    <div id='main_wrapper' class="container">
+        <div class='row-fluid'>
+
+            <aside id='controller' class="span3 well sidebar-nav">
+                <h3>Controller</h3>
+                <ul class="nav nav-list">
+
+                    <li class="nav-header">Options</li>
+                    <li><button id='createBtn'>Create game</button></li>
+                    <li><button id='joinBtn'>Join game</button></li>
+                    <li><button id='leaveBtn'>Leave game</button></li>
+                    <li><button id='readyBtn'>Ready game</button></li>
+                    <li><button id='unreadyBtn'>Unready game</button></li>
+
+                    <li class="nav-header">Values</li>
+                    <li>
+                        <input class='input-default' type="text" placeholder="user" name="user" id='userid' />
+                        <label for="user" class='label label-info'>User</label>
+                    </li>
+                    <li>
+                        <input class='input-default' type="text" placeholder="gameid" name="gameid" id='gameid' />
+                        <label for="gameid" class='label label-info'>Gameid</label>
+                    </li>
+                    <li>
+                        <label for="generate_random_gameid" class='label'>Generate random gameid</label>
+                        <input type="checkbox" name="generate_random_gameid" id='generate_random_gameid' checked="checked" />
+                        <button id='pauseBtn'>Update on</button>
+                    </li>
+                </ul>
+            </aside>
+
+            <section id='to_from' class='span4'>
+                <h3>From server</h3>
+                <article id='from_server_view'>
+                    <label>Status:</label>
+                    <div id='status' clasS='well'></div>
+                    <label>Body:</label>
+                    <div id='body' class='well'></div>
+                </article>
+
+                <h3>To server</h3>
+                <article id='to_server_view'>
+                    <label>Request:</label>
+                    <div id='request' clasS='well'></div>
+                    <label> Headers:</label>
+                    <div id='headers' clasS='well'></div>
+                    <label>Data:</label>
+                    <div id='data' clasS='well'></div>
+                </article>
+            </section>
+
+            <section id='lobby' class='span3'>
+                <h3>Lobby <span id='numGames'></span></h3>
+                <article id='lobby_view' />
+            </section>
+        </div>
+
+        <section id='record' class='row-fluid'>
+                <article id='record_view' class='span10'>
+                    <hr />
+                    <textarea></textarea>
+                </article>
+        </section>
+    </body>
+
+    <section id='templates' style='visibility:hidden'>
+
+        <div id='game_template'>
+            <article class='game well'>
+                <h5 gid='GAMEID'>GAMEID</h5>
+                <p id='GAMEID'>CONTENT</p>
+            </article>
+        </div>
+
+    </section>
+</html>
