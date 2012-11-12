@@ -268,7 +268,7 @@ namespace HotCit.Strategies
 
                     var ds = player.City.Where(d => d.Price - 1 <= gold);
 
-                    choices.AddRange(ds.Select(d => player + "/" + d.Title));
+                    choices.AddRange(ds.Select(d => player.Username + "/" + d.Title));
                 }
 
                 res.Add(new Option
@@ -291,7 +291,7 @@ namespace HotCit.Strategies
 
             if (district == null) throw new HotCitException(ExceptionType.NotFound, info.District + " not found at " + info.Target);
 
-            if (owner.Gold < district.Value - 1) throw new HotCitException(ExceptionType.BadAction, "District to expensive to destory");
+            owner.Gold -= district.Value - 1;
 
             target.City.Remove(district);
         }

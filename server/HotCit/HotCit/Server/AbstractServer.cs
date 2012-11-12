@@ -88,6 +88,9 @@ namespace HotCit.Server
                     case ExceptionType.Impossible:
                         code = HttpStatusCode.Conflict;
                         break;
+                    case ExceptionType.NotEnoughGold:
+                        code = HttpStatusCode.PaymentRequired;
+                        break;
                 }
                 message = e.Mes;
             } else

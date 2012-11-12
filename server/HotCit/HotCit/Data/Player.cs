@@ -24,7 +24,8 @@ namespace HotCit.Data
             get { return _gold; }
             set
             {
-                if (value < 0) throw new HotCitException(ExceptionType.NotEnoughGold);
+                if (value < 0)
+                    throw new HotCitException(ExceptionType.NotEnoughGold, "You need " + -value + " more gold");
                 PropertyChanged(PropertyChange.PlayerGold, Username);
                 _gold = value;
             }
@@ -74,6 +75,10 @@ namespace HotCit.Data
         public void Reset()
         {
             HiddenCharacters.Clear();
+            foreach (var c in Characters)
+            {
+                c.Reset();
+            }
             Characters.Clear();
         }
 
@@ -81,7 +86,7 @@ namespace HotCit.Data
         {
             try
             {
-                var c = HiddenCharacters.Min();
+                var c = HiddenCharacters.First(ch => !ch.Dead);
                 if (c == null) return false;
 
                 c.OnReveal(this, game);
@@ -96,8 +101,6 @@ namespace HotCit.Data
                 HiddenCharacters.Remove(c);
                 Characters.Add(c);
 
-                foreach (var ch in Characters)
-                    ch.Reset();
                 foreach (var d in City)
                     d.Reset();
                 return true;
@@ -112,14 +115,14 @@ namespace HotCit.Data
         public bool IsCharacter(int no)
         {
             return
-                HiddenCharacters.Any(c => c.No == no) ||
+                HiddenCharacters.Any(c => c.No == no && !c.Dead) ||
                 Characters.Any(c => c.No == no);
         }
 
         public bool IsCharacter(string title)
         {
             return
-                HiddenCharacters.Any(c => c.Name == title) ||
+                HiddenCharacters.Any(c => c.Name == title && !c.Dead) ||
                 Characters.Any(c => c.Name == title);
         }
 
