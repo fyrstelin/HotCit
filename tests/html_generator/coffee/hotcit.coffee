@@ -38,11 +38,15 @@ LEAVE_BTN = '#leaveBtn'
 READY_BTN = '#readyBtn'
 UNREADY_BTN = '#unreadyBtn'
 RECORD_VIEW = '#record_view'
+MAXPLAYERS = '#maxPlayers'
+MINPLAYERS = '#minPlayers'
 
 setGameId = (id) -> $("#{GAMEID}").val(id)
 getGameId = () -> $("#{GAMEID}").val()
 getUserId = () -> $("#{USERID}").val()
 setUserId = (id) -> $("#{USERID}").val(id)
+getMinPlayers = () -> $("#{MINPLAYERS} option:selected").val();
+getMaxPlayers = () -> $("#{MAXPLAYERS} option:selected").val();
 
 getGenRandomFlag = () -> 	$("#{CONTROLLER} #{GENERATE_RANDOM_GID}" ).is(':checked')
 
@@ -64,6 +68,7 @@ to_server_view = {
 	setHeaders: (headers) -> $("#{TO_SERVER_VIEW} #headers").html(headers)
 	setData: (data) -> 	$("#{TO_SERVER_VIEW} #data").html(data)
 }
+
 record_view = {
 	append: (line) -> 
 		el = $("#{RECORD_VIEW} textarea")
@@ -74,7 +79,8 @@ record_view = {
 		line = "[#{description}, #{method}, /#{path}, #{username}, #{params}, #{statuscode}, #{textStatus}, #{data}]"
 		record_view.append(line)
 	init: () ->
-		record_view.append("#{SERVER}\n")
+		el = $("#{RECORD_VIEW} textarea")
+		el.val("#{SERVER}")
 		record_view.append("[description, method, url, username, params, statuscode, reason, data]")
 }
 
@@ -98,6 +104,7 @@ make_lobby_view = (games_object) ->
 	# make games list html object with game objects
 	lobby_view.setGames(games)
 	lobby_view.setNumGames(Object.keys(games_object).length)
+
 
 generate_gameid = (gameid) -> 
 	id = Math.floor(Math.random()*100000)
@@ -152,7 +159,9 @@ setupCreateBtn = () ->
 	$("#{CREATE_BTN}").click -> 
 		gid = getGameId()
 		uid = getUserId()
-		doCreateGame(gid, uid, handleResponse, handleResponse)
+		minp = getMinPlayers()
+		maxp = getMaxPlayers()
+		doCreateGame(gid, uid, minp, maxp, handleResponse, handleResponse)
 		if getGenRandomFlag()
 			setGameId(generate_gameid())
 
@@ -199,6 +208,7 @@ curryAjax = ({method, path, data, success, error, authorization}) ->
 	headers = {}
 	headers["Content-Type"] = "application/json"
 	headers["Authorization"] = authorization if authorization?
+	data = if data then data else null
 
 	url = "http://#{SERVER}/#{path}/" 
 	$.ajax
@@ -206,7 +216,7 @@ curryAjax = ({method, path, data, success, error, authorization}) ->
 		url: url
 		type: method
 		headers: headers
-		#data: data
+		data: data
 
 		#beforeSend: (xhrObj) ->
 		#	xhrObj.setRequestHeader 
@@ -320,11 +330,12 @@ curryAjax = ({method, path, data, success, error, authorization}) ->
 	)
 
 
-@doCreateGame = (gameid, owner, success, error) ->
+@doCreateGame = (gameid, owner, minPlayers, maxPlayers, success, error) ->
 	curryAjax(
 		method: 'POST'
 		path: "lobby/#{gameid}"  
 		authorization: owner  
+		data: "{\"MinPlayers\": #{minPlayers}, \"MaxPlayers\": #{maxPlayers}}"
 
 		success: () ->
 			console.log "Created new game #{gameid}."

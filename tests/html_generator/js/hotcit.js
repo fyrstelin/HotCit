@@ -21,7 +21,7 @@ CHECK: GET GAMES
 
 
 (function() {
-  var CONTROLLER, CREATE_BTN, DEBUG, DEFAULT_USER, FROM_SERVER_VIEW, GAMEID, GAME_TEMPLATE, GENERATE_RANDOM_GID, JOIN_BTN, LEAVE_BTN, LOBBY_VIEW, NUMGAMES, PAUSE_BTN, READY_BTN, RECORD_VIEW, SERVER, TEMPLATES, TO_SERVER_VIEW, UNREADY_BTN, UPDATE_INTERVAL, USERID, curryAjax, from_server_view, generate_gameid, getGameId, getGenRandomFlag, getUserId, handleResponse, lobby_view, make_lobby_view, record_view, setGameId, setUserId, setupCreateBtn, setupJoinBtn, setupLeaveBtn, setupPauseBtn, setupReadyBtn, setupSetGameIdOnClick, setupUnreadyBtn, templates, to_server_view, update_lobby,
+  var CONTROLLER, CREATE_BTN, DEBUG, DEFAULT_USER, FROM_SERVER_VIEW, GAMEID, GAME_TEMPLATE, GENERATE_RANDOM_GID, JOIN_BTN, LEAVE_BTN, LOBBY_VIEW, MAXPLAYERS, MINPLAYERS, NUMGAMES, PAUSE_BTN, READY_BTN, RECORD_VIEW, SERVER, TEMPLATES, TO_SERVER_VIEW, UNREADY_BTN, UPDATE_INTERVAL, USERID, curryAjax, from_server_view, generate_gameid, getGameId, getGenRandomFlag, getMaxPlayers, getMinPlayers, getUserId, handleResponse, lobby_view, make_lobby_view, record_view, setGameId, setUserId, setupCreateBtn, setupJoinBtn, setupLeaveBtn, setupPauseBtn, setupReadyBtn, setupSetGameIdOnClick, setupUnreadyBtn, templates, to_server_view, update_lobby,
     __hasProp = {}.hasOwnProperty;
 
   DEBUG = true;
@@ -66,6 +66,10 @@ CHECK: GET GAMES
 
   RECORD_VIEW = '#record_view';
 
+  MAXPLAYERS = '#maxPlayers';
+
+  MINPLAYERS = '#minPlayers';
+
   setGameId = function(id) {
     return $("" + GAMEID).val(id);
   };
@@ -80,6 +84,14 @@ CHECK: GET GAMES
 
   setUserId = function(id) {
     return $("" + USERID).val(id);
+  };
+
+  getMinPlayers = function() {
+    return $("" + MINPLAYERS + " option:selected").val();
+  };
+
+  getMaxPlayers = function() {
+    return $("" + MAXPLAYERS + " option:selected").val();
   };
 
   getGenRandomFlag = function() {
@@ -157,7 +169,9 @@ CHECK: GET GAMES
       return record_view.append(line);
     },
     init: function() {
-      record_view.append("" + SERVER + "\n");
+      var el;
+      el = $("" + RECORD_VIEW + " textarea");
+      el.val("" + SERVER);
       return record_view.append("[description, method, url, username, params, statuscode, reason, data]");
     }
   };
@@ -251,10 +265,12 @@ CHECK: GET GAMES
 
   setupCreateBtn = function() {
     return $("" + CREATE_BTN).click(function() {
-      var gid, uid;
+      var gid, maxp, minp, uid;
       gid = getGameId();
       uid = getUserId();
-      doCreateGame(gid, uid, handleResponse, handleResponse);
+      minp = getMinPlayers();
+      maxp = getMaxPlayers();
+      doCreateGame(gid, uid, minp, maxp, handleResponse, handleResponse);
       if (getGenRandomFlag()) {
         return setGameId(generate_gameid());
       }
@@ -319,12 +335,14 @@ CHECK: GET GAMES
     if (authorization != null) {
       headers["Authorization"] = authorization;
     }
+    data = data ? data : null;
     url = "http://" + SERVER + "/" + path + "/";
     return $.ajax({
       async: false,
       url: url,
       type: method,
       headers: headers,
+      data: data,
       success: function(body, textStatus, xhrObj) {
         var status;
         status = xhrObj.status;
@@ -433,11 +451,12 @@ CHECK: GET GAMES
     });
   };
 
-  this.doCreateGame = function(gameid, owner, success, error) {
+  this.doCreateGame = function(gameid, owner, minPlayers, maxPlayers, success, error) {
     return curryAjax({
       method: 'POST',
       path: "lobby/" + gameid,
       authorization: owner,
+      data: "{\"MinPlayers\": " + minPlayers + ", \"MaxPlayers\": " + maxPlayers + "}",
       success: function() {
         console.log("Created new game " + gameid + ".");
         console.log(arguments);

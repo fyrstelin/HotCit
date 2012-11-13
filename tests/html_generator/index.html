@@ -20,6 +20,10 @@
     /* MAIN WRAPPER */
     #main_wrapper { width:1200px }
 
+    #minPlayers, #maxPlayers {
+        width: 48px;
+    }
+
     /* CONTROLLER SECTION */
     #controller {
         min-height: 686px;
@@ -106,6 +110,25 @@
 
                     <li class="nav-header">Values</li>
                     <li>
+                        <select id='minPlayers' name="minPlayers">
+                            <option selected="selected" >2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                        </select>
+                        to
+                        <select id='maxPlayers' name="maxPlayers">
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option selected="selected">8</option>
+                        </select> Players
+                    </li>
+                    <li>
                         <input class='input-default' type="text" placeholder="user" name="user" id='userid' />
                         <label for="user" class='label label-info'>User</label>
                     </li>
@@ -116,8 +139,9 @@
                     <li>
                         <label for="generate_random_gameid" class='label'>Generate random gameid</label>
                         <input type="checkbox" name="generate_random_gameid" id='generate_random_gameid' checked="checked" />
-                        <button id='pauseBtn'>Update on</button>
+                        <br /><br />
                     </li>
+                    <li><button id='pauseBtn'>Update on</button></li>
                 </ul>
             </aside>
 
