@@ -1,12 +1,9 @@
 import httplib, urllib, json, base64
 from test_parser import parse
-
-# TODO: how to get rid of unicode chars!
-#import unicodedata
-#unicodedata.normalize('NFKD', title).encode('ascii','ignore')
-
+import re, ast
 import sys
 from sys import argv
+
 
 content_type = 'application/json'
 accept = 'application/json'
@@ -21,11 +18,8 @@ def send_request(server, method, url, params, headers, debug=False):
     #send request
     conn = httplib.HTTPConnection(server)
 
-    if debug:
-        conn.set_debuglevel(DEBUG)
-
-    if params:
-        params = json.dumps(params)
+    if debug: conn.set_debuglevel(DEBUG)
+    if params: params = json.dumps(params)
         
     conn.request(method, url, params, headers)
     res = conn.getresponse()
@@ -39,21 +33,41 @@ def send_request(server, method, url, params, headers, debug=False):
     return (status, reason, data)
 
 
+
 class AssertExc(Exception):
     pass
 
-import re, ast
-def assertEquals(value, expected, key):
-    value = str(value).lower()
+
+def assertEquals(recieved, expected, key):
+
+    try: # convert into dicts if possible, else catch exception
+        d_recieved = json.loads(recieved);
+        d_expected = json.loads(expected);
+        dictsCompare = isinstance(recieved, dict) and isinstance(expected, dict)
+
+    except: # assume either both are dicts or none are
+        dictsCompare = False
+
+    recieved = str(recieved).lower()
     expected = str(expected).lower()
-       
-    if value != expected:
+
+    if dictsCompare:
+        success = True
+        for key, value in d_expected.iteritems():
+            if( not key in d_recieved or d_recieved[key] != value):
+                success = False
+                break;
+    else:
+        success = recieved == expected
+    
+
+    if not success:
         msg = "\n"
         msg += key[0].upper()+key[1:] + ':'
         msg += "\n\t"
         msg += "Expected".ljust(12) + ": %s" % expected
         msg += "\n\t"
-        msg += "Actual".ljust(12) + ": %s" % value
+        msg += "Actual".ljust(12) + ": %s" % recieved
         raise AssertExc(msg)
     
 
@@ -76,13 +90,7 @@ def run_test(testno, debug, server, description=None, username=None, password=No
             if not isinstance(data, str) and not isinstance(data, unicode): data = json.dumps(data)
         except:
             pass
-            
-    if rdata:
-        try:
-            rdata = json.dumps(json.loads(rdata))
-        except:
-            pass
-        
+         
     print 'TEST', testno, ':', description.ljust(20),':', 
     try:
         if statuscode:  assertEquals(int(rstatus), int(statuscode), 'statuscode')
@@ -116,12 +124,7 @@ def run_test(testno, debug, server, description=None, username=None, password=No
             
         response += '\n'
         if rdata:
-            response += 'Content body:' + '\n'
-            try:
-                rdata = json.loads(rdata)
-            except:
-                pass
-                
+            response += 'Content body:' + '\n'              
             if isinstance(rdata,dict):
                 for key, value in rdata.iteritems():
                     response += '\t' + key + ':' + json.dumps(value) + '\n'
