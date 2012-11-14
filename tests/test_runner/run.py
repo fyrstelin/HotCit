@@ -44,7 +44,8 @@ def assertEquals(recieved, expected, key):
         d_recieved = json.loads(recieved);
         d_expected = json.loads(expected);
         dictsCompare = isinstance(recieved, dict) and isinstance(expected, dict)
-
+        dictsCompare = True
+        
     except: # assume either both are dicts or none are
         dictsCompare = False
 

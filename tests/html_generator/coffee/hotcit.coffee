@@ -113,10 +113,9 @@ generate_gameid = (gameid) ->
 
 handleResponse = (data, status, textStatus, headers, method, path, params, server) ->
 	request = "#{method}  #{server}/#{path}/"
-	#data = JSON.stringify(data, undefined, 2)
 
-	tdata = if $.isPlainObject(data) then "@#{JSON.stringify(data)}@"  else data
-	tparams = if $.isPlainObject(params) then "@#{JSON.stringify(params)}@"  else params
+	tdata = if $.isPlainObject(data) then "@#{JSON.stringify(data)}@" else ''  # expected to be json always
+	tparams = if params then "@#{params}@"  else ''
 	record_view.record(' ', method, path, headers['Authorization'], tparams, status, textStatus, tdata)
 
 	fheaders = ''

@@ -1,16 +1,18 @@
 
-Data:
-	Expected    : {"minplayers": 3, "passwordprotected": false, "maxplayers": 7, "playercount": 1}
-	Actual      : {"minplayers":3,"maxplayers":7,"passwordprotected":false,"playercount":1}
+Statuscode:
+	Expected    : 201
+	Actual      : 409
 
-Uri: GET  localhost:53998/lobby/mygame/
+Uri: POST  localhost:53998/lobby/f
 
-Status: 200 OK
+Status: 409 Conflict
 
 Headers:
 	Content-Type: application/json
+	Authorization: Alice
 	Accept: application/json
 
+Params:
+	MinPlayers:2
+	MaxPlayers:8
 
-Content body:
-	{"MinPlayers":3,"MaxPlayers":7,"PasswordProtected":false,"PlayerCount":1}

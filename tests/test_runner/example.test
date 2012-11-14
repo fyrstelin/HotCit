@@ -1,8 +1,8 @@
 localhost:53998
-
-	[description        , method    , url               , username  , params                , statuscode, reason        , data ]
-    
-	[get lobby          , GET       , /lobby/           ,           ,			            , 200	    , OK            ,		]	 
-	[get gamesetup      , GET       , /lobby/mygame200/  ,	        ,			            , 404		, Not Found     ,		]
-	[create gamesetup   , POST      , /lobby/mygame200/  , ada       , @{"discard":"fixed"}@ , 201		,				,		]
-	[get gamesetup      , GET       , /lobby/			,			,						, 200		,               ,       ]
+[description, method, url, username, params, statuscode, reason, data]
+[ , POST, /lobby/foooooo, Alice, @{"MinPlayers": 2, "MaxPlayers": 8}@, 201, Created, @{"MinPlayers":2,"MaxPlayers":8,"PasswordProtected":false,"PlayerCount":1}@]
+[ , PUT, /lobby/foooooo/users, Alice, , 204, No Content, ]
+[ , PUT, /lobby/foooooo/ready, Alice, , 204, No Content, ]
+[ , DELETE, /lobby/foooooo/ready, Alice, , 204, No Content, ]
+[ , DELETE, /lobby/foooooo/users, Alice, , 204, No Content, ]
+[ , DELETE, /lobby/foooooo/users, Alice, , 404, Not Found, ]

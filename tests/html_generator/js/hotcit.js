@@ -214,8 +214,8 @@ CHECK: GET GAMES
   handleResponse = function(data, status, textStatus, headers, method, path, params, server) {
     var fdata, fheaders, key, request, tdata, tparams, value;
     request = "" + method + "  " + server + "/" + path + "/";
-    tdata = $.isPlainObject(data) ? "@" + (JSON.stringify(data)) + "@" : data;
-    tparams = $.isPlainObject(params) ? "@" + (JSON.stringify(params)) + "@" : params;
+    tdata = $.isPlainObject(data) ? "@" + (JSON.stringify(data)) + "@" : '';
+    tparams = params ? "@" + params + "@" : '';
     record_view.record(' ', method, path, headers['Authorization'], tparams, status, textStatus, tdata);
     fheaders = '';
     for (key in headers) {
