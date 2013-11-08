@@ -220,9 +220,16 @@ namespace HotCit.Server
 
     public class SecretServer : AbstractServer<SecretRequest>
     {
-        public object OGet(SecretRequest request)
+        public object Get(SecretRequest request)
         {
-            return GetGame(request.GameId).GetOptions(User);
+            var game = GetGame(request.GameId);
+            switch (request.What)
+            {
+                case What.Options: return game.GetOptions(User);
+                case What.Hand: return game.GetHand(User);
+                default: throw new IllegalInputException("Should not happen!!");
+            }
+            
         }
     }
 }

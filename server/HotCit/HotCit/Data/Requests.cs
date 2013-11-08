@@ -39,6 +39,12 @@ namespace HotCit.Data
     public class SecretRequest
     {
         public string GameId { get; set; }
+        public What What { get; set; }
+    }
+
+    public enum What
+    {
+        Options, Hand
     }
 
     public enum Action
