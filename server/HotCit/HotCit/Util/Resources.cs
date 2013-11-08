@@ -14,7 +14,7 @@ namespace HotCit.Util
 
     public class Resources
     {
-        private static readonly string Resourcedir = Environment.GetEnvironmentVariable("HotCit", EnvironmentVariableTarget.Machine) + @"\resources\";
+        private static readonly string Resourcedir = @"resources\";
         private static readonly string Imagedir = Resourcedir + @"images\";
 
         public ICollection<string> Characters
@@ -67,6 +67,7 @@ namespace HotCit.Util
         {
             try
             {
+                Console.WriteLine("Getting " + id + " in " + quality);
                 var path = Imagedir + quality + "/" + id + ".png";
                 return new FileStream(path, FileMode.Open);
             }

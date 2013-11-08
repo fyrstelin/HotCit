@@ -7,7 +7,7 @@ using ServiceStack.ServiceInterface;
 
 namespace HotCit.Server
 {
-    public abstract class AbstractServer<T> : RestServiceBase<T>
+    public abstract class AbstractServer<T> : Service
     {
         protected readonly GameSetupRepository SetupRepository = GameSetupRepository.GetInstance();
         protected readonly GameRepository GameRepository = GameRepository.GetInstance();
@@ -24,7 +24,7 @@ namespace HotCit.Server
             }
         }
 
-        public override object Options(T request)
+        public object Options(T request)
         {
             return "Apples are green";
         }
@@ -63,7 +63,7 @@ namespace HotCit.Server
         {
             return GameRepository.GetGame(id);
         }
-
+        /*
         protected override object HandleException(T request, Exception ex)
         {
             var e = ex as HotCitException;
@@ -103,7 +103,7 @@ namespace HotCit.Server
                 message = ex.Message;
             }
             return HttpError(code, message);
-        }
+        }*/
 
         private static object HttpError(HttpStatusCode code, object o)
         {

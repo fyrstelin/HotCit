@@ -1,14 +1,21 @@
-﻿using System;
-using Funq;
+﻿using Funq;
 using HotCit.Data;
 using HotCit.Server;
+using HotCit.Util;
 using ServiceStack.WebHost.Endpoints;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace HotCit
 {
-    public class Global : System.Web.HttpApplication
+    class Program
     {
-        public class ServerHost : AppHostBase
+        public class ServerHost : AppHostHttpListenerBase
         {
             public ServerHost()
                 : base("HotCit Web Services", typeof(LobbyServer).Assembly)
@@ -27,7 +34,16 @@ namespace HotCit
                                 {"Access-Control-Allow-Methods", "*"},
                                 {"Access-Control-Allow-Headers", "*"}
                             },
-                        DebugMode = true
+                        DebugMode = true,
+                        MapExceptionToStatusCode =
+                        {
+                            { typeof(HotCit.Util.TimeoutException), 408},
+                            { typeof(IllegalInputException), 400},
+                            { typeof(BadActionException), 403},
+                            { typeof(NotFoundException), 404},
+                            { typeof(ImpossibleException), 409},
+                            { typeof(NotEnoughGoldException), 402}
+                        }
                     });
 
 
@@ -50,13 +66,16 @@ namespace HotCit
             }
         }
 
-
-        void Application_Start(object sender, EventArgs e)
+        static void Main(string[] args)
         {
-            new ServerHost().Init();
+            var app = new ServerHost();
+            var addr = "http://*:8080/";
+            app.Init();
+            app.Start(addr);
+            Console.WriteLine("AppHost Created at {0}, listening on {1}", DateTime.Now, addr);
+
+            Console.WriteLine("CTRL + C to exit");
+            Thread.Sleep(Timeout.Infinite);
         }
-
-        
-
     }
 }

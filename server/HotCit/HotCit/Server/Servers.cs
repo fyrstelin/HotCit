@@ -11,7 +11,7 @@ namespace HotCit.Server
 {
     public class LobbyServer : AbstractServer<LobbyRequest>
     {
-        public override object OnGet(LobbyRequest request)
+        public object Get(LobbyRequest request)
         {
             var id = request.GameId;
             if (id == null)
@@ -19,7 +19,7 @@ namespace HotCit.Server
             return GetGameSetup(id);
         }
 
-        public override object OnPost(LobbyRequest request)
+        public object Post(LobbyRequest request)
         {
             var id = request.GameId;
             var minPlayers = request.MinPlayers;
@@ -56,14 +56,14 @@ namespace HotCit.Server
 
     public class JoinServer : AbstractServer<JoinRequest>
     {
-        public override object OnGet(JoinRequest request)
+        public object Get(JoinRequest request)
         {
             var id = request.GameId;
             if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
             return GetGameSetup(id).GetUsers();
         }
 
-        public override object OnPut(JoinRequest request)
+        public object Put(JoinRequest request)
         {
             var id = request.GameId;
             if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
@@ -73,7 +73,7 @@ namespace HotCit.Server
             return Succeeded;
         }
 
-        public override object OnDelete(JoinRequest request)
+        public object Delete(JoinRequest request)
         {
             var id = request.GameId;
             if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
@@ -89,7 +89,7 @@ namespace HotCit.Server
 
     public class ReadyServer : AbstractServer<ReadyRequest>
     {
-        public override object OnPut(ReadyRequest request)
+        public object Put(ReadyRequest request)
         {
             var id = request.GameId;
             if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
@@ -105,7 +105,7 @@ namespace HotCit.Server
             return Succeeded;
         }
 
-        public override object OnDelete(ReadyRequest request)
+        public object Delete(ReadyRequest request)
         {
             var id = request.GameId;
             if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
@@ -120,7 +120,7 @@ namespace HotCit.Server
 
     public class GameServer : AbstractServer<GameRequest>
     {
-        public override object OnGet(GameRequest request)
+        public object Get(GameRequest request)
         {
             var id = request.GameId;
             if (id == null) return GameRepository.Games;
@@ -128,7 +128,7 @@ namespace HotCit.Server
             return new HttpResult(GetPartialGame(request.GameId, IfRange), statusCode);
         }
 
-        public override object OnPut(GameRequest request)
+        public object Put(GameRequest request)
         {
             var game = GetGame(request.GameId);
 
@@ -169,7 +169,7 @@ namespace HotCit.Server
             throw new HotCitException(ExceptionType.IllegalInput);
         }
 
-        public override object OnDelete(GameRequest request)
+        public object Delete(GameRequest request)
         {
             var id = request.GameId;
             if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
@@ -184,7 +184,7 @@ namespace HotCit.Server
 
     public class ResourceServer : AbstractServer<ResourceRequest>
     {
-        public override object OnGet(ResourceRequest request)
+        public object Get(ResourceRequest request)
         {
             var type = request.ResourceType;
             var id = request.ResourceId;
@@ -220,7 +220,7 @@ namespace HotCit.Server
 
     public class SecretServer : AbstractServer<SecretRequest>
     {
-        public override object OnGet(SecretRequest request)
+        public object OGet(SecretRequest request)
         {
             return GetGame(request.GameId).GetOptions(User);
         }

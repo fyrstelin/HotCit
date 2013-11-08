@@ -1,0 +1,35 @@
+Name: architect
+Number: 7
+Text: After you take an action, draw two extra cards and put both in your hand. You may build up to three districts during your turn.
+-
+Name: assassin
+Number: 1
+Text: Announce a character you wish to murder. The murdered character misses his entire turn.
+-
+Name: bishop
+Number: 5
+Text: You receive one gold for each religious (blue) district in your city. Your districts may not me destroyed by the Warlord.
+Color: blue
+-
+Name: king
+Number: 4
+Text: You receive on gold for each noble (yellow) district in your city. When the King is called, you immediately receive the crown counter.
+Color: yellow
+-
+Name: magician
+Number: 3
+Text: You may either exchange your cards with another player or discard any Number of cards and draw an equal Number of cards.
+-
+Name: merchant
+Number: 6
+Text: You receive one gold for each trade (green) district in your city. When you take an action, you recieve one extra gold.
+Color: green
+-
+Name: thief
+Number: 2
+Text: Announce a character from whom you wish to steal. When the player with this card is revealed, take his gold.
+-
+Name: warlord
+Number: 8
+Text: You receive one gold for each military (red) district in your city. You may pay to destroy one district of your choice.
+Color: red
