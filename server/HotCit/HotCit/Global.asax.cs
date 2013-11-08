@@ -24,8 +24,8 @@ namespace HotCit
                         GlobalResponseHeaders =
                             {
                                 {"Access-Control-Allow-Origin", "*"},
-                                {"Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS"},
-                                {"Access-Control-Allow-Headers", "Content-Type, Authorization, If-Range, Accept, Origin"}
+                                {"Access-Control-Allow-Methods", "*"},
+                                {"Access-Control-Allow-Headers", "*"}
                             },
                         DebugMode = true
                     });
