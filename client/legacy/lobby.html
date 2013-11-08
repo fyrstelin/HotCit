@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+		<title>HotCit - Lobby</title>
+		<script data-main="scripts/lobby" src="scripts/libs/require.js"></script>
+		<link rel='stylesheet' href='styles/lobby.css' type='text/css'>
+	</head>
+	<body>
+		<header>
+			<h1>HotCit Lobby</h1>
+		</header>
+		
+		<nav class='tabs'>
+			<ul>
+				<li><button data-tab='user_tab'>User</button></li>
+				<li><button data-tab='games_tab'>Games</button></li>
+				<li><button data-tab='creategame_tab'>Create Game</button></li>
+			</ul>
+		</nav>
+		
+		<section id='user_tab'>
+			<h1>User</h1>
+			
+			<table>
+				<tr>
+					<th>Username:</th>
+					<td><input id='username' placeholder='username'/></td>
+				</tr>
+			</table>
+		</section>
+		
+		<section id='games_tab'>
+			<h1>Games</h1>
+			<table>
+				<thead>
+					<tr>
+						<th>Game name</th>
+						<th>Min players</th>
+						<th>Max players</th>
+						<th>Players</th>
+						<th>Password proteceted</th>
+					</tr>
+				</thead>
+				<tbody id='games'>
+				
+				</tbody>
+			</table>
+		</section>
+
+		<section id='creategame_tab'>
+			<h1>Create game</h1>
+			<table>
+				<tr>
+					<th>Game name</th>
+					<td><input id='gamename' placeholder='Game name'/></td>
+				</tr>
+				<tr>
+					<th>Min players</th>
+					<td><input id='min_players' type='number' value='3'/></td>
+				</tr>
+				<tr>
+					<th>Max players</th>
+					<td><input id='max_players' type='number' value='7'/></td>
+				</tr>
+				<tr>
+					<th>Password</th>
+					<td><input id='password' placeholder='password'/></td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<button id='create_game'>Create game</button>
+					</td>
+				</tr>
+			</table>
+		</section>
+		
+		<section id='game_tab'>
+			<h1 id='game'></h1>
+			
+			<ul id='players'>
+			</ul>
+			
+			<button id='join'>Join</button>
+			<button id='ready'>I'm ready</button>
+		</section>
+	</body>
+</html>
