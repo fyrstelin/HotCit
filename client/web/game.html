@@ -8,7 +8,40 @@
 	</head>
 	<body>
     <div id='app'>
-    
+		<!-- TEMPLATES -->
+		
+		<script id='playerTemplate' type='text/template'>
+			<div class='player'>
+				<h1>
+					{{Username}}
+					{{#Characters}}
+						<img class='character' src='/resources/images/{{.}}?dpi=xldpi'/>
+					{{/Characters}}
+				</h1>
+				<div class='stats'>
+					<span class='gold'>{{Gold}}</span>
+					<span class='points'>{{Points}}</span>
+				</div>
+				
+				<h3>Hand</h3>
+				<div class='hand'>
+					{{#Hand}}
+						<img class='card' src='/resources/images/{{.}}'/>
+					{{/Hand}}
+				</div>
+				
+				<h3>City</h3>
+				<div class='city'>
+					{{#City}}
+						<img class='card' src='/resources/images/{{.}}'/>
+					{{/City}}
+				</div>
+			</div>
+		</script>
+		
+		<!-- VIEW -->
+		<div id='players'></div>
+		<div id='player'></div>
     </div>
   </body>
 </html>

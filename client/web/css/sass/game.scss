@@ -5,6 +5,76 @@ html {
 #app {
   background: orange;
   width: 800px;
-  height: 600px;
+  min-height: 600px;
   margin: auto;
+  font-family: arial;
+  padding: 10px;
+}
+
+#players {
+
+	.player {
+		background: green;
+		width: 32%;
+		display: inline-block;
+		font-size: 0.5em;
+		border: 2px solid black;
+	}
+}
+
+.player {
+	h1 {
+		text-align: center;
+		height: 1.5em;
+		overflow: hidden;
+		
+		img {
+			vertical-align: text-top;
+			height: 4em;
+		}
+	}
+
+	.stats {
+		.gold {
+			
+		}
+		
+		.gold:before {
+			content: "Gold: ";
+			font-weight: bold;
+		}
+		
+		.points {
+			margin-left: 2em;
+		}
+		
+		.points:before {
+			content: "Points: ";
+			font-weight: bold;
+		}
+	}
+	
+	.hand {
+		height: 8em;
+		overflow-x: auto;
+		overflow-y: hidden;
+		white-space: nowrap;
+		text-align: center;
+		
+		.card {
+			height: 100%;
+		}
+	}
+	
+	.city {
+		text-align: center;
+	
+		.card {
+			width: 10%;
+		}
+	}
+}
+
+.card {
+	margin: 0 -1em;
 }
