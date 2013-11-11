@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html class="no-js">
+<head>
+    <title>HotCit</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/jquery-2.0.3.js"></script>
+    <script src="js/underscore-1.1.6.js"></script>
+    <script src="js/backbone.js"></script>
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="js/ServerDao.js"></script>
+    <script>
+    $(document).ready(function() {
+        create_game('mygame', 'alice', 4, 5, 
+            function(body, status, textStatus, headers, method, path, data, SERVER) { console.log(arguments); },
+            function(body, status, textStatus, headers, method, path, data, SERVER) { console.log(arguments); })
+    });
+    </script>
+    <style></style>
+
+</head>
+<body>
+
+</body>
+</html>
