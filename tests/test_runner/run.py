@@ -20,8 +20,10 @@ def send_request(server, method, url, params, headers, debug=False):
 
     if debug: conn.set_debuglevel(DEBUG)
     if params: params = json.dumps(params)
+    else: params = '{"discard":"fixed"}'
         
-    conn.request(method, url, params, headers)
+    
+    conn.request(method=method, url=url, body=params, headers=headers)
     res = conn.getresponse()
     conn.close()
 

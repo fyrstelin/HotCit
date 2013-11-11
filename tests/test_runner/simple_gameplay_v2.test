@@ -1,0 +1,90 @@
+localhost:8080
+
+    [ description      , method , url                       , username  , params                      , statuscode , reason            , data                                                                               ]
+  % ---
+  % Setup test
+  %   - make sure every users have an eventual gamesetup and delete an existing game
+  %   - make sure the game does not exist by letting ada leave it
+  % ---
+    [ leave game       , DELETE , /lobby/mygame/users/      , ada       ,                             ,            ,                   ,                                                                                    ]
+    [ leave game       , DELETE , /lobby/mygame/users/      , turing    ,                             ,            ,                   ,                                                                                    ]
+    [ leave game       , DELETE , /lobby/mygame/users/      , hopper    ,                             ,            ,                   ,                                                                                    ]
+    [ leave game       , DELETE , /lobby/mygame/users/      , wiener    ,                             ,            ,                   ,                                                                                    ]
+    [ leave game       , DELETE , /games/mygame/            , ada       ,                             ,            ,                   ,                                                                                    ]
+  % ---
+  % A legal gamecreation sequence with all mutating calls
+  % ---
+    [ get lobby        , GET    , /lobby/                   ,           ,                             , 200         , OK                ,                                                                                    ]
+    [ get gamesetup    , GET    , /lobby/mygame/            ,           ,                             , 404         , notfoundexception ,                                                                                    ]
+    [ create gamesetup , POST   , /lobby/mygame/            , ada       , @{"discard":"fixed"}@       , 201         , Created           ,                                                                                    ]
+    [ get gamesetup    , GET    , /lobby/mygame/            ,           ,                             , 200         , OK                , ]
+    [ join game        , PUT    , /lobby/mygame/users/      , turing    ,                             , 204         ,                   ,                                                                                    ]
+    [ join game        , PUT    , /lobby/mygame/users/      , hopper    ,                             , 204         ,                   ,                                                                                    ]
+    [ leave game       , DELETE , /lobby/mygame/users/      , turing    ,                             , 204         ,                   ,                                                                                    ]
+    [ Im ready         , PUT    , /lobby/mygame/ready/      , ada       ,                             , 204         ,                   ,                                                                                    ]
+    [ join game        , PUT    , /lobby/mygame/users/      , wiener    ,                             , 204         ,                   ,                                                                                    ]
+    [ Im ready         , PUT    , /lobby/mygame/ready/      , wiener    ,                             , 204         ,                   ,                                                                                    ]
+    [ Im not ready     , DELETE , /lobby/mygame/ready/      , ada       ,                             , 204         ,                   ,                                                                                    ]
+    [ Im ready         , PUT    , /lobby/mygame/ready/      , hopper    ,                             , 204         ,                   ,                                                                                    ]
+    [ Im ready         , PUT    , /lobby/mygame/ready/      , ada       ,                             , 204         ,                   ,                                                                                    ]
+    [ get gamesetup    , GET    , /lobby/mygame/            ,           ,                             , 404         , notfoundexception ,                                                                                    ]
+    [ join game        , PUT    , /lobby/mygame/users/      , turing    ,                             , 404         , notfoundexception ,                                                                                    ]
+  % ---
+  % Choosing Characters (ada -> hopper -> wiener)
+  % ---
+    [ Choose Magician  , PUT    , /games/mygame/            , ada       , @{"select": ["magician"]}@  , 204         ,                   ,                                                                                    ]
+    [ Choose King      , PUT    , /games/mygame/            , hopper    , @{"select": ["king"]}@      , 204         ,                   ,                                                                                    ]
+    [ Choose Magician  , PUT    , /games/mygame/            , wiener    , @{"select": ["magician"]}@  , 403         , badactionexception         ,                                                                                    ]
+    [ Choose Thief     , PUT    , /games/mygame/            , wiener    , @{"select": ["thief"]}@     , 204         ,                   ,                                                                                    ]
+    [ Choose Warlord   , PUT    , /games/mygame/            , ada       , @{"select": ["warlord"]}@   , 204         ,                   ,                                                                                    ]
+    [ Choose Assassin  , PUT    , /games/mygame/            , hopper    , @{"select": ["assassin"]}@  , 204         ,                   ,                                                                                    ]
+    [ Choose Merchant  , PUT    , /games/mygame/            , wiener    , @{"select": ["merchant"]}@  , 204         ,                   ,                                                                                    ]
+  % ---
+  % Taking turns (hopper -> wiener -> ada -> hopper -> wiener -> ada)
+  % ---
+  % [ Hoppers turn     , GET    , /games/mygame/            ,           ,                             , 200         , OK                , ?{"PlayerInTurn": "hopper"}?                                                       ]
+  % ---
+  % Hoppers turn
+  % ---
+    [ Build tavern     , PUT    , /games/mygame/            , hopper    , @{"build": "tavern"}@       , 403         , badactionexception         , ]
+    [ Use Ability      , PUT    , /games/mygame/            , hopper    , @{"ability": {"source": "assassin", "target": "merchant"}}@, 204,           , ]
+    [ Take gold        , PUT    , /games/mygame/            , hopper    , @{"action": "takegold"}@    , 204         ,                   , ]
+    [ Build district   , PUT    , /games/mygame/            , hopper    , @{"build": "castle"}@       , 404         , notfoundexception , ]
+    [ End turn         , PUT    , /games/mygame/            , hopper    , @{"action": "endturn"}@     , 204         ,                   , ]
+    [ Get options      , GET    , /games/mygame/options/    , hopper    ,                             , 200         , OK                , @[]@]
+  % ---
+  % [ Wieners turn     , GET    , /games/mygame/            ,           ,                             , 200         , OK                , ?{"PlayerInTurn": "wiener"}?]
+  % ---
+  % Wieners turn
+  % ---
+    [ Draw districts   , PUT    , /games/mygame/            , wiener    , @{"action": "drawdistricts"}@, 204        ,                   , ]
+    [ Select manor     , PUT    , /games/mygame/            , wiener    , @{"select": ["manor"]}@      , 204        ,                   , ]
+    [ Steal gold       , PUT    , /games/mygame/            , wiener    , @{"ability": {"source": "thief", "target": "magician"}}@, 204,           , ]
+    [ Steal more gold  , PUT    , /games/mygame/            , wiener    , @{"ability": {"source": "thief", "target": "bishop"}}@, 403, badactionexception, ]
+    [ Build manor      , PUT    , /games/mygame/            , wiener    , @{"build": "manor"}@        , 204         ,                   , ]
+    [ End turn         , PUT    , /games/mygame/            , wiener    , @{"action": "endturn"}@     , 204         ,                   , ]
+  % ---
+  % [ Adas turn        , GET    , /games/mygame/            ,           ,                             , 200         , OK                , ?{"PlayerInTurn": "ada"}?]
+  % ---
+  % Adas turn
+  % --- 
+    [ Take gold       , PUT    , /games/mygame/             , ada       , @{"action": "takegold"}@    , 204         ,                   , ]
+    [ End turn        , PUT    , /games/mygame/             , ada       , @{"action": "endturn"}@     , 204         ,                   , ]
+  % ---
+  % [ Hoppers turn     , GET    , /games/mygame/            ,           ,                             , 200         , OK                , ?{"PlayerInTurn": "hopper"}?]
+  % ---
+  % Hoppers turn
+  % --- 
+    [ Draw districts  , PUT    , /games/mygame/            , hopper     , @{"action": "drawdistricts"}@, 204        ,                   , ]
+    [ Select castle   , PUT    , /games/mygame/            , hopper     , @{"select": ["castle"]}@    , 204         ,                   , ]
+    [ Build castle    , PUT    , /games/mygame/            , hopper     , @{"build": "castle"}@       , 204         ,                   , ]
+    [ Use ability     , PUT    , /games/mygame/            , hopper     , @{"ability": {"source": "king"}}@, 204    ,                   , ]
+    [ End turn        , PUT    , /games/mygame/            , hopper     , @{"action": "endturn"}@     , 204         ,                   , ]
+  % ---
+  % [ Adas turn       , GET    , /games/mygame/            ,            ,                             , 200         , OK                , ?{"PlayerInTurn": "ada"}?]
+  % ---
+  % Adas turn (since Merchant aka. Hopper is assassinated
+  % --- 
+    [ Take gold       , PUT    , /games/mygame/            , ada        , @{"action": "takegold"}@    , 204         ,                   , ]
+    [ Use ability     , PUT    , /games/mygame/            , ada        , @{"ability": {"source": "warlord", "target": "hopper", "district": "castle"}}@, 204,           , ]
+    [ End turn        , PUT    , /games/mygame/            , ada        , @{"action": "endturn"}@     , 204         ,                   , ]

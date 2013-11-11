@@ -1,0 +1,8 @@
+localhost:8080
+[description, method, url, username, params, statuscode, reason, data]
+[ , POST, /lobby/foooooo, Alice, @{"MinPlayers": 2, "MaxPlayers": 8}@, 201, Created, ]
+[ , PUT, /lobby/foooooo/users, Alice, , 204, ,]
+[ , PUT, /lobby/foooooo/ready, Alice, , 204, , ]
+[ , DELETE, /lobby/foooooo/ready, Alice, , 204, , ]
+[ , DELETE, /lobby/foooooo/users, Alice, , 204, , ]
+[ , DELETE, /lobby/foooooo/users, Alice, , 404, notfoundexception, ]

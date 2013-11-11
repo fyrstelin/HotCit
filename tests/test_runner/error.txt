@@ -1,18 +1,17 @@
 
 Statuscode:
-	Expected    : 201
-	Actual      : 409
+	Expected    : 204
+	Actual      : 403
 
-Uri: POST  localhost:53998/lobby/f
+Uri: PUT  localhost:8080/games/mygame/
 
-Status: 409 Conflict
+Status: 403 BadActionException
 
 Headers:
 	Content-Type: application/json
-	Authorization: Alice
+	Authorization: hopper
 	Accept: application/json
 
 Params:
-	MinPlayers:2
-	MaxPlayers:8
+	ability:{"source": "assassin", "target": "merchant"}
 
