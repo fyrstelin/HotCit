@@ -141,7 +141,7 @@ var lobbyAPI = {
             method: 'POST',
             path: 'lobby/'+gameid,
             authorization: playerid,
-            data: "{\"MinPlayers\": " + minplayers + ", \"MaxPlayers\": " + maxplayers + "}",
+            data: JSON.stringify({MinPlayers: minplayers, MaxPlayers: maxplayers, Discard: 'fixed'}),
             success: function() {
               log("Player " + playerid + " created game " + gameid);
               return success.apply(this, arguments);
