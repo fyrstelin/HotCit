@@ -4,6 +4,7 @@ var SERVER = 'localhost:8080',
     err = function(msg) {console.error(msg); };
 
 function sendAction(gameid, playerid, action, success, error) {
+        // action['Discard'] = 'fixed'; // HACK (AFFECTS AN UNCHANGABLE GLOBAL SERVER STATE??!?)
         var action = JSON.stringify(action);
         return curryAjax({
         method: 'PUT',
@@ -23,51 +24,65 @@ function sendAction(gameid, playerid, action, success, error) {
 
 // TODO
 var gameAPI = {
-    getOptions: function(gameid, playerid, success, error) {
-        return curryAjax({
-            method: 'GET',
-            path: 'games/'+gameid+'/options/',
-            authorization: playerid,
-            success: function() {
-              log("Player " + playerid + " recieved options for game " + gameid);
-              return success.apply(this, arguments);
-            },
-            error: function() {
-              err("Player " + playerid + " could not recieve options for game " + gameid);
-              return error.apply(this, arguments);
-            }
-        });
+    get: {
+        options: function(gameid, playerid, success, error) {
+            return curryAjax({
+                method: 'GET',
+                path: 'games/'+gameid+'/options/',
+                authorization: playerid,
+                success: function() {
+                  log("Player " + playerid + " recieved options for game " + gameid);
+                  return success.apply(this, arguments);
+                },
+                error: function() {
+                  err("Player " + playerid + " could not recieve options for game " + gameid);
+                  return error.apply(this, arguments);
+                }
+            });
+        },
+        hand: function(gameid, playerid, success, error) {
+            return curryAjax({
+                method: 'GET',
+                path: 'games/'+gameid+'/hand/',
+                authorization: playerid,
+                // data: {Discard: 'fixed'}, // HACK
+                success: function() {
+                  log("Player " + playerid + " recieved hand for game " + gameid);
+                  return success.apply(this, arguments);
+                },
+                error: function() {
+                  err("Player " + playerid + " could not recieve hand for game " + gameid);
+                  return error.apply(this, arguments);
+                }
+            });
+        },
+        allCharacters: function() { throw new "not implemented"},
+        getCharacter: function() { throw new "not implemented"},
+        allDistricts: function() { throw new "not implemented"},
+        district: function() { throw new "not implemented"},
+        image: function() { throw new "not implemented"},
+        game: function() { throw new "not implemented"},
     },
-    doSelect: function(gameid, playerid, selecteeid, success, error) {
-        return sendAction(gameid, playerid, {select: selecteeid}, success, error);
-    },
-    doBuild: function(gameid, playerid, buildeeid, success, error) {
-        return sendAction(gameid, playerid, {build: buildeeid}, success, error);
-    },
-    doAbility: function(gameid, playerid, source, target, success, error) {
-        return sendAction(gameid, playerid, {ability: {source: source, target: target}}, success, error);
-    },
-    doTakeGold: function(gameid, playerid, success, error) {
-        return sendAction(gameid, playerid, {action: "takegold"}, success, error);
-    },
-    doEndTurn: function(gameid, playerid, success, error) {
-        return sendAction(gameid, playerid, {action: 'endturn'}, success, error);
-    },
+    do: {
+        select: function(gameid, playerid, selecteeid, success, error) {
+            return sendAction(gameid, playerid, {select: selecteeid}, success, error);
+        },
+        build: function(gameid, playerid, buildeeid, success, error) {
+            return sendAction(gameid, playerid, {build: buildeeid}, success, error);
+        },
+        ability: function(gameid, playerid, source, target, success, error) {
+            return sendAction(gameid, playerid, {ability: {source: source, target: target}}, success, error);
+        },
+        takeGold: function(gameid, playerid, success, error) {
+            return sendAction(gameid, playerid, {action: "takegold"}, success, error);
+        },
+        endTurn: function(gameid, playerid, success, error) {
+            return sendAction(gameid, playerid, {action: 'endturn'}, success, error);
+        },
+    }
 }
 
-function getAllCharacters() {};
-function getCharacter() {};
-function getAllDistricts() {};
-function getDistrict() {};
-function getImage() {};
-function getGame() {};
-
-function getHand() {};
-function getGame() {};
-function createGame() {}
-// function getLobby() {};
-function getGame() {};
-
+ 
 var lobbyAPI = {
     joinGame: function(gameid, playerid, success, error) {
         return curryAjax({
@@ -141,7 +156,7 @@ var lobbyAPI = {
             method: 'POST',
             path: 'lobby/'+gameid,
             authorization: playerid,
-            data: JSON.stringify({MinPlayers: minplayers, MaxPlayers: maxplayers, Discard: 'fixed'}),
+            data: JSON.stringify({MinPlayers: minplayers, MaxPlayers: maxplayers}), // HACK , Discard: 'fixed'}
             success: function() {
               log("Player " + playerid + " created game " + gameid);
               return success.apply(this, arguments);

@@ -21,7 +21,7 @@
         function dummy() {  }
         var error = function(gameid, playerid) {
             return function() {
-                gameAPI.getOptions(gameid, playerid, printOptions, error);
+                gameAPI.get.options(gameid, playerid, printOptions, error);
                 console.error(arguments);
             }
         };
@@ -45,28 +45,51 @@
         
         // GAME ACTIONS
         // SELECT PLAYERS
+        function autoSelect(playerid) {
+            gameAPI.get.options(gameid, players[playerid], function(body) {
+                var choice = body[0]['Choices'][0];
+                gameAPI.do.select(gameid, players[playerid], choice, success, error(gameid, players[playerid]));
+            }, error(gameid, players[playerid]));
+        }
+        autoSelect(0);
+        autoSelect(2);
+        autoSelect(3);
+        autoSelect(0);
+        autoSelect(2);
+        autoSelect(3);
+        
+        /*
         gameAPI.doSelect(gameid, players[0], 'magician', success, error(gameid, players[0]));
         gameAPI.doSelect(gameid, players[2], 'king', success, error(gameid, players[2]));
         gameAPI.doSelect(gameid, players[3], 'thief', success, error(gameid, players[3]));
         gameAPI.doSelect(gameid, players[0], 'warlord', success, error(gameid, players[0]));
         gameAPI.doSelect(gameid, players[2], 'assassin', success, error(gameid, players[2]));
         gameAPI.doSelect(gameid, players[3], 'merchant', success, error(gameid, players[3]));
+        */
         // TODO: include an explicit end turn statement?
         
         // FIRST TURN
         // why send source, seems unneccessary, maybe nice for debuging?
-        gameAPI.getOptions(gameid, players[2], printOptions, error(gameid, players[2]));
+        // getHand(gameid, players[2], print, error(gameid, players[2]));
+        // gameAPI.getOptions(gameid, players[2], printOptions, error(gameid, players[2]));
 
         // should be allowed! (and required action to do first)
-        // gameAPI.doAbility(gameid, players[2], "assassin", "merchant", success, error(gameid, players[2]));
-        
-        gameAPI.doTakeGold(gameid, players[2], success, error(gameid, players[2]));
-        
-        // nobody has any cards in their hands!
-        gameAPI.doBuild(gameid, players[2], "castle", success, error(gameid, players[2]));
-        gameAPI.doEndTurn(gameid, players[2], success, error(gameid, players[2]));
-        gameAPI.getOptions(gameid, players[2], printOptions, error(gameid, players[2]));
+        // gameAPI.do.ability(gameid, players[2], "assassin", "merchant", success, error(gameid, players[2]));
+        console.log("do actions");
+        gameAPI.do.takeGold(gameid, players[2], success, error(gameid, players[2]));
+        gameAPI.get.options(gameid, players[0], printOptions, error(gameid, players[0]));
+        gameAPI.get.options(gameid, players[1], printOptions, error(gameid, players[1]));
+        gameAPI.get.options(gameid, players[2], printOptions, error(gameid, players[2]));
+        gameAPI.get.options(gameid, players[3], printOptions, error(gameid, players[3]));
 
+
+        // nobody has any cards in their hands!
+        //gameAPI.get.hand(gameid, players[2], print, error(gameid, players[2]));
+
+        //gameAPI.doBuild(gameid, players[2], "castle", success, error(gameid, players[2]));
+        //gameAPI.do.endTurn(gameid, players[2], success, error(gameid, players[2]));
+        //gameAPI.get.options(gameid, players[2], printOptions, error(gameid, players[2]));
+        //gameAPI.get.hand(gameid, players[2], print, error(gameid, players[2]));
     });
     </script>
     <style></style>
