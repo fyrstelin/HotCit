@@ -3,10 +3,26 @@ var SERVER = 'localhost:8080',
     log = function(msg) {console.log(msg); };
     err = function(msg) {console.error(msg); };
 
-
+function sendAction(gameid, playerid, action, success, error) {
+        var action = JSON.stringify(action);
+        return curryAjax({
+        method: 'PUT',
+        path: 'games/'+gameid,
+        authorization: playerid,
+        data: action,
+        success: function() {
+          log("Player " + playerid + ": action: " + action);
+          return success.apply(this, arguments);
+        },
+        error: function() {
+          err("Player " + playerid + ": action failed: " + action);
+          return error.apply(this, arguments);
+        }
+    });
+}
 
 // TODO
-var gameAPI {
+var gameAPI = {
     getOptions: function(gameid, playerid, success, error) {
         return curryAjax({
             method: 'GET',
@@ -21,8 +37,24 @@ var gameAPI {
               return error.apply(this, arguments);
             }
         });
-    }
+    },
+    doSelect: function(gameid, playerid, selecteeid, success, error) {
+        return sendAction(gameid, playerid, {select: selecteeid}, success, error);
+    },
+    doBuild: function(gameid, playerid, buildeeid, success, error) {
+        return sendAction(gameid, playerid, {build: buildeeid}, success, error);
+    },
+    doAbility: function(gameid, playerid, source, target, success, error) {
+        return sendAction(gameid, playerid, {ability: {source: source, target: target}}, success, error);
+    },
+    doTakeGold: function(gameid, playerid, success, error) {
+        return sendAction(gameid, playerid, {action: "takegold"}, success, error);
+    },
+    doEndTurn: function(gameid, playerid, success, error) {
+        return sendAction(gameid, playerid, {action: 'endturn'}, success, error);
+    },
 }
+
 function getAllCharacters() {};
 function getCharacter() {};
 function getAllDistricts() {};
@@ -35,7 +67,6 @@ function getGame() {};
 function createGame() {}
 // function getLobby() {};
 function getGame() {};
-function sendAction () {};
 
 var lobbyAPI = {
     joinGame: function(gameid, playerid, success, error) {

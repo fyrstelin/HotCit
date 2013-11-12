@@ -15,8 +15,8 @@ localhost:8080
   % A legal gamecreation sequence with all mutating calls
   % ---
     [ get lobby        , GET    , /lobby/                   ,           ,                             , 200         , OK                ,                                                                                    ]
-    [ get gamesetup    , GET    , /lobby/mygame/            ,           ,                             , 404         , notfoundexception ,                                                                                    ]
-    [ create gamesetup , POST   , /lobby/mygame/            , ada       , @{"discard":"fixed"}@       , 201         , Created           ,                                                                                    ]
+    [ get game fail    , GET    , /lobby/mygame/            ,           ,                             , 404         , notfoundexception ,                                                                                    ]
+    [ create gamesetup , POST   , /lobby/mygame/            , ada       ,                             , 201         , Created           ,                                                                                    ]
     [ get gamesetup    , GET    , /lobby/mygame/            ,           ,                             , 200         , OK                , ]
     [ join game        , PUT    , /lobby/mygame/users/      , turing    ,                             , 204         ,                   ,                                                                                    ]
     [ join game        , PUT    , /lobby/mygame/users/      , hopper    ,                             , 204         ,                   ,                                                                                    ]

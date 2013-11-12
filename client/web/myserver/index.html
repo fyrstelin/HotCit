@@ -14,6 +14,10 @@
     $(document).ready(function() {
         function getr(prefix) { return prefix+Math.floor(Math.random()*9999); }
         function print() { console.log(arguments) }
+        function printBody() { console.log("body: ", arguments[0]) }
+        function printOptions(body) { console.log(arguments[0][0]); }
+        
+        
         function dummy() {  }
         var error = print;
         var success = dummy;
@@ -35,14 +39,30 @@
         lobbyAPI.flagReady(gameid, players[0], success, error);
         
         // GAME ACTIONS
-        getOptions(gameid, players[0], function(body) {
-        console.log(body[0]['Message']); }, error);
+        // SELECT PLAYERS
+        gameAPI.getOptions(gameid, players[0], printOptions, error);
+        gameAPI.doSelect(gameid, players[0], 'magician', success, error);
+        gameAPI.doSelect(gameid, players[2], 'king', success, error);
+        gameAPI.doSelect(gameid, players[3], 'thief', success, error);
+        gameAPI.doSelect(gameid, players[0], 'warlord', success, error);
+        gameAPI.doSelect(gameid, players[2], 'assassin', success, error);
+        gameAPI.doSelect(gameid, players[3], 'merchant', success, error);
+        // TODO: include an explicit end turn statement?
+        
+        // FIRST TURN
+        // why send source?
+        gameAPI.doAbility(gameid, players[2], "assassin", "merchant", success, error);
+        gameAPI.doTakeGold(gameid, players[2], success, error);
+        gameAPI.getOptions(gameid, players[2], printOptions, error);
+        gameAPI.doEndTurn(gameid, players[2], success, error);
+        gameAPI.getOptions(gameid, players[0], printOptions, error);
     });
     </script>
     <style></style>
 
 </head>
 <body>
-
+    <h1>TODO</h1>
+    <p>refactor to use futures</p>
 </body>
 </html>
