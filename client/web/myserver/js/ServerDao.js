@@ -1,50 +1,128 @@
 var SERVER = 'localhost:8080',
     DEFAULT_CONTENT_TYPE = "application/json",
     log = function(msg) {console.log(msg); };
+    err = function(msg) {console.error(msg); };
+
 
 
 // TODO
+var gameAPI {
+    getOptions: function(gameid, playerid, success, error) {
+        return curryAjax({
+            method: 'GET',
+            path: 'games/'+gameid+'/options/',
+            authorization: playerid,
+            success: function() {
+              log("Player " + playerid + " recieved options for game " + gameid);
+              return success.apply(this, arguments);
+            },
+            error: function() {
+              err("Player " + playerid + " could not recieve options for game " + gameid);
+              return error.apply(this, arguments);
+            }
+        });
+    }
+}
 function getAllCharacters() {};
 function getCharacter() {};
 function getAllDistricts() {};
 function getDistrict() {};
 function getImage() {};
 function getGame() {};
-function getOptions() {}
+
 function getHand() {};
 function getGame() {};
 function createGame() {}
-function getLobby() {};
+// function getLobby() {};
 function getGame() {};
-function joinGame()) {}
-function leaveGame() {};
-function sendReady() {};
 function sendAction () {};
 
-    
-/**
-    example:
-    create_game('mygame', 'alice', 2, 8, 
-                function(body, status, textStatus, headers, method, path, data, SERVER),
-                function(body, status, textStatus, headers, method, path, data, SERVER))
-*/
-function create_game(gameid, playerid, minplayers, maxplayers, success, error) {
-    return curryAjax({
-        method: 'POST',
-        path: 'lobby/'+gameid,
-        authorization: 'johndoe',
-        data: "{\"MinPlayers\": " + minplayers + ", \"MaxPlayers\": " + maxplayers + "}",
-        success: function() {
-          log("Created new game " + playerid + ".");
-          // console.log(arguments);
-          return success.apply(this, arguments);
-        },
-        error: function() {
-          log("ERROR: could not create new game " + playerid + ".");
-          return error.apply(this, arguments);
-        }
-    });
+var lobbyAPI = {
+    joinGame: function(gameid, playerid, success, error) {
+        return curryAjax({
+            method: 'PUT',
+            path: 'lobby/'+gameid+'/users/',
+            authorization: playerid,
+            success: function() {
+              log("Player " + playerid + " joined game " + gameid);
+              return success.apply(this, arguments);
+            },
+            error: function() {
+              err("Player " + playerid + " could not join game " + gameid);
+              return error.apply(this, arguments);
+            }
+        });
+    },
+    leaveGame: function(gameid, playerid, success, error) {
+        return curryAjax({
+            method: 'DELETE',
+            path: 'lobby/'+gameid+'/users/',
+            authorization: playerid,
+            success: function() {
+              log("Player " + playerid + " left game " + gameid);
+              return success.apply(this, arguments);
+            },
+            error: function() {
+              err("Player " + playerid + " could not leave game " + gameid);
+              return error.apply(this, arguments);
+            }
+        });
+    },
+    flagReady: function(gameid, playerid, success, error) {
+        return curryAjax({
+            method: 'PUT',
+            path: 'lobby/'+gameid+'/ready/',
+            authorization: playerid,
+            success: function() {
+              log("Player " + playerid + " flag ready on game " + gameid);
+              return success.apply(this, arguments);
+            },
+            error: function() {
+              err("Player " + playerid + " could not flag ready on game " + gameid);
+              return error.apply(this, arguments);
+            }
+        });
+    },
+    cancelReady: function(gameid, playerid, success, error) {
+        return curryAjax({
+            method: 'DELETE',
+            path: 'lobby/'+gameid+'/ready/',
+            authorization: playerid,
+            success: function() {
+              log("Player " + playerid + " cancelled ready flag on game " + gameid);
+              return success.apply(this, arguments);
+            },
+            error: function() {
+              err("Player " + playerid + " could not cancel ready flag on game " + gameid);
+              return error.apply(this, arguments);
+            }
+        });
+    },
+        
+    /**
+        example:
+        create_game('mygame', 'alice', 2, 8, 
+                    function(body, status, textStatus, headers, method, path, data, SERVER),
+                    function(body, status, textStatus, headers, method, path, data, SERVER))
+    */
+    create_game: function(gameid, playerid, minplayers, maxplayers, success, error) {
+        return curryAjax({
+            method: 'POST',
+            path: 'lobby/'+gameid,
+            authorization: playerid,
+            data: "{\"MinPlayers\": " + minplayers + ", \"MaxPlayers\": " + maxplayers + "}",
+            success: function() {
+              log("Player " + playerid + " created game " + gameid);
+              return success.apply(this, arguments);
+            },
+            error: function() {
+              err("Player " + playerid + " could not create new game");
+              return error.apply(this, arguments);
+            }
+        });
+    },
 }
+
   
 /**
     takes named parameters: 

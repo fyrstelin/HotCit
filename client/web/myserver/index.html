@@ -12,9 +12,31 @@
     <script src="js/ServerDao.js"></script>
     <script>
     $(document).ready(function() {
-        create_game('mygame', 'alice', 4, 5, 
-            function(body, status, textStatus, headers, method, path, data, SERVER) { console.log(arguments); },
-            function(body, status, textStatus, headers, method, path, data, SERVER) { console.log(arguments); })
+        function getr(prefix) { return prefix+Math.floor(Math.random()*9999); }
+        function print() { console.log(arguments) }
+        function dummy() {  }
+        var error = print;
+        var success = dummy;
+        
+        var players = [ "ada", "turing", "hopper", "wiener" ],
+            gameid = getr("game");
+            
+        // simple_gameplay_v2.test
+        // LOPPY SETUP
+        lobbyAPI.create_game(gameid, players[0], 3, 5, success, error);
+        lobbyAPI.joinGame(gameid, players[1], success, error);
+        lobbyAPI.joinGame(gameid, players[2], success, error);
+        lobbyAPI.leaveGame(gameid, players[1], success, error);
+        lobbyAPI.flagReady(gameid, players[0], success, error);
+        lobbyAPI.joinGame(gameid, players[3], success, error);
+        lobbyAPI.flagReady(gameid, players[3], success, error);
+        lobbyAPI.cancelReady(gameid, players[0], success, error);
+        lobbyAPI.flagReady(gameid, players[2], success, error);
+        lobbyAPI.flagReady(gameid, players[0], success, error);
+        
+        // GAME ACTIONS
+        getOptions(gameid, players[0], function(body) {
+        console.log(body[0]['Message']); }, error);
     });
     </script>
     <style></style>
