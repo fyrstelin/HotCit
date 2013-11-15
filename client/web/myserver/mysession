@@ -1,0 +1,12 @@
+<NotepadPlus>
+    <Session activeView="0">
+        <mainView activeIndex="0">
+            <File firstVisibleLine="48" xOffset="0" scrollWidth="992" startPos="3936" endPos="3936" selMode="0" lang="HTML" encoding="-1" filename="C:\Users\W&#x00F8;lch\Desktop\git\HotCit\client\web\myserver\index.html" />
+            <File firstVisibleLine="31" xOffset="20" scrollWidth="1128" startPos="2653" endPos="2653" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\W&#x00F8;lch\Desktop\git\HotCit\client\web\myserver\js\ServerDao.js" />
+        </mainView>
+        <subView activeIndex="1">
+            <File firstVisibleLine="0" xOffset="681" scrollWidth="1848" startPos="7950" endPos="7950" selMode="0" lang="Normal Text" encoding="-1" filename="C:\Users\W&#x00F8;lch\Desktop\git\HotCit\tests\test_runner\simple_gameplay_v2.test" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1554" startPos="5307" endPos="5307" selMode="0" lang="Normal Text" encoding="-1" filename="C:\Users\W&#x00F8;lch\Desktop\git\HotCit\tests\test_runner\GameCreation.test" />
+        </subView>
+    </Session>
+</NotepadPlus>

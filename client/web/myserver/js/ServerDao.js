@@ -1,28 +1,27 @@
-var SERVER = 'localhost:8080',
-    DEFAULT_CONTENT_TYPE = "application/json",
-    log = function(msg) {console.log(msg); };
-    err = function(msg) {console.error(msg); };
+var SERVER, 
+    DEFAULT_CONTENT_TYPE,
+    PADDING,
+    log, err,
+    gameAPI, lobbyAPI,
+    curryAjax, sendAction;
 
-function sendAction(gameid, playerid, action, success, error) {
-        // action['Discard'] = 'fixed'; // HACK (AFFECTS AN UNCHANGABLE GLOBAL SERVER STATE??!?)
-        var action = JSON.stringify(action);
-        return curryAjax({
-        method: 'PUT',
-        path: 'games/'+gameid,
-        authorization: playerid,
-        data: action,
-        success: function() {
-          log("Player " + playerid + ": action: " + action);
-          return success.apply(this, arguments);
-        },
-        error: function() {
-          err("Player " + playerid + ": action failed: " + action);
-          return error.apply(this, arguments);
-        }
-    });
-}
+SERVER = 'localhost:8080';
+DEFAULT_CONTENT_TYPE = "application/json";
+PADDING = "         "; // used for console.log
 
-// TODO
+// TODO: refactor to use: var dfd = new jQuery.Deferred();
+ 
+log = function(playerid, what) { 
+        var id = playerid + PADDING.substring(0, PADDING.length - playerid.length);
+        console.log(id + " >> \t\t" + what)
+    };
+        
+err = function(playerid, what) {
+        var id = playerid + PADDING.substring(0, PADDING.length - playerid.length);
+        console.log(playerid + " >> \t\t" + what + " + failed")
+    };
+      
+        
 var gameAPI = {
     get: {
         options: function(gameid, playerid, success, error) {
@@ -31,11 +30,11 @@ var gameAPI = {
                 path: 'games/'+gameid+'/options/',
                 authorization: playerid,
                 success: function() {
-                  log("Player " + playerid + " recieved options for game " + gameid);
+                  log(playerid, "gameAPI.get.options");
                   return success.apply(this, arguments);
                 },
                 error: function() {
-                  err("Player " + playerid + " could not recieve options for game " + gameid);
+                  err(playerid, "gameAPI.get.options");
                   return error.apply(this, arguments);
                 }
             });
@@ -47,21 +46,30 @@ var gameAPI = {
                 authorization: playerid,
                 // data: {Discard: 'fixed'}, // HACK
                 success: function() {
-                  log("Player " + playerid + " recieved hand for game " + gameid);
+                  log(playerid, "gameAPI.get.hand");
                   return success.apply(this, arguments);
                 },
                 error: function() {
-                  err("Player " + playerid + " could not recieve hand for game " + gameid);
+                  err(playerid, "gameAPI.get.hand");
                   return error.apply(this, arguments);
                 }
             });
         },
-        allCharacters: function() { throw new "not implemented"},
-        getCharacter: function() { throw new "not implemented"},
-        allDistricts: function() { throw new "not implemented"},
-        district: function() { throw new "not implemented"},
-        image: function() { throw new "not implemented"},
-        game: function() { throw new "not implemented"},
+        game: function(gameid, playerid, success, error) { 
+            return curryAjax({
+                method: 'GET',
+                path: 'games/'+gameid,
+                authorization: playerid,
+                success: function() {
+                  log(playerid, "gameAPI.get.game(" + gameid + ")");
+                  return success.apply(this, arguments);
+                },
+                error: function() {
+                  err(playerid, "gameAPI.get.game");
+                  return error.apply(this, arguments);
+                }
+            });
+        },
     },
     do: {
         select: function(gameid, playerid, selecteeid, success, error) {
@@ -75,6 +83,9 @@ var gameAPI = {
         },
         takeGold: function(gameid, playerid, success, error) {
             return sendAction(gameid, playerid, {action: "takegold"}, success, error);
+        },
+        draw: function(gameid, playerid, success, error) {
+            return sendAction(gameid, playerid, {action: "drawdistricts"}, success, error);
         },
         endTurn: function(gameid, playerid, success, error) {
             return sendAction(gameid, playerid, {action: 'endturn'}, success, error);
@@ -90,11 +101,11 @@ var lobbyAPI = {
             path: 'lobby/'+gameid+'/users/',
             authorization: playerid,
             success: function() {
-              log("Player " + playerid + " joined game " + gameid);
+              log(playerid, "lobbyAPI.joinGame");
               return success.apply(this, arguments);
             },
             error: function() {
-              err("Player " + playerid + " could not join game " + gameid);
+              err(playerid, "lobbyAPI.joinGame");
               return error.apply(this, arguments);
             }
         });
@@ -105,11 +116,11 @@ var lobbyAPI = {
             path: 'lobby/'+gameid+'/users/',
             authorization: playerid,
             success: function() {
-              log("Player " + playerid + " left game " + gameid);
+              log(playerid, "lobbyAPI.leaveGame");
               return success.apply(this, arguments);
             },
             error: function() {
-              err("Player " + playerid + " could not leave game " + gameid);
+              err(playerid, "lobbyAPI.leaveGame");
               return error.apply(this, arguments);
             }
         });
@@ -120,11 +131,11 @@ var lobbyAPI = {
             path: 'lobby/'+gameid+'/ready/',
             authorization: playerid,
             success: function() {
-              log("Player " + playerid + " flag ready on game " + gameid);
+              log(playerid, "lobbyAPI.flagReady");
               return success.apply(this, arguments);
             },
             error: function() {
-              err("Player " + playerid + " could not flag ready on game " + gameid);
+              err(playerid, "lobbyAPI.flagReady");
               return error.apply(this, arguments);
             }
         });
@@ -135,11 +146,11 @@ var lobbyAPI = {
             path: 'lobby/'+gameid+'/ready/',
             authorization: playerid,
             success: function() {
-              log("Player " + playerid + " cancelled ready flag on game " + gameid);
+              log(playerid, "lobbyAPI.cancelReady");
               return success.apply(this, arguments);
             },
             error: function() {
-              err("Player " + playerid + " could not cancel ready flag on game " + gameid);
+              err(playerid, "lobbyAPI.cancelReady");
               return error.apply(this, arguments);
             }
         });
@@ -158,15 +169,34 @@ var lobbyAPI = {
             authorization: playerid,
             data: JSON.stringify({MinPlayers: minplayers, MaxPlayers: maxplayers}), // HACK , Discard: 'fixed'}
             success: function() {
-              log("Player " + playerid + " created game " + gameid);
+              log(playerid, "lobbyAPI.create_game");
               return success.apply(this, arguments);
             },
             error: function() {
-              err("Player " + playerid + " could not create new game");
+              err(playerid, "lobbyAPI.create_game");
               return error.apply(this, arguments);
             }
         });
     },
+}
+
+
+function sendAction(gameid, playerid, action, success, error) {
+    var action = JSON.stringify(action);
+    return curryAjax({
+        method: 'PUT',
+        path: 'games/'+gameid,
+        authorization: playerid,
+        data: action,
+        success: function() {
+          log(playerid, "gameApi..sendAction: " + action);
+          return success.apply(this, arguments);
+        },
+        error: function() {
+          err(playerid, "gameApi.sendAction: " + action);
+          return error.apply(this, arguments);
+        }
+    });
 }
 
   
@@ -225,7 +255,7 @@ var curryAjax = function(_arg) {
         return success(body, status, textStatus, headers, method, path, data, SERVER);
       },
       error: function(jqXHR, textStatus) {
-        var body, status;
+        var body, status;var dfd = new jQuery.Deferred();
         status = jqXHR.status;
         body = jqXHR.responseText;
         textStatus = jqXHR.statusText;
@@ -233,4 +263,4 @@ var curryAjax = function(_arg) {
         return error(body, status, textStatus, headers, method, path, data, SERVER);
       }
     });
-  };
+};

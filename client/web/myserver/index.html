@@ -1,22 +1,25 @@
 <!DOCTYPE html>
-
-<html class="no-js">
+<html lang="en">
 <head>
     <title>HotCit</title>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/main.css">
     <script src="js/jquery-2.0.3.js"></script>
     <script src="js/underscore-1.1.6.js"></script>
     <script src="js/backbone.js"></script>
-    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="js/mustache.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap-theme.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
     <script src="js/ServerDao.js"></script>
+    <script src="js/Simulate.js"></script>
+    <script src="js/OptionsView.js"></script>
     <script>
     $(document).ready(function() {
-        function getr(prefix) { return prefix+Math.floor(Math.random()*9999); }
         function print() { console.log(arguments) }
         function printBody() { console.log("body: ", arguments[0]) }
         function printOptions(body, playerid) { console.log("options: " + playerid + ":", arguments[0]); }
-        
         
         function dummy() {  }
         var error = function(gameid, playerid) {
@@ -27,46 +30,10 @@
         };
         var success = dummy;
         
-        var players = [ "ada", "turing", "hopper", "wiener" ],
-            gameid = getr("game");
+        var playernames = [ "ada", "turing", "hopper", "wiener" ]; 
             
-        // simple_gameplay_v2.test
-        // LOPPY SETUP
-        lobbyAPI.create_game(gameid, players[0], 3, 5, success, error);
-        lobbyAPI.joinGame(gameid, players[1], success, error(gameid, players[1]));
-        lobbyAPI.joinGame(gameid, players[2], success, error(gameid, players[2]));
-        lobbyAPI.leaveGame(gameid, players[1], success, error(gameid, players[1]));
-        lobbyAPI.flagReady(gameid, players[0], success, error(gameid, players[0]));
-        lobbyAPI.joinGame(gameid, players[3], success, error(gameid, players[3]));
-        lobbyAPI.flagReady(gameid, players[3], success, error(gameid, players[3]));
-        lobbyAPI.cancelReady(gameid, players[0], success, error(gameid, players[0]));
-        lobbyAPI.flagReady(gameid, players[2], success, error(gameid, players[2]));
-        lobbyAPI.flagReady(gameid, players[0], success, error(gameid, players[0]));
-        
-        // GAME ACTIONS
-        // SELECT PLAYERS
-        function autoSelect(playerid) {
-            gameAPI.get.options(gameid, players[playerid], function(body) {
-                var choice = body[0]['Choices'][0];
-                gameAPI.do.select(gameid, players[playerid], choice, success, error(gameid, players[playerid]));
-            }, error(gameid, players[playerid]));
-        }
-        autoSelect(0);
-        autoSelect(2);
-        autoSelect(3);
-        autoSelect(0);
-        autoSelect(2);
-        autoSelect(3);
-        
-        /*
-        gameAPI.doSelect(gameid, players[0], 'magician', success, error(gameid, players[0]));
-        gameAPI.doSelect(gameid, players[2], 'king', success, error(gameid, players[2]));
-        gameAPI.doSelect(gameid, players[3], 'thief', success, error(gameid, players[3]));
-        gameAPI.doSelect(gameid, players[0], 'warlord', success, error(gameid, players[0]));
-        gameAPI.doSelect(gameid, players[2], 'assassin', success, error(gameid, players[2]));
-        gameAPI.doSelect(gameid, players[3], 'merchant', success, error(gameid, players[3]));
-        */
-        // TODO: include an explicit end turn statement?
+        var gameid = simulate.lobby(playernames, success, error);
+        simulate.characterselect(gameid, success, error);    
         
         // FIRST TURN
         // why send source, seems unneccessary, maybe nice for debuging?
@@ -75,14 +42,13 @@
 
         // should be allowed! (and required action to do first)
         // gameAPI.do.ability(gameid, players[2], "assassin", "merchant", success, error(gameid, players[2]));
-        console.log("do actions");
-        gameAPI.do.takeGold(gameid, players[2], success, error(gameid, players[2]));
-        gameAPI.get.options(gameid, players[0], printOptions, error(gameid, players[0]));
-        gameAPI.get.options(gameid, players[1], printOptions, error(gameid, players[1]));
-        gameAPI.get.options(gameid, players[2], printOptions, error(gameid, players[2]));
-        gameAPI.get.options(gameid, players[3], printOptions, error(gameid, players[3]));
-
-
+        // console.log("do actions");
+        // gameAPI.do.takeGold(gameid, players[2], success, error(gameid, players[2]));
+        // gameAPI.get.options(gameid, players[0], printOptions, error(gameid, players[0]));
+        // gameAPI.get.options(gameid, players[1], printOptions, error(gameid, players[1]));
+        // gameAPI.get.options(gameid, players[2], printOptions, error(gameid, players[2]));
+        // gameAPI.get.options(gameid, players[3], printOptions, error(gameid, players[3]));
+        
         // nobody has any cards in their hands!
         //gameAPI.get.hand(gameid, players[2], print, error(gameid, players[2]));
 
@@ -90,13 +56,53 @@
         //gameAPI.do.endTurn(gameid, players[2], success, error(gameid, players[2]));
         //gameAPI.get.options(gameid, players[2], printOptions, error(gameid, players[2]));
         //gameAPI.get.hand(gameid, players[2], print, error(gameid, players[2]));
+        var optionsView = new OptionsView(gameid, '#options', '#myModal', '.modal-body', '#options_view') 
+        var changePlayerView = new ChangePlayerView(gameid, "#changeplayerBtn",  optionsView);
+        changePlayerView.render();
+        optionsView.render();
     });
     </script>
-    <style></style>
+    
+    <script id="options_view" type="text/html">
+        <li>
+            <button type='button' class='btn btn-primary' style='width:100%; white-space: normal;'>
+                {{Message}}
+            </button>
+        </li>
+    </script>
+
 
 </head>
-<body>
-    <h1>TODO</h1>
-    <p>refactor to use futures</p>
+<body class='container'>
+    <div class='row'>
+        <h1>TODO</h1>
+        <p>do stuff</p>
+        <div class='well' style='width:200px;'>
+            <button type='button' id='changeplayerBtn' class='btn btn-primary' style='width:100%; white-space: normal;'>change player</button>
+        </div>
+        <div class='well' style='width:200px;'>
+            <ul class='nav nav-pills nav-stacked' id='options'></ul>
+        </div>
+    </div>
 </body>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Please select a card</h4>
+      </div>
+      <div class="modal-body">
+        Did you know assassin is spelled with a lot of s's?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary">Assassinate</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 </html>
