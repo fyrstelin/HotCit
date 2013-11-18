@@ -15,6 +15,8 @@
     <script src="js/ServerDao.js"></script>
     <script src="js/Simulate.js"></script>
     <script src="js/OptionsView.js"></script>
+    <script src="js/ChangePlayerView.js"></script>
+    <script src="js/GameModel.js"></script>
     <script>
     $(document).ready(function() {
         function print() { console.log(arguments) }
@@ -56,9 +58,13 @@
         //gameAPI.do.endTurn(gameid, players[2], success, error(gameid, players[2]));
         //gameAPI.get.options(gameid, players[2], printOptions, error(gameid, players[2]));
         //gameAPI.get.hand(gameid, players[2], print, error(gameid, players[2]));
-        var optionsView = new OptionsView(gameid, '#options', '#myModal', '.modal-body', '#options_view') 
-        var changePlayerView = new ChangePlayerView(gameid, "#changeplayerBtn",  optionsView);
+        
+        var model = new GameModel(gameid, 'ada');
+        model.update();
+        
+        var changePlayerView = new ChangePlayerView(model, "#changeplayerBtn");
         changePlayerView.render();
+        var optionsView = new OptionsView(model, '#options', '#myModal', '.modal-body', '#options_view') 
         optionsView.render();
     });
     </script>

@@ -1,0 +1,24 @@
+# complaints
+why send source in : {"ability":{"source":"assassin","target":"king"}}
+when game knows who is sending it and what character it is?
+
+sideeffects observed, if assassin kills a player, it changes how 
+other games begin!
+
+discard:fixed does not work as expectd, need a fixed game setup 
+which should only require a data-parameter on create game call
+
+refactor everything to conform to requirejs and lint everything
+
+images should be preloaded...
+
+howto listen on server update? currently not working just calling get.game..
+
+options should be included in Game json object, as both usually will be required?
+
+player actions are currently a bit problematic, might consider changes..
+
+mvc or just modelcontroller view?
+
+finish a working unit_test of game..
+

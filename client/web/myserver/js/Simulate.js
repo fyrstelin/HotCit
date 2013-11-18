@@ -1,9 +1,12 @@
+// hack: THIS GOES GLOBAL!!
+var logflag = true;
+function log(msg) { if(logflag) console.log(msg); }
 
 // simple_gameplay_v2.test
 var simulate = {
     lobby: function(playernames, success, error) {
         // LOPPY 
-        console.log("\nsimulate.lobby");
+        log("\nsimulate.lobby");
         var gameid = 'game'+Math.floor(Math.random()*9999);
         lobbyAPI.create_game(gameid, playernames[0], 3, 5, success, error);
         lobbyAPI.joinGame(gameid, playernames[1], success, error);
@@ -19,7 +22,7 @@ var simulate = {
     },
     characterselect: function(gameid, success, error) {
        // SELECT CHARACTERS
-       console.log("\nsimulate.characterselect");
+       log("\nsimulate.characterselect");
        
         function autoSelect() {
             // next player?

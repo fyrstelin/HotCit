@@ -10,6 +10,7 @@ DEFAULT_CONTENT_TYPE = "application/json";
 PADDING = "         "; // used for console.log
 
 // TODO: refactor to use: var dfd = new jQuery.Deferred();
+// TODO: refactor to use: done(error, success)?
  
 log = function(playerid, what) { 
         var id = playerid + PADDING.substring(0, PADDING.length - playerid.length);
@@ -21,7 +22,6 @@ err = function(playerid, what) {
         console.log(playerid + " >> \t\t" + what + " + failed")
     };
       
-        
 var gameAPI = {
     get: {
         options: function(gameid, playerid, success, error) {
