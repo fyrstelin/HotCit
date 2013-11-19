@@ -2,70 +2,18 @@
 <html lang="en">
 <head>
     <title>HotCit</title>
+    <!-- global libs -->
     <script src="js/jquery-2.0.3.js"></script>
     <script src="js/underscore-1.1.6.js"></script>
-    <script src="js/backbone.js"></script>
     <script src="js/mustache.js"></script>
-    <!-- Latest compiled and minified CSS -->
+    
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-    <!-- Optional theme -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap-theme.min.css">
-    <!-- Latest compiled and minified JavaScript -->
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
-    <script src="js/ServerDao.js"></script>
-    <script src="js/Simulate.js"></script>
-    <script src="js/OptionsView.js"></script>
-    <script src="js/ChangePlayerView.js"></script>
-    <script src="js/GameModel.js"></script>
+    <script data-main="js/main" src="js/require.js"></script>
     <script>
     $(document).ready(function() {
-        function print() { console.log(arguments) }
-        function printBody() { console.log("body: ", arguments[0]) }
-        function printOptions(body, playerid) { console.log("options: " + playerid + ":", arguments[0]); }
         
-        function dummy() {  }
-        var error = function(gameid, playerid) {
-            return function() {
-                gameAPI.get.options(gameid, playerid, printOptions, error);
-                console.error(arguments);
-            }
-        };
-        var success = dummy;
-        
-        var playernames = [ "ada", "turing", "hopper", "wiener" ]; 
-            
-        var gameid = simulate.lobby(playernames, success, error);
-        simulate.characterselect(gameid, success, error);    
-        
-        // FIRST TURN
-        // why send source, seems unneccessary, maybe nice for debuging?
-        // getHand(gameid, players[2], print, error(gameid, players[2]));
-        // gameAPI.getOptions(gameid, players[2], printOptions, error(gameid, players[2]));
-
-        // should be allowed! (and required action to do first)
-        // gameAPI.do.ability(gameid, players[2], "assassin", "merchant", success, error(gameid, players[2]));
-        // console.log("do actions");
-        // gameAPI.do.takeGold(gameid, players[2], success, error(gameid, players[2]));
-        // gameAPI.get.options(gameid, players[0], printOptions, error(gameid, players[0]));
-        // gameAPI.get.options(gameid, players[1], printOptions, error(gameid, players[1]));
-        // gameAPI.get.options(gameid, players[2], printOptions, error(gameid, players[2]));
-        // gameAPI.get.options(gameid, players[3], printOptions, error(gameid, players[3]));
-        
-        // nobody has any cards in their hands!
-        //gameAPI.get.hand(gameid, players[2], print, error(gameid, players[2]));
-
-        //gameAPI.doBuild(gameid, players[2], "castle", success, error(gameid, players[2]));
-        //gameAPI.do.endTurn(gameid, players[2], success, error(gameid, players[2]));
-        //gameAPI.get.options(gameid, players[2], printOptions, error(gameid, players[2]));
-        //gameAPI.get.hand(gameid, players[2], print, error(gameid, players[2]));
-        
-        var model = new GameModel(gameid, 'ada');
-        model.update();
-        
-        var changePlayerView = new ChangePlayerView(model, "#changeplayerBtn");
-        changePlayerView.render();
-        var optionsView = new OptionsView(model, '#options', '#myModal', '.modal-body', '#options_view') 
-        optionsView.render();
     });
     </script>
     
