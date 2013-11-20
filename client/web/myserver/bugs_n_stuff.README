@@ -13,8 +13,10 @@ refactor everything to conform to requirejs and lint everything
 images should be preloaded...
 
 howto listen on server update? currently not working just calling get.game..
+[use etag...]
 
 options should be included in Game json object, as both usually will be required?
+[game, hand, options..]
 
 player actions are currently a bit problematic, might consider changes..
 

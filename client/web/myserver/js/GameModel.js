@@ -11,7 +11,7 @@ define(["ServerDao"], function (ServerDao) {
 
     var GameModel = function(gameid, playerid){
         this.listeners = [];
-        
+       
         this.playerid = playerid;
         this.gameid = gameid;
         this.numPlayers = -1;
@@ -19,6 +19,7 @@ define(["ServerDao"], function (ServerDao) {
         this.model = null;
         
         this.update();
+        
         // TODO: hack...
         for(var idx = 0; idx < this.Players.length; idx++) {
             if(this.Players[idx].Username === this.playerid) {
@@ -26,16 +27,6 @@ define(["ServerDao"], function (ServerDao) {
                 break;
             }
         }
-        
-        /*
-        this.FaceUpCharacters;
-        this.King;
-        this.PlayerInTurn;
-        this.Players;
-        this.Round;
-        this.Step;
-        this.Turn;
-        */
     };
 
     GameModel.prototype.register = function(listener) {
@@ -116,7 +107,7 @@ define(["ServerDao"], function (ServerDao) {
                     // should mark card, and first do action when button is clicked
                     // strange side effects occur when killing a player.. - requires restart..
                     // server is not very helpfull - should send log statements...
-                    $('#myModal').modal('hide');
+                    //$('#myModal').modal('hide');
                     model.update();
                 });
                 

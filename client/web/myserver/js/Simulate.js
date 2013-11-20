@@ -45,12 +45,12 @@ define(["ServerDao"], function (ServerDao) {
                 }, error(gameid, playernameinturn));
             }
             
-            autoSelect(0);
-            autoSelect(2);
-            autoSelect(3);
-            autoSelect(0);
-            autoSelect(2);
-            autoSelect(3);
+            autoSelect();
+            autoSelect();
+            autoSelect();
+            autoSelect();
+            autoSelect();
+            autoSelect();
         }
     }
     

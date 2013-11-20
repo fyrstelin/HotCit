@@ -47,7 +47,6 @@ define(function () {
                     method: 'GET',
                     path: 'games/'+gameid+'/hand/',
                     authorization: playerid,
-                    // data: {Discard: 'fixed'}, // HACK
                     success: function() {
                       log(playerid, "gameAPI.get.hand");
                       return success.apply(this, arguments);
@@ -170,7 +169,7 @@ define(function () {
                 method: 'POST',
                 path: 'lobby/'+gameid,
                 authorization: playerid,
-                data: JSON.stringify({MinPlayers: minplayers, MaxPlayers: maxplayers}), // HACK , Discard: 'fixed'}
+                data: JSON.stringify({MinPlayers: minplayers, MaxPlayers: maxplayers, Discard: 'fixed'}), 
                 success: function() {
                   log(playerid, "lobbyAPI.create_game");
                   return success.apply(this, arguments);

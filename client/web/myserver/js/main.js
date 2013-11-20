@@ -5,12 +5,12 @@ require.config({
    
 define(function(require) {
     var OptionsView = require("OptionsView"),
-        Simulate = require("Simulate"),
-        ServerDao = require("ServerDao"),
-        GameModel = require("GameModel"),
+        Simulate    = require("Simulate"),
+        ServerDao   = require("ServerDao"),
+        GameModel   = require("GameModel"),
         ChangePlayerView = require("ChangePlayerView"),
-        lobbyAPI = ServerDao.lobbyAPI,
-        gameAPI = ServerDao.gameAPI;
+        lobbyAPI    = ServerDao.lobbyAPI,
+        gameAPI     = ServerDao.gameAPI;
     
     // $ is actually global... =(
     // why on earth must I prefix with js for the libraries??
@@ -28,7 +28,6 @@ define(function(require) {
         }
     };
     var success = dummy;
-    
     var playernames = [ "ada", "turing", "hopper", "wiener" ]; 
         
     var gameid = Simulate.lobby(playernames, success, error);

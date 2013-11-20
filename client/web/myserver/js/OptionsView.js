@@ -22,8 +22,6 @@ define(function() {
 
         this.model.register(this);
 
-        var that = this;
-
         // TODO: finish actions, cleanup and document
         // let andy handle updates from server and rendering other stuff.
         // TODO: make a render all 
@@ -50,10 +48,10 @@ define(function() {
         return this;
     };
     
-    OptionsView.prototype.notify = function(model) {
+    OptionsView.prototype.notify = function(newmodel) {
         log("notify");
 
-        this.model = model;
+        this.model = newmodel;
         this.render();
         return this;
     };
