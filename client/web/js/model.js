@@ -1,47 +1,137 @@
-/*global define*/
+/*global define, console*/
+/*jslint eqeq: true*/
 
 define("model", function () {
 	"use strict";
-	var mock = {
-		me: {
-			Username: "Nygaard",
-			City: ["manor", "battlefield", "university", "monastery", "school_of_magic"],
-			Hand: ["cathedral", "dragon_gate", "great_wall", "watchtower"],
-			Points: 3,
-			Gold: 3,
-			Characters: ["king"]
-		},
-		players: [{
-			Username: "Turing",
-			City: [],
-			Hand: ["unknown_district", "unknown_district", "unknown_district", "unknown_district", "unknown_district"],
-			Points: 5,
-			Gold: 2,
-			Characters: ["thief"]
-		}, {
-			Username: "Ada",
-			City: [],
-			Hand: ["unknown_district", "unknown_district", "unknown_district", "unknown_district"],
-			Points: 3,
-			Gold: 1,
-			Characters: ["magician"]
-		}, {
-			Username: "Wiener",
-			City: [],
-			Hand: ["unknown_district"],
-			Points: 5,
-			Gold: 6,
-			Characters: ["unknown_character"]
-		}]
-	};
 
-	return {
-		getMe: function (done) {
-			done(mock.me);
-		},
+	/**
+	 * Parameters:
+	 *   - interface provider 
+	 *		getGame()
+	 *		getHand()
+	 *		getOptions()
+	 *		listen(function callback(update))
+	 *	- pid: id of playing player
+	 **/
+	function Model(provider, pid) {
+		var data = provider.getGame(), //getGame is sync
+			game = data.game,
+			listeners = [],
+			model = this;
 
-		getOtherPlayers: function (done) {
-			done(mock.players);
+		model.opponents = [];
+		model.my = {};
+
+		/********************************/
+		/**  SIMPLE FIELDS             **/
+		/**    - king                  **/
+		/**    - player in turn        **/
+		/**    - turn                  **/
+		/**    - step                  **/
+		/**    - round                 **/
+		/**    - faceup character      **/
+		/********************************/
+		function setSimpleFields(update) {
+			model.king = update.King || model.king;
+			model.playerInTurn = update.PlayerInTurn || model.playerInTurn;
+			model.turn = update.Turn || model.turn;
+			model.step = update.Step || model.step;
+			model.round = update.Round || model.round;
+			model.faceUpCharacters = update.FaceUpCharacters || model.faceUpCharacters;
 		}
-	};
+		setSimpleFields(game);
+
+		/********************************/
+		/**    Helper(s)               **/
+		/********************************/
+		function createUnknownHand(size) {
+			var res = [], i;
+			for (i = 0; i < size; i += 1) {
+				res.push("unknown_district");
+			}
+			return res;
+		}
+
+		/********************************/
+		/**   OPPONENTS AND ME         **/
+		/**     - filter out self      **/
+		/**		- fill out self        **/
+		/********************************/
+		game.Players.forEach(function (player) {
+			if (player.Username != pid) {
+				model.opponents.push({
+					username: player.Username,
+					city: player.City,
+					hand: createUnknownHand(player.NumberOfCards),
+					points: player.Points,
+					gold: player.Gold,
+					characters: player.Characters
+				});
+			} else {
+				model.my.username = player.Username;
+				model.my.city = player.City;
+				model.my.points = player.Points;
+				model.my.gold = player.Gold;
+				model.my.characters = player.Characters;
+			}
+		});
+
+		model.my.hand = provider.getHand(pid);
+		model.my.options = provider.getOptions(pid);
+
+
+
+
+		/********************************/
+		/** LISTENERS                  **/
+		/********************************/
+		function notify() {
+			listeners.forEach(function (cb) {
+				cb(model);
+			});
+		}
+
+		this.listen = function (cb) {
+			listeners.push(cb);
+		};
+
+		/********************************/
+		/** LONGPOLLING                **/
+		/********************************/
+		provider.listen(function (update) {
+			setSimpleFields(update);
+
+			if (update.Players) {
+				//traverse players. A map could have been nice
+				update.Players.forEach(function (p1) {
+					if (p1.Username == model.my.username) { //update my
+						model.my.city       = p1.City       || model.my.city;
+						model.my.points     = p1.Points	    || model.my.points;
+						model.my.gold       = p1.Gold       || model.my.gold;
+						model.my.characters = p1.Characters || model.my.characters;
+					} else { //update opponents
+						model.opponents.forEach(function (p2) {
+							if (p1.Username == p2.username) {
+								p2.city       = p1.City       || p2.city;
+								p2.points     = p1.Points     || p2.points;
+								p2.gold       = p1.Gold       || p2.gold;
+								p2.characters = p1.Characters || p2.characters;
+								if (p1.NumberOfCards) {
+									p2.hand = createUnknownHand(p1.NumberOfCards);
+								}
+							}
+						});
+					}
+				});
+			}
+
+			//TODO: implement longpolling on serverside
+			model.my.hand = provider.getHand(pid);
+			model.my.options = provider.getOptions(pid);
+
+			notify();
+		}, data.etag);
+	}
+
+	return Model;
 });
