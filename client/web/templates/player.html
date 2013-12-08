@@ -1,0 +1,26 @@
+<div class='player'>
+	<h1>
+		{{username}}
+		{{#characters}}
+			<img class='character' src='/resources/images/{{.}}?dpi=xldpi'/>
+		{{/characters}}
+	</h1>
+	<div class='stats'>
+		<span class='gold'>{{gold}}</span>
+		<span class='points'>{{points}}</span>
+	</div>
+	
+	<h3>Hand</h3>
+	<div class='hand'>
+		{{#hand}}
+			<img class='card' src='/resources/images/{{.}}'/>
+		{{/hand}}
+	</div>
+	
+	<h3>City</h3>
+	<div class='city'>
+		{{#city}}
+			<img class='card' src='/resources/images/{{.}}'/>
+		{{/city}}
+	</div>
+</div>
