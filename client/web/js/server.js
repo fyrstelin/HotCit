@@ -1,4 +1,5 @@
 /*global define, console*/
+/*jslint unparam: true*/
 
 define(["jquery"], function ($) {
 	"use strict";
@@ -11,10 +12,10 @@ define(["jquery"], function ($) {
 
 		function getGame() {
 			var res = $.ajax({
-				async: false,
-				url: baseUrl,
-				dataType: "json"
-			}),
+					async: false,
+					url: baseUrl,
+					dataType: "json"
+				}),
 				etag = res.getResponseHeader("etag");
 			return {
 				game: res.responseJSON,
@@ -55,7 +56,23 @@ define(["jquery"], function ($) {
 			}).done(function (game, status, res) {
 				done(game);
 				etag = res.getResponseHeader("etag");
-				listen(done, etag);
+			}).always(function () {
+				listen(done, etag); //ODO remove?
+			});
+		}
+
+		function control(action, pid) {
+			$.ajax({
+				type: "put",
+				url: baseUrl,
+				headers: {
+					Authorization: pid,
+					"Content-Type": "application/json"
+				},
+				dataType: "json",
+				data: JSON.stringify(action)
+			}).fail(function () {
+				console.log("ERROR: " + JSON.stringify(action));
 			});
 		}
 
@@ -63,6 +80,7 @@ define(["jquery"], function ($) {
 		this.getHand = getHand;
 		this.getOptions = getOptions;
 		this.listen = listen;
+		this.control = control;
 	}
 
 	return {

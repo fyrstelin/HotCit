@@ -72,6 +72,11 @@ namespace HotCit.Server
             return true;
         }
 
+        public void RemoveAllGames()
+        {
+            _games.Clear();
+        }
+
         public KeyValuePair<int, GameResponse> GetPartialGame(string id, int lastSeenGame)
         {
             try

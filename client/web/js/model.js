@@ -6,15 +6,15 @@ define("model", function () {
 
 	/**
 	 * Parameters:
-	 *   - interface provider 
+	 *   - interface server 
 	 *		getGame()
 	 *		getHand()
 	 *		getOptions()
 	 *		listen(function callback(update))
 	 *	- pid: id of playing player
 	 **/
-	function Model(provider, pid) {
-		var data = provider.getGame(), //getGame is sync
+	function Model(server, pid) {
+		var data = server.getGame(), //getGame is sync
 			game = data.game,
 			listeners = [],
 			model = this;
@@ -37,7 +37,7 @@ define("model", function () {
 			model.turn = update.Turn || model.turn;
 			model.step = update.Step || model.step;
 			model.round = update.Round || model.round;
-			model.faceUpCharacters = update.FaceUpCharacters || model.faceUpCharacters;
+			model.faceUpCharacters = update.FaceUpCharacters || model.faceUpCharacters; //ODO array reference
 		}
 		setSimpleFields(game);
 
@@ -76,8 +76,8 @@ define("model", function () {
 			}
 		});
 
-		model.my.hand = provider.getHand(pid);
-		model.my.options = provider.getOptions(pid);
+		model.my.hand = server.getHand(pid);
+		model.my.options = server.getOptions(pid);
 
 
 
@@ -98,7 +98,7 @@ define("model", function () {
 		/********************************/
 		/** LONGPOLLING                **/
 		/********************************/
-		provider.listen(function (update) {
+		server.listen(function (update) {
 			setSimpleFields(update);
 
 			if (update.Players) {
@@ -125,9 +125,19 @@ define("model", function () {
 				});
 			}
 
-			//TODO: implement longpolling on serverside
-			model.my.hand = provider.getHand(pid);
-			model.my.options = provider.getOptions(pid);
+			//ODO: implement longpolling on serverside
+
+			//To keep reference to model.my.hand
+			model.my.hand.length = 0;
+			server.getHand(pid).forEach(function (c) {
+				model.my.hand.push(c);
+			});
+
+			//To keep reference to model.my.options
+			model.my.options.length = 0;
+			server.getOptions(pid).forEach(function (o) {
+				model.my.options.push(o);
+			});
 
 			notify();
 		}, data.etag);

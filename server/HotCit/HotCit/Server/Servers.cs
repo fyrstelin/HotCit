@@ -6,6 +6,7 @@ using HotCit.Strategies;
 using HotCit.Util;
 using ServiceStack.Common.Web;
 using Action = HotCit.Data.Action;
+using HotCit.Test;
 
 namespace HotCit.Server
 {
@@ -172,7 +173,13 @@ namespace HotCit.Server
         public object Delete(GameRequest request)
         {
             var id = request.GameId;
-            if (id == null) throw new HotCitException(ExceptionType.IllegalInput);
+            if (id == null)
+            {
+                //Restart server
+                GameRepository.RemoveAllGames();
+                GameRepository.AddGame("test", new Game(new SimpleGameFactory()));
+                return Succeeded;
+            }
             if (GetGame(id).Players.Any(p => p.Username == User))
             {
                 GameRepository.RemoveGame(id);
