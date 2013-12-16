@@ -1,6 +1,26 @@
 /*global define*/
 /*jslint eqeq: true*/
 
+// TODO: move to a controller, =)
+var that = this;
+this.eventhandlers = {
+	optionSelect: function(option) {
+		// ARGH! Coffeescript!!
+		if(option.Type === "Select")
+		{
+			console.log('SELECT OPTION', option);
+			that.eventhandlers.requestSelect(option, function(selectedvalue){
+				// send selected option + value to server
+			})
+		}
+	},
+	requestSelect: function(option, callback) {
+		// request select via modalview
+		// on return, callback(option,selectedvalue)
+		callback("XXX");
+	},
+}
+
 define(function () {
 	"use strict";
 

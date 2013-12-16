@@ -8,7 +8,7 @@ require.config({
 	}
 });
 
-var afk, tugend, mis, rko;
+var controllers, model, server;
 
 define(function (require) {
 	"use strict";
@@ -16,16 +16,19 @@ define(function (require) {
 		Server = require('server'),
 		Model = require('model'),
 		Views = require('views'),
+		OptionsView = require('options_view'),
 		Controller = require('controller');
-	$(function () {
-		var server = new Server.Game("test"),
-			model = new Model(server, "afk");
 
-		//For test purpose
-		afk = new Controller(server, "afk");
-		tugend = new Controller(server, "tugend");
-		mis = new Controller(server, "mis");
-		rko = new Controller(server, "rko");
+	$(function () {
+		server = new Server.Game("test");
+		model = new Model(server, "afk");
+		controllers = { 
+			//For test purpose
+			afk: new Controller(server, "afk"),
+			tugend: new Controller(server, "tugend"),
+			mis: new Controller(server, "mis"),
+			rko: new Controller(server, "rko")
+		}
 
 		/****************************************/
 		/**  VIEWS                             **/
@@ -33,6 +36,12 @@ define(function (require) {
 		Views.Opponents(model, $('#players'));
 		Views.Player(model, $('#player'));
 		var h = new Views.Hand(model.my.hand, $('#hand'));
-		model.listen(h.render);
+		model.addListener(h.render);
+
+		var views = [];
+		views.push(new OptionsView(model, controllers, '#optionsView'));
+		views.forEach( function(view) { view.render(); });
+
+		//$('.btn').click();
 	});
 });

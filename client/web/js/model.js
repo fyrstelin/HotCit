@@ -47,7 +47,7 @@ define("model", function () {
 		function createUnknownHand(size) {
 			var res = [], i;
 			for (i = 0; i < size; i += 1) {
-				res.push("unknown_district");
+				res.push("facedown2");
 			}
 			return res;
 		}
@@ -91,7 +91,7 @@ define("model", function () {
 			});
 		}
 
-		this.listen = function (cb) {
+		this.addListener = function (cb) {
 			listeners.push(cb);
 		};
 
