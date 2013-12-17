@@ -20,8 +20,8 @@ define(function (require) {
     ";
 
     option_template = "\
-        <li>\
-            <a class='btn'>{{pid}}{{#isPlayerInTurn}}*{{/isPlayerInTurn}}</a>\
+        <li {{#isPlayerInTurn}}class='active'{{/isPlayerInTurn}}>\
+            <a class='btn'>{{pid}}</a>\
         </li>\
     ";
 
@@ -78,11 +78,13 @@ define(function (require) {
     PlayerInTurnView.prototype._renderOption = function (option) {
         var element = $(Mustache.render(option_template,
                         { 'pid': option,
-                          'isPlayerInTurn': option === model.my.username }));
+                          'isPlayerInTurn': model.playerInTurn === option }));
 
+        /*
         if (selected === option) {
             element.addClass('active');
         }
+        */
 
         // add event listener
         element.click(function () { that.optionSelect(option); });

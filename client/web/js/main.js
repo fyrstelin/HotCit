@@ -1,4 +1,4 @@
-/*global require, define, console, window*/
+/*global require, define, console, window, document */
 require.config({
 	baseUrl: "js",
 	paths : {
@@ -25,7 +25,12 @@ define(function (require) {
 		PlayerInTurnView = require('playerinturn_view');
     
     server = new Server.Game("test");
-    model = new Model(server, "afk");
+    
+    // hack?
+    window.onhashchange = function() { document.location.reload(); };
+    var pid = window.location.hash.substring(1);
+    
+    model = new Model(server, pid);
     controllers = {
         //For test purpose
         afk: new Controller(server, "afk"),

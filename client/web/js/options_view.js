@@ -7,7 +7,8 @@ define(function (require) {
 	"use strict";
     
     /* LOCAL VARIABLES */
-    var that, Mustache, view_template, option_template, model, controllers, selectionView;
+    var that, Mustache, view_template, 
+        option_template, model, controllers, selectionView;
     
     /* IMPORTS */
     Mustache = require('mustache');
