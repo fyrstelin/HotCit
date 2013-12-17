@@ -32,6 +32,8 @@ define(function (require) {
         
         model = in_model;
         that.elm = $(view_template);
+        
+        that.elm.addClass('playerinturn_view'); // TODO: add class identification on all views..
 
         // this is annoying..
         playerids = [];
@@ -39,6 +41,8 @@ define(function (require) {
         model.opponents.forEach(function (player) {
             playerids.push(player.username);
         });
+        playerids.sort();
+        console.log(playerids);
 
         selected = model.playerInTurn;
         model.addListener(that.notify);
@@ -52,7 +56,7 @@ define(function (require) {
         that.elm.empty();
 
         // render all options
-        that._renderOptions();
+        that._renderPlayers();
 
         return that;
     };
@@ -62,32 +66,12 @@ define(function (require) {
         that.render();
         return that;
     };
-    
-    /* EVENT HANDLER */
-    /* PRIVATE METHOD */
-    PlayerInTurnView.prototype.optionSelect = function (choice) {
-        selected = choice;
-        
-        // HACK: this should be delegated to a controller, but 
-        //       it is not really something we want in production code
-        model.overridePlayerInTurn(choice);
-        return that;
-    };
 
     /* PRIVATE METHOD */
-    PlayerInTurnView.prototype._renderOption = function (option) {
+    PlayerInTurnView.prototype._renderPlayer = function (option) {
         var element = $(Mustache.render(option_template,
                         { 'pid': option,
                           'isPlayerInTurn': model.playerInTurn === option }));
-
-        /*
-        if (selected === option) {
-            element.addClass('active');
-        }
-        */
-
-        // add event listener
-        element.click(function () { that.optionSelect(option); });
 
         // add element to the DOM
         that.elm.append(element);
@@ -96,8 +80,8 @@ define(function (require) {
     };
 
     /* PRIVATE METHOD */
-    PlayerInTurnView.prototype._renderOptions = function _renderOptions() {
-        playerids.forEach(that._renderOption);
+    PlayerInTurnView.prototype._renderPlayers = function () {
+        playerids.forEach(that._renderPlayer);
         return that;
     };
 

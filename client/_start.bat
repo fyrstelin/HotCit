@@ -9,5 +9,5 @@ pause
 
 :: open game in chrome browser
 cd web
-start chrome http://localhost:8080/web/game.html
+start chrome http://localhost:8080/web/game.html#afk http://localhost:8080/web/game.html#rko http://localhost:8080/web/game.html#mis http://localhost:8080/web/game.html#tugend
 cd ..

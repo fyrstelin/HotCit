@@ -26,9 +26,10 @@ define(function (require) {
     
     server = new Server.Game("test");
     
-    // hack?
+    // set user by #<user> in url, or default
     window.onhashchange = function() { document.location.reload(); };
     var pid = window.location.hash.substring(1) || 'afk';
+    document.title = pid;
     
     model = new Model(server, pid);
     controllers = {
