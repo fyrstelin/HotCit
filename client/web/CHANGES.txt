@@ -1,0 +1,51 @@
+CHANGES
+    
+    *new folder
+        vendors: folder for vendor libraries which span multiple filetypes, css, js..
+    
+    *new class structure
+        I tried to seutp a generic class structure for advanced use, 
+        let me know what you think about it
+        
+        class
+            GameModel:model
+            $Element:elm
+                a fixed element which the parentview should inject into its elm.
+                
+            method:constructor:<name of the class>
+            
+            method:render
+                updates the content of this.elm
+                
+            method:notify
+                notify the instance that it's model has changed
+                
+            method:_<> 
+                signifies a pseudo private method
+                which should be of no interest outside the class
+                maybe there are far better ways to do this?
+    
+    *new classes
+        playerinturn_view:
+            sort-of-a controller right now, it's a little hack...
+            includes the 'overridePlayerInTurn' method added to the model as a quickfix
+            
+        selection_view:
+            a modal view which supports single-card selection by image 
+            
+        options_view:
+            display playerInTurn's current options, and 
+            delegate option select to the matching controller,
+            and the selection_view respectively for execution and choice request.
+            
+            only support character select right now.
+            
+    *updated main.js
+        to include new views, 
+        also pushed model to global view to ease development
+        
+    *todo:  
+        should probably refactor and extract generic view to superclass
+        same goes for option select, maybe..
+        
+        EXPERIMENT WITH PRIVATE NAMESPACE BY VARIABLES INSTEAD OF THIS..
