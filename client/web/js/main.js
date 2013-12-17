@@ -28,7 +28,7 @@ define(function (require) {
     
     // hack?
     window.onhashchange = function() { document.location.reload(); };
-    var pid = window.location.hash.substring(1);
+    var pid = window.location.hash.substring(1) || 'afk';
     
     model = new Model(server, pid);
     controllers = {
