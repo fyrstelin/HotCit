@@ -17,7 +17,9 @@ define(function (require) {
 		Model = require('model'),
 		Views = require('views'),
 		OptionsView = require('options_view'),
-		Controller = require('controller');
+		SelectionView = require('selection_view'),
+		Controller = require('controller'),
+		PlayerInTurnView = require('playerinturn_view');
 
 	$(function () {
 		server = new Server.Game("test");
@@ -28,20 +30,33 @@ define(function (require) {
 			tugend: new Controller(server, "tugend"),
 			mis: new Controller(server, "mis"),
 			rko: new Controller(server, "rko")
-		}
+		};
 
 		/****************************************/
 		/**  VIEWS                             **/
 		/****************************************/
 		Views.Opponents(model, $('#players'));
 		Views.Player(model, $('#player'));
-		var h = new Views.Hand(model.my.hand, $('#hand'));
-		model.addListener(h.render);
+		Views.Hand(model, $('#hand'));
+		Views.CurrentPlayer(model, $('#current_player'));
 
 		var views = [];
-		views.push(new OptionsView(model, controllers, '#optionsView'));
-		views.forEach( function(view) { view.render(); });
 
-		//$('.btn').click();
+		// inject selectionView
+		var selectionView = new SelectionView();
+		$('body').append(selectionView.elm);
+		// should only be rendered in specific cases
+
+		// inject optionsview
+		var optionsView = new OptionsView(model, controllers, selectionView);
+		$('#optionsView').append(optionsView.elm); // or replacewith
+		views.push(optionsView);
+
+		// hack view
+		var playerInTurnView = new PlayerInTurnView(model);
+		$('#playerinturnView').append(playerInTurnView.elm);
+		views.push(playerInTurnView);
+
+		views.forEach( function(view) { view.render(); });
 	});
 });

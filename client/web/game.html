@@ -1,14 +1,17 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    <!-- <meta http-equiv="refresh" content="2"> -->
 		<title>HotCit - Lobby</title>
+
         <script data-main="js/main" src="js/libs/require.js"></script>
-        <!-- TODO: cleanup -->
-        <script src="js/libs/jquery-2.0.3.js"></script>
-        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap-theme.min.css">
+    
+        <!-- Bootstrap -->
+        <script src="js/libs/jquery-2.0.3.js"></script> <!-- dependency -->
+        <script src="vendors/bootstrap/js/bootstrap.min.js"></script>
+        <link rel='stylesheet' href='vendors/bootstrap/css/bootstrap.min.css' type='text/css'>
+        <!-- <link rel='stylesheet' href='vendors/bootstrap/css/bootstrap-theme.min.css' type='text/css'> -->
+        <!-- /Bootstrap -->
+
 		<link rel='stylesheet' href='css/game.css' type='text/css'>
 		<link rel='stylesheet' href='css/jquery-ui.css' type='text/css'>
 	</head>
@@ -16,7 +19,11 @@
     <div id='app'>
 		<div id='players'></div>
 		<div id='player'></div>
-        <div id='optionsView'></div>
+        <div style='width:300px'>
+            <div id='optionsView' class='well'></div>
+            <div id='playerinturnView' class='well'></div>
+        </div>
+        </div>
     </div>
   </body>
 </html>

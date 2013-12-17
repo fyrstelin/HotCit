@@ -1,7 +1,7 @@
 /*global define, console*/
 define(function (require) {
 	"use strict";
-	var template, handTemplate,
+	var template, handTemplate, currentPlayerTemplate,
 		$ = require('jquery'),
 		Mustache = require('mustache');
 
@@ -14,6 +14,7 @@ define(function (require) {
 
 	template = Mustache.compile(load("templates/player.html"));
 	handTemplate = Mustache.compile(load("templates/hand.html"));
+	currentPlayerTemplate = Mustache.compile(load("templates/currentplayer.html"));
 
 	//We may or may not want a seperate view for every opponent?
 	function OpponentsView(model, elm) {
@@ -27,9 +28,9 @@ define(function (require) {
 	}
 
 	//better way? No model and the caller is responsible for registering the render function...
-	function HandView(hand, elm) {
+	function HandView(model, elm) {
 		this.render = function () {
-			elm.html(handTemplate(hand));
+			elm.html(handTemplate(model.my.hand));
 		};
 		this.render();
 	}
@@ -42,9 +43,18 @@ define(function (require) {
 		model.addListener(render);
 	}
 
+	function CurrentPlayerView(model, elm) {
+		function render() {
+			elm.html(currentPlayerTemplate(model));
+		}
+		render();
+		model.addListener(render);
+	}
+
 	return {
 		Opponents: OpponentsView,
 		Player: PlayerView,
-		Hand: HandView
+		Hand: HandView,
+		CurrentPlayer: CurrentPlayerView,
 	};
 });
