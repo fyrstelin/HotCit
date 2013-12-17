@@ -92,7 +92,8 @@ define("model", function () {
 		}
 
         // allow local state changes to override playerInTurn
-        // slightly a hack
+        // todo: this is a hack and should be replaced by a prober 
+        //       state change pattern?
 		this.overridePlayerInTurn = function (playerInTurn) {
 			model.playerInTurnOverride = playerInTurn;
 			model.playerInTurn = playerInTurn;
@@ -114,7 +115,7 @@ define("model", function () {
 				update.Players.forEach(function (p1) {
 					if (p1.Username == model.my.username) { //update my
 						model.my.city       = p1.City       || model.my.city;
-						model.my.points     = p1.Points	    || model.my.points;
+						model.my.points     = p1.Points     || model.my.points;
 						model.my.gold       = p1.Gold       || model.my.gold;
 						model.my.characters = p1.Characters || model.my.characters;
 					} else { //update opponents
