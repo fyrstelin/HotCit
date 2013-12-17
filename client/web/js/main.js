@@ -8,11 +8,14 @@ require.config({
 	}
 });
 
-var controllers, model, server;
+/* GLOBALS */
+var controllers, model;
 
 define(function (require) {
 	"use strict";
-	var $ = require('jquery'),
+    
+	var server, views, selectionView, optionsView, playerInTurnView,
+        $ = require('jquery'),
 		Server = require('server'),
 		Model = require('model'),
 		Views = require('views'),
@@ -20,43 +23,41 @@ define(function (require) {
 		SelectionView = require('selection_view'),
 		Controller = require('controller'),
 		PlayerInTurnView = require('playerinturn_view');
+    
+    server = new Server.Game("test");
+    model = new Model(server, "afk");
+    controllers = {
+        //For test purpose
+        afk: new Controller(server, "afk"),
+        tugend: new Controller(server, "tugend"),
+        mis: new Controller(server, "mis"),
+        rko: new Controller(server, "rko")
+    };
 
-	$(function () {
-		server = new Server.Game("test");
-		model = new Model(server, "afk");
-		controllers = { 
-			//For test purpose
-			afk: new Controller(server, "afk"),
-			tugend: new Controller(server, "tugend"),
-			mis: new Controller(server, "mis"),
-			rko: new Controller(server, "rko")
-		};
+    /****************************************/
+    /**  VIEWS                             **/
+    /****************************************/
+    Views.Opponents(model, $('#players'));
+    Views.Player(model, $('#player'));
+    Views.Hand(model, $('#hand'));
+    Views.CurrentPlayer(model, $('#current_player'));
 
-		/****************************************/
-		/**  VIEWS                             **/
-		/****************************************/
-		Views.Opponents(model, $('#players'));
-		Views.Player(model, $('#player'));
-		Views.Hand(model, $('#hand'));
-		Views.CurrentPlayer(model, $('#current_player'));
+    views = [];
+    
+    // inject selectionView
+    selectionView = new SelectionView();
+    $('body').append(selectionView.elm);
+    // should only be rendered in specific cases via other views
 
-		var views = [];
+    // inject optionsview
+    optionsView = new OptionsView(model, controllers, selectionView);
+    $('#optionsView').append(optionsView.elm); // or replacewith
+    views.push(optionsView);
 
-		// inject selectionView
-		var selectionView = new SelectionView();
-		$('body').append(selectionView.elm);
-		// should only be rendered in specific cases
+    // inject playerInTurnView 
+    playerInTurnView = new PlayerInTurnView(model);
+    $('#playerinturnView').append(playerInTurnView.elm);
+    views.push(playerInTurnView);
 
-		// inject optionsview
-		var optionsView = new OptionsView(model, controllers, selectionView);
-		$('#optionsView').append(optionsView.elm); // or replacewith
-		views.push(optionsView);
-
-		// hack view
-		var playerInTurnView = new PlayerInTurnView(model);
-		$('#playerinturnView').append(playerInTurnView.elm);
-		views.push(playerInTurnView);
-
-		views.forEach( function(view) { view.render(); });
-	});
+    views.forEach(function (view) { view.render(); });
 });

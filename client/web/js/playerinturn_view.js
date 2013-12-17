@@ -1,95 +1,103 @@
+/*global define, console, $*/
+/*jslint es5: true*/
+/*jslint nomen: true*/
+/*jshint multistr: true */
+
 define(function (require) {
     "use strict";
-    var Mustache = require('mustache');
-    /**
-        TODO:
-        A: cleanup options view
-        B: add to existing setup
-        C: outfactor general behavior to subclss
-    */
-    var view_template = "\
+    
+    /* LOCAL VARIABLES */
+    var that, Mustache, view_template, option_template, model, selected, playerids;
+    
+    /* IMPORTS */
+    Mustache = require('mustache');
+
+    /* TEMPLATES */
+    // TODO: do we want these small templates to be in separate files?
+    // I argued 'yes', last time.
+    view_template = "\
         <ul class='nav nav-pills' class='options'></ul>\
     ";
 
-    var option_template = "\
+    option_template = "\
         <li>\
-            <a href='' onclick='return false;'>{{pid}}</button>\
+            <a class='btn'>{{pid}}{{#isPlayerInTurn}}*{{/isPlayerInTurn}}</a>\
         </li>\
     ";
 
-    // TODO: use static methods some more..
-    function PlayerInTurnView(model) {
-        console.log("INIT: PlayerInTurnView", model)
-        this.model = model;
-        this.elm = $(view_template);
-        var that = this;
+    /* CONSTRUCTOR */
+    function PlayerInTurnView(in_model) {
+        console.log("INIT: PlayerInTurnView", in_model);
+        that = this;
+        
+        model = in_model;
+        that.elm = $(view_template);
 
         // this is annoying..
-        this.players = [];
-        this.players.push(this.model.my.username);
-        this.model.opponents.forEach(function(player) {
-            that.players.push(player.username);
+        playerids = [];
+        playerids.push(model.my.username);
+        model.opponents.forEach(function (player) {
+            playerids.push(player.username);
         });
 
-        this.selected = this.model.playerInTurn;
-        this.model.addListener(this.notify.bind(this));
-    };
-
-    PlayerInTurnView.prototype.optionSelect = function(choice) {
-        var that = this;
-        this.selected = choice;
-        console.log(this.model);
-        this.model.overridePlayerInTurn(choice);
-        return this;
+        selected = model.playerInTurn;
+        model.addListener(that.notify);
     }
 
-    PlayerInTurnView.prototype._renderOption = function(option) {
-        var that = this;
-        var element = $(Mustache.render(option_template, { 'pid': option }));
-
-        if( this.selected === option)
-            element.addClass('active');
-
-        // add event listener
-        element.click(function() { that.optionSelect(option) });
-
-        // add element to the DOM
-        this.elm.append(element);  
-
-        return this;   
-    }
-
-    PlayerInTurnView.prototype._renderOptions = function() {
-        var that = this;
-        this.players.forEach(that._renderOption.bind(this));
-        return this;
-    }
-
-    // TODO: invert
-    PlayerInTurnView.prototype.render = function() {
+    /* METHOD */
+    PlayerInTurnView.prototype.render = function () {
         console.log("RENDER PlayerInTurnView");
 
         // clear container
-        this.elm.empty();
+        that.elm.empty();
 
         // render all options
-        this._renderOptions();    
+        that._renderOptions();
 
-        return this;
+        return that;
     };
     
-    PlayerInTurnView.prototype.notify = function() {
-        this.render();
-        return this;
-    }
+    /* METHOD */
+    PlayerInTurnView.prototype.notify = function () {
+        that.render();
+        return that;
+    };
+    
+    /* EVENT HANDLER */
+    /* PRIVATE METHOD */
+    PlayerInTurnView.prototype.optionSelect = function (choice) {
+        selected = choice;
+        
+        // HACK: this should be delegated to a controller, but 
+        //       it is not really something we want in production code
+        model.overridePlayerInTurn(choice);
+        return that;
+    };
+
+    /* PRIVATE METHOD */
+    PlayerInTurnView.prototype._renderOption = function (option) {
+        var element = $(Mustache.render(option_template,
+                        { 'pid': option,
+                          'isPlayerInTurn': option === model.my.username }));
+
+        if (selected === option) {
+            element.addClass('active');
+        }
+
+        // add event listener
+        element.click(function () { that.optionSelect(option); });
+
+        // add element to the DOM
+        that.elm.append(element);
+
+        return that;
+    };
+
+    /* PRIVATE METHOD */
+    PlayerInTurnView.prototype._renderOptions = function _renderOptions() {
+        playerids.forEach(that._renderOption);
+        return that;
+    };
 
     return PlayerInTurnView;
 });
-
-/**
-    TODO:
-    [A]: cleanup and document
-    [B]: prettify how elements and containers should work,
-         i.e. views should not inject themselves
-    [E]: introduce a test suite documenting the working functionality
-*/

@@ -1,120 +1,121 @@
-function getOptionsOfPlayerInTurn(model) {
-    console.log(model);
-    if( model.my.username === model.playerInTurn)
-        return model.my.options;
-    else return [];
-}
+/*global define, console, $ */
+/*jslint es5: true */
+/*jslint nomen: true */
+/*jshint multistr: true */
 
 define(function (require) {
 	"use strict";
-    var Mustache = require('mustache');
+    
+    /* LOCAL VARIABLES */
+    var that, Mustache, view_template, option_template, model, controllers, selectionView;
+    
+    /* IMPORTS */
+    Mustache = require('mustache');
     /**
         TODO:
-        A: cleanup options view
-        B: add to existing setup
-        C: outfactor general behavior to subclss
+        outfactor general behavior to subclss
     */
-    var view_template = "\
+    
+    /* TEMPLATES */
+    // TODO: do we want these small templates to be in separate files?
+    // I argued 'yes', last time.
+    view_template = "\
         <ul class='nav nav-pills nav-stacked' class='options'></ul>\
     ";
 
-    var option_template = "\
+    option_template = "\
         <li>\
             <button type='button' class='btn btn-primary'>\
                 {{Message}}\
             </button>\
         </li>\
     ";
+      
+     /* CONSTRUCTOR */
+    function OptionsView(in_model, in_controllers, in_selectionView) {
+        console.log("INIT: OPTIONSVIEW", model);
 
-    function OptionsView(model, controllers, selectionView) {
-        console.log("INIT: OPTIONSVIEW", model)
-
-        // this.gameid = model.gameid;
-        this.model = model;
-        this.controllers = controllers;
-        this.me_controller = controllers[this.model.my.username];
-        this.model.addListener(this.notify.bind(this));
+        that = this;
+        
+        model = in_model;
+        controllers = in_controllers;
+        model.addListener(this.notify);
+        selectionView = in_selectionView;
+                
         this.elm = $(view_template);
-        this.selectionView = selectionView;
+    }
+    
+    /* METHOD */
+    OptionsView.prototype.render = function (model) {
+        console.log("RENDER OPTIONSVIEW", model);
+        
+        // clear container
+        that.elm.empty();
+
+        // render all options
+        that._renderOptions();
+
+        return that;
+    };
+    
+    /* METHOD */
+    OptionsView.prototype.notify = function () {
+        that.render();
+        return that;
     };
 
-    OptionsView.prototype.select = function(choice) {
-        if( choice !== "_CANCEL") {
+    /* EVENT HANDLER */
+    /* PRIVATE METHOD */
+    OptionsView.prototype.select = function (choice) {
+        // todo: outfactor events to a 'enum' like structure?
+        if (choice !== "_CANCEL") {
             console.log("SELECTED: ", choice);
-            this.me_controller.select(choice);
+            controllers[model.playerInTurn].select(choice);
         }
 
-        return this;
-    }
+        return that;
+    };
 
-    OptionsView.prototype.optionSelect = function(option) {
+    /* EVENT HANDLER */
+    /* PRIVATE METHOD */
+    OptionsView.prototype.optionSelect = function (option) {
         // console.log("EVENT: CLICK OPTION", option);
-        var that = this;
-
-        this.selectionView.render(
-            option.Choices, this.select.bind(this), 'Please select a card');
+        selectionView.render(option.Choices,
+             that.select, 'Please select a card');
        
-        return this;
-    }; 
+        return that;
+    };
 
-    OptionsView.prototype._renderOption = function(option) {
-        var that = this;
+    /* PRIVATE METHOD */
+    OptionsView.prototype._renderOption = function (option) {
         var element = $(Mustache.render(option_template, option));
 
         // add event listener
-        element.click(function() { that.optionSelect(option) });
+        element.click(function () { that.optionSelect(option); });
 
         // add element to the DOM
-        this.elm.append(element);  
-
-        return this;   
-    }
-
-    OptionsView.prototype._renderOptions = function() {
-        var options = getOptionsOfPlayerInTurn(this.model);
-        var that = this;
-
-        if( options.length === 0) {
-            var element = $(Mustache.render(
-                option_template, {'Message': 'no options sir!'}));
-            element.find('.btn').attr('disabled', 'disabled');
-            this.elm.append(element);
-        } else {
-            options.forEach(this._renderOption.bind(this));
-        }
-
-        return this;
-    }
-
-    // TODO: invert
-    OptionsView.prototype.render = function() {
-        console.log("RENDER OPTIONSVIEW");
-
-        var that = this;
-
-        // clear container
-        this.elm.empty();
-
-        // render all options
-        this._renderOptions();    
+        that.elm.append(element);
 
         return this;
     };
-    
-    OptionsView.prototype.notify = function() {
-        this.render();
+
+    /* PRIVATE METHOD */
+    OptionsView.prototype._renderOptions = function () {
+        var options, element;
+
+        options = (model.my.username === model.playerInTurn) ?
+                   model.my.options : [];
+        
+        if (options.length === 0) {
+            element = $(Mustache.render(option_template, {'Message': 'no options sir!'}));
+            element.find('.btn').attr('disabled', 'disabled');
+            that.elm.append(element);
+        } else {
+            options.forEach(that._renderOption);
+        }
+
         return this;
-    }
+    };
 
     return OptionsView;
 });
-
-/**
-    TODO:
-    [A]: cleanup
-    [B]: prettify how elements and containers should work,
-         i.e. views should not inject themselves
-    [C]: show playerinturn
-    [D]: state pattern for changing players?
-    [E]: introduce a test suite documenting the working functionality
-*/

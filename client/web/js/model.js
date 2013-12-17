@@ -91,11 +91,13 @@ define("model", function () {
 			});
 		}
 
-		this.overridePlayerInTurn = function(playerInTurn) {
+        // allow local state changes to override playerInTurn
+        // slightly a hack
+		this.overridePlayerInTurn = function (playerInTurn) {
 			model.playerInTurnOverride = playerInTurn;
 			model.playerInTurn = playerInTurn;
 			notify();
-		}
+		};
  
 		this.addListener = function (cb) {
 			listeners.push(cb);
