@@ -64,7 +64,6 @@ namespace HotCit
 
         static void Main(string[] args)
         {
-            ServicePointManager.DefaultConnectionLimit = 32;
             var app = new ServerHost();
             var addr = "http://*:8080/";
             app.Init();

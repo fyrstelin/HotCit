@@ -40,7 +40,7 @@ define(function (require) {
                 var elm;
                 elm = $("<img>")
                     .addClass("card")
-                    .attr("src", "/resources/images/" + c);
+                    .attr("src", "/resources/images/mdpi/" + c + ".png");
                 that.elm.append(elm);
                 
                 if (model.my.can("BuildDistrict")) {
@@ -73,7 +73,7 @@ define(function (require) {
             cityView.html("");
             model.my.city.forEach(function (c) {
                 cityView.append($("<img>")
-                    .attr("src", "/resources/images/" + c)
+                    .attr("src", "/resources/images/mdpi/" + c + ".png")
                     .addClass("card"));
             });
 		}

@@ -39,7 +39,7 @@ define(function (require) {
         <h4 class='modal-title' id='myModalLabel'>{{title}}</h4>\
     ";
     
-    card_choice_template = "<img width=100 src='/resources/images/{{card}}' />";
+    card_choice_template = "<img width=100 src='/resources/images/mdpi/{{card}}.png' />";
     
     /* CONSTRUCTOR */
     function SelectionView() {
