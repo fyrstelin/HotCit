@@ -170,12 +170,7 @@ namespace HotCit
                             case Data.Turn.TakeAnAction:
                                 res.Add(new Option
                                 {
-                                    Message = "Take 2 gold", //TODO merchant
-                                    Type = OptionType.TakeAction,
-                                });
-                                res.Add(new Option
-                                {
-                                    Message = "Draw 2 districts and discard one of them", //TODO architect
+                                    Message = "Take 2 gold or Draw 2 districts and discard one of them", //TODO merchant and architect
                                     Type = OptionType.TakeAction,
                                 });
                                 break;

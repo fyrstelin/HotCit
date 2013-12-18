@@ -25,7 +25,6 @@ namespace HotCit
 
             public override void Configure(Container container)
             {
-                
                 SetConfig(new EndpointHostConfig
                     {
                         GlobalResponseHeaders =
@@ -45,8 +44,6 @@ namespace HotCit
                             { typeof(NotEnoughGoldException), 402}
                         }
                     });
-
-
                 Routes.
                     Add<LobbyRequest>("/lobby/").
                     Add<LobbyRequest>("/lobby/{GameId}/").
@@ -67,6 +64,7 @@ namespace HotCit
 
         static void Main(string[] args)
         {
+            ServicePointManager.DefaultConnectionLimit = 32;
             var app = new ServerHost();
             var addr = "http://*:8080/";
             app.Init();

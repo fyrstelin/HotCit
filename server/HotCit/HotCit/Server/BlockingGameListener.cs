@@ -68,15 +68,16 @@ namespace HotCit.Server
         public KeyValuePair<int, GameResponse> GetGame(int lastSeenGame)
         {
             int etag;
+            IEnumerable<KeyValuePair<int, Property>> changes;
 
             lock (_changes)
             {
                 while (_changes.Keys.Max() <= lastSeenGame)
                     Monitor.Wait(_changes);
                 etag = _changes.Keys.Max();
+                changes = _changes.Where(pair => pair.Key > lastSeenGame);
             }
 
-            var changes = _changes.Where(pair => pair.Key > lastSeenGame);
             var res = new GameResponse();
             foreach (var change in changes.Select(pair => pair.Value))
             {
