@@ -1,0 +1,95 @@
+<templates>
+    <!--- PLAYER VIEW --->
+    <template id='player'>
+        <div class='player'>
+            <h1>
+                {{username}}
+                {{#characters}}
+                    <img class='character' src='/resources/images/ldpi/{{.}}.png'/>
+                {{/characters}}
+            </h1>
+            <div class='stats'>
+                <span class='gold'>{{gold}}</span>
+                <span class='points'>{{points}}</span>
+            </div>
+            
+            <h3>Hand</h3>
+            <div class='hand'>
+                {{#hand}}
+                    <img class='card' src='/resources/images/mdpi/{{.}}.png'/>
+                {{/hand}}
+            </div>
+            
+            <h3>City</h3>
+            <div class='city'>
+                {{#city}}
+                    <img class='card' src='/resources/images/mdpi/{{.}}.png'/>
+                {{/city}}
+            </div>
+        </div>
+    </template>
+    
+    
+    <!--- HAND VIEW --->
+    <template id='hand'>
+        <div class='hand'>
+            {{#.}}
+                <img class='card' src='/resources/images/mdpi/{{.}}.png'/>
+            {{/.}}
+        </div>
+    </template>
+    
+    <!--- SELECTION VIEW --->
+    <template id='selection'>
+        <div class='modal fade' id='myModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
+          <div class='modal-dialog'>
+            <div class='modal-content'>
+              <div class='modal-header'></div>
+              <div class='modal-body'></div>
+              <div class='modal-footer'>
+                <button type='button' class='cancel btn btn-default' data-dismiss='modal'>Cancel</button>
+                <button type='button' class='select btn btn-primary' data-dismiss='modal'>Select</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </template>
+    
+    <!--- SELECTION VIEW HEADER --->
+    <template id='selection_header'>
+        <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+        <h4 class='modal-title' id='myModalLabel'>{{title}}</h4>
+    </template>
+    
+    <!--- SELECTION CARD CHOICE --->
+    <template id='selection_card'>
+        <img width=100 src='/resources/images/mdpi/{{card}}.png' />
+    </template>
+    
+    <!--- OPTIONS VIEW --->
+    <template id='options'>
+        <ul class='nav nav-pills nav-stacked' class='options'></ul>
+    </template>
+    
+    <!--- OPTIONS OPTION VIEW ---> <!-- BAAAAD NAMING BY ANDY!!!-->
+    <template id='option'>
+        <li>
+            <button type='button' class='btn btn-primary'>
+                {{Message}}
+            </button>
+        </li>
+    </template>
+    
+    <!--- PLAYER IN TURN VIEW --->
+    <template id='playerTurn'> <!-- BAAAAD NAMING BY ANDY!!!-->
+        <ul class='nav nav-pills' class='options'></ul>
+    </template>
+    
+    <!--- PLAYER IN TURN VIEW --->
+    <template id='playerInTurn'> <!-- BAAAAD NAMING BY ANDY!!!-->
+        <li>
+        <!-- JQuery do not like this :-( <li {{#isPlayerInTurn}}class='active'{{/isPlayerInTurn}}>-->
+            <a class='btn'>{{pid}}</a>
+        </li>
+    </template>
+</templates>

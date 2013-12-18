@@ -1,19 +1,19 @@
 /*global define, console*/
 define(function (require) {
 	"use strict";
-	var template, currentPlayerTemplate,
+	var templates,
 		$ = require('jquery'),
 		Mustache = require('mustache');
     
     
-	function load(url) {
-		return $.ajax({
-			url: url,
-			async: false
-		}).responseText;
-	}
-
-	currentPlayerTemplate = Mustache.compile(load("templates/currentplayer.html"));
+    templates = $($.ajax({
+        url: "templates.html",
+        async: false
+    }).responseText);
+    
+    function getTemplate(id) {
+        return templates.find("#" + id).html();
+    }
 
 	//We may or may not want a seperate view for every opponent?
 	function OpponentsView(model) {
@@ -27,7 +27,7 @@ define(function (require) {
 		render();
 		model.addListener(render);
 	}
-    OpponentsView.prototype.template = Mustache.compile(load("templates/player.html"));
+    OpponentsView.prototype.template = Mustache.compile(getTemplate("player"));
     
     function HandView(model, controller) {
         var that = this;
@@ -35,7 +35,7 @@ define(function (require) {
         that.elm = $("<div>").addClass("hand");
         
         function render() {
-            that.elm.html("");
+            that.elm.empty();
             model.my.hand.forEach(function (c) {
                 var elm;
                 elm = $("<img>")
@@ -70,7 +70,7 @@ define(function (require) {
             .append("<h3>City</h3>")
             .append(cityView);
 		function render() {
-            cityView.html("");
+            cityView.empty();
             model.my.city.forEach(function (c) {
                 cityView.append($("<img>")
                     .attr("src", "/resources/images/mdpi/" + c + ".png")
@@ -86,17 +86,17 @@ define(function (require) {
         var that = this,
             goldElm,
             districtElm,
-            endTurn;
+            endTurnElm;
         that.elm = $('<div>').css("text-align", "center");
         goldElm = $("<button>gold</button>");
         districtElm = $('<button>district</button>');
-        endTurn = $("<button>End Turn</button>'");
+        endTurnElm = $("<button>End Turn</button>'");
         that.elm.append(goldElm)
             .append(districtElm)
-            .append(endTurn);
+            .append(endTurnElm);
         goldElm.on("click", controller.takeGold);
         districtElm.on('click', controller.drawDistricts);
-        endTurn.on("click", controller.endTurn);
+        endTurnElm.on("click", controller.endTurn);
         
         function render() {
             if (model.my.can("TakeAction")) {
@@ -106,6 +106,12 @@ define(function (require) {
                 goldElm.attr("disabled", "disabled");
                 districtElm.attr("disabled", "disabled");
             }
+            
+            if (model.my.can("EndTurn")) {
+                endTurnElm.attr("disabled", null);
+            } else {
+                endTurnElm.attr("disabled", "disabled");
+            }
         }
         render();
         model.addListener(render);
@@ -114,6 +120,7 @@ define(function (require) {
 	return {
 		Opponents: OpponentsView,
 		Player: PlayerView,
-        Board: BoardView
+        Board: BoardView,
+        getTemplate: getTemplate
 	};
 });

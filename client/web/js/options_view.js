@@ -7,30 +7,20 @@ define(function (require) {
 	"use strict";
     
     /* LOCAL VARIABLES */
-    var that, Mustache, view_template,
+    var that, Mustache, Views, view_template,
         option_template, model, controllers, selectionView;
     
     /* IMPORTS */
     Mustache = require('mustache');
+    Views = require('views');
     /**
         TODO:
         outfactor general behavior to subclss
     */
     
     /* TEMPLATES */
-    // TODO: do we want these small templates to be in separate files?
-    // I argued 'yes', last time.
-    view_template = "\
-        <ul class='nav nav-pills nav-stacked' class='options'></ul>\
-    ";
-
-    option_template = "\
-        <li>\
-            <button type='button' class='btn btn-primary'>\
-                {{Message}}\
-            </button>\
-        </li>\
-    ";
+    view_template = Views.getTemplate("options");
+    option_template = Views.getTemplate("option");
       
      /* CONSTRUCTOR */
     function OptionsView(in_model, in_controllers, in_selectionView) {

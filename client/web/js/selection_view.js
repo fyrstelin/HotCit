@@ -7,7 +7,7 @@ define(function (require) {
     "use strict";
     
     /* LOCAL VARIABLES */
-    var that, Mustache,
+    var that, Mustache, Views,
         view_template,
         header_template,
         card_choice_template,
@@ -17,29 +17,12 @@ define(function (require) {
     
    /* IMPORTS */
     Mustache = require('mustache');
+    Views = require('views');
 
     /* TEMPLATES */
-    view_template = "\
-    <div class='modal fade' id='myModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>\
-      <div class='modal-dialog'>\
-        <div class='modal-content'>\
-          <div class='modal-header'></div>\
-          <div class='modal-body'></div>\
-          <div class='modal-footer'>\
-            <button type='button' class='cancel btn btn-default' data-dismiss='modal'>Cancel</button>\
-            <button type='button' class='select btn btn-primary' data-dismiss='modal'>Select</button>\
-          </div>\
-        </div><!-- /.modal-content -->\
-      </div><!-- /.modal-dialog -->\
-    </div><!-- /.modal -->\
-    ";
-
-    header_template = "\
-        <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>\
-        <h4 class='modal-title' id='myModalLabel'>{{title}}</h4>\
-    ";
-    
-    card_choice_template = "<img width=100 src='/resources/images/mdpi/{{card}}.png' />";
+    view_template = Views.getTemplate("selection");
+    header_template = Views.getTemplate("selection_header");
+    card_choice_template = Views.getTemplate("selection_card");
     
     /* CONSTRUCTOR */
     function SelectionView() {

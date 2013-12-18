@@ -7,23 +7,18 @@ define(function (require) {
     "use strict";
     
     /* LOCAL VARIABLES */
-    var that, Mustache, view_template, option_template, model, selected, playerids;
+    var that, Mustache, Views, view_template, option_template, model, selected, playerids;
     
     /* IMPORTS */
     Mustache = require('mustache');
+    Views = require('views');
 
     /* TEMPLATES */
     // TODO: do we want these small templates to be in separate files?
     // I argued 'yes', last time.
-    view_template = "\
-        <ul class='nav nav-pills' class='options'></ul>\
-    ";
+    view_template = Views.getTemplate("playerTurn");
 
-    option_template = "\
-        <li {{#isPlayerInTurn}}class='active'{{/isPlayerInTurn}}>\
-            <a class='btn'>{{pid}}</a>\
-        </li>\
-    ";
+    option_template = Views.getTemplate("playerInTurn");
 
     /* CONSTRUCTOR */
     function PlayerInTurnView(in_model) {
