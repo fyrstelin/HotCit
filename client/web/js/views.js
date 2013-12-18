@@ -29,57 +29,42 @@ define(function (require) {
 	}
     OpponentsView.prototype.template = Mustache.compile(getTemplate("player"));
     
-    function HandView(model, controller) {
-        var that = this;
-        
-        that.elm = $("<div>").addClass("hand");
-        
-        function render() {
-            that.elm.empty();
-            model.my.hand.forEach(function (c) {
-                var elm;
-                elm = $("<img>")
-                    .addClass("card")
-                    .attr("src", "/resources/images/mdpi/" + c + ".png");
-                that.elm.append(elm);
-                
-                if (model.my.can("BuildDistrict")) {
-                    elm.on("click", function () {
-                        controller.buildDistrict(c);
-                    });
-                    elm.addClass("option");
-                }
-            });
-        }
-        model.addListener(render);
-        render();
-    }
     
     //build without templates - I think it could work.
 	function PlayerView(model, controller) {
         var that = this,
-            handView,
             cityView;
-        handView = new HandView(model, controller);
-        cityView = $("<div>").addClass("city");
-        that.elm =
-            $('<div>').addClass("player")
-            .append($("<h1>").html(model.my.username))
-            .append($("<h3>Hand</h3>"))
-            .append(handView.elm)
-            .append("<h3>City</h3>")
-            .append(cityView);
+        
+        that.elm = $('<div>');
+        
+        /* //add a live listener?
+        that.elm.on("click", ".hand .card", function () {
+            if (model.my.can("BuildDistrict")) {
+                controller.buildDistrict($(this).data("card"));
+            }
+        });
+        */
+        
 		function render() {
-            cityView.empty();
-            model.my.city.forEach(function (c) {
-                cityView.append($("<img>")
-                    .attr("src", "/resources/images/mdpi/" + c + ".png")
-                    .addClass("card"));
-            });
+            that.elm.html(that.template({
+                username: model.my.username,
+                characters: model.my.characters,
+                gold: model.my.gold,
+                points: model.my.points,
+                city: model.my.city,
+                hand: model.my.hand
+            }));
+            
+            if (model.my.can("BuildDistrict")) { //adding listener every time?
+                that.elm.find(".hand .card").on("click", function () {
+                    controller.buildDistrict($(this).data("card"));
+                });
+            }
 		}
 		render();
 		model.addListener(render);
 	}
+    PlayerView.prototype.template = OpponentsView.prototype.template;
     
     
     function BoardView(model, controller) {
