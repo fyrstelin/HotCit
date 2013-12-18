@@ -15,6 +15,7 @@ define(function (require) {
 	"use strict";
     
 	var server, views, selectionView, optionsView, playerInTurnView,
+        pid, opponentView, playerView, boardView, controller,
         $ = require('jquery'),
 		Server = require('server'),
 		Model = require('model'),
@@ -27,11 +28,12 @@ define(function (require) {
     server = new Server.Game("test");
     
     // set user by #<user> in url, or default
-    window.onhashchange = function() { document.location.reload(); };
-    var pid = window.location.hash.substring(1) || 'afk';
+    window.onhashchange = function () { document.location.reload(); };
+    pid = window.location.hash.substring(1) || 'afk';
     document.title = pid;
     
     model = new Model(server, pid);
+    controller = new Controller(server, pid);
     controllers = {
         //For test purpose
         afk: new Controller(server, "afk"),
@@ -43,10 +45,14 @@ define(function (require) {
     /****************************************/
     /**  VIEWS                             **/
     /****************************************/
-    Views.Opponents(model, $('#players'));
-    Views.Player(model, $('#player'));
-    Views.Hand(model, $('#hand'));
-    Views.CurrentPlayer(model, $('#current_player'));
+    opponentView = new Views.Opponents(model);
+    $('#players').html(opponentView.elm);
+    
+    playerView = new Views.Player(model, controller);
+    $('#player').html(playerView.elm);
+    
+    boardView = new Views.Board(model, controller);
+    $('#board').html(boardView.elm);
 
     views = [];
     

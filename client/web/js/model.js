@@ -21,6 +21,7 @@ define("model", function () {
 
 		model.opponents = [];
 		model.my = {};
+        
 
 		/********************************/
 		/**  SIMPLE FIELDS             **/
@@ -79,6 +80,11 @@ define("model", function () {
 		model.my.hand = server.getHand(pid);
 		model.my.options = server.getOptions(pid);
 
+        model.my.can = function (what) {
+            return model.my.options.some(function (option) {
+                return option.Type == what;
+            });
+        };
 
 
 
