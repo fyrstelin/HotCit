@@ -53,6 +53,7 @@ define(function (require) {
     
     boardView = new Views.Board(model, controller);
     $('#board').html(boardView.elm);
+    
 
     views = [];
     
@@ -72,4 +73,23 @@ define(function (require) {
     views.push(playerInTurnView);
 
     views.forEach(function (view) { view.render(); });
+    
+    /****************************************/
+    /**  ACTIVE CONTROLLERS                **/
+    /****************************************/
+    
+    function activateController() {
+        $(".controller").each(function () {
+            var elm = $(this),
+                option = elm.data("option");
+            if (model.my.can(option)) {
+                elm.addClass("option");
+            } else {
+                elm.removeClass("option");
+            }
+        });
+    }
+    
+    model.addListener(activateController);
+    activateController();
 });

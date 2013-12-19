@@ -5,7 +5,6 @@ define(function (require) {
 		$ = require('jquery'),
 		Mustache = require('mustache');
     
-    
     templates = $($.ajax({
         url: "templates.html",
         async: false
@@ -68,39 +67,14 @@ define(function (require) {
     
     
     function BoardView(model, controller) {
-        var that = this,
-            goldElm,
-            districtElm,
-            endTurnElm;
+        var that = this;
         that.elm = $('<div>').css("text-align", "center");
-        goldElm = $("<button>gold</button>");
-        districtElm = $('<button>district</button>');
-        endTurnElm = $("<button>End Turn</button>'");
-        that.elm.append(goldElm)
-            .append(districtElm)
-            .append(endTurnElm);
-        goldElm.on("click", controller.takeGold);
-        districtElm.on('click', controller.drawDistricts);
-        endTurnElm.on("click", controller.endTurn);
-        
-        function render() {
-            if (model.my.can("TakeAction")) {
-                goldElm.attr("disabled", null);
-                districtElm.attr("disabled", null);
-            } else {
-                goldElm.attr("disabled", "disabled");
-                districtElm.attr("disabled", "disabled");
-            }
-            
-            if (model.my.can("EndTurn")) {
-                endTurnElm.attr("disabled", null);
-            } else {
-                endTurnElm.attr("disabled", "disabled");
-            }
-        }
-        render();
-        model.addListener(render);
+        that.elm.html(Mustache.render(that.template));
+        that.elm.on("click", "button.gold", controller.takeGold);
+        that.elm.on('click', "button.districts", controller.drawDistricts);
+        that.elm.on("click", "button.endTurn", controller.endTurn);
     }
+    BoardView.prototype.template = getTemplate("board");
 
 	return {
 		Opponents: OpponentsView,

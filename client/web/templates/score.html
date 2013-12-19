@@ -1,0 +1,19 @@
+<h1>Score</h1>
+<table>
+    <tr>
+        <th colspan="2">Player</th>
+        <th>Gold</th>
+        <th>Points</th>
+    </tr>
+    {{#.}}
+        <tr>
+            <td>{{username}}</td>
+            <td>
+                {{#inTurn}}!{{/inTurn}}
+                {{#king}}+{{/king}}
+            </td>
+            <td>{{gold}}</td>
+            <td>{{points}}</td>
+        </tr>
+    {{/.}}
+</table>
