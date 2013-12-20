@@ -10,13 +10,59 @@
 	</script>
 
 
+<!---CARD.HTML--->
+
+	<script id='card'>
+<img class='card' src='/resources/images/mdpi/{{.}}.png'/>
+	</script>
+
+
+<!---CITY.HTML--->
+
+	<script id='city'>
+{{#.}}
+    <img class='card' src='/resources/images/mdpi/{{.}}.png'/>
+{{/.}}
+	</script>
+
+
 <!---HAND.HTML--->
 
 	<script id='hand'>
-<div class='hand'>
-    {{#.}}
-        <img class='card' src='/resources/images/mdpi/{{.}}.png'/>
-    {{/.}}
+{{#.}}
+    <img class='card' src='/resources/images/mdpi/{{.}}.png' data-card='{{.}}'/>
+{{/.}}
+	</script>
+
+
+<!---OPPONENT.HTML--->
+
+	<script id='opponent'>
+<div class='opponent'>
+    <h1>
+        {{username}}
+        {{#characters}}
+            <img class='character' src='/resources/images/ldpi/{{.}}.png'/>
+        {{/characters}}
+    </h1>
+    <div class='stats'>
+        <span class='gold'>{{gold}}</span>
+        <span class='points'>{{points}}</span>
+    </div>
+    
+    <h3>Hand</h3>
+    <div class='hand'>
+        {{#hand}}
+            <img class='card' src='/resources/images/mdpi/{{.}}.png' data-card='{{.}}'/>
+        {{/hand}}
+    </div>
+    
+    <h3>City</h3>
+    <div class='city'>
+        {{#city}}
+            <img class='card' src='/resources/images/mdpi/{{.}}.png'/>
+        {{/city}}
+    </div>
 </div>
 	</script>
 
@@ -43,46 +89,24 @@
 
 	<script id='player'>
 <div class='player'>
-    <h1>
-        {{username}}
-        {{#characters}}
-            <img class='character' src='/resources/images/ldpi/{{.}}.png'/>
-        {{/characters}}
-    </h1>
-    <div class='stats'>
-        <span class='gold'>{{gold}}</span>
-        <span class='points'>{{points}}</span>
-    </div>
-    
-    <h3>Hand</h3>
-    <div class='hand'>
-        {{#hand}}
-            <img class='card controller' src='/resources/images/mdpi/{{.}}.png' data-card='{{.}}' data-option='BuildDistrict'/>
-        {{/hand}}
-    </div>
-    
-    <h3>City</h3>
-    <div class='city'>
-        {{#city}}
-            <img class='card' src='/resources/images/mdpi/{{.}}.png'/>
-        {{/city}}
-    </div>
+    <div class='city'></div>
+    <div class='hand'></div>
 </div>
 	</script>
 
 
-<!---PLAYER_IN_TURN.HTML--->
+<!---PLAYERINTURN.HTML--->
 
-	<script id='player_in_turn'>
+	<script id='playerInTurn'>
 <li {{#isPlayerInTurn}}class='active'{{/isPlayerInTurn}}>
     <a class='btn'>{{pid}}</a>
 </li>
 	</script>
 
 
-<!---PLAYER_TURN.HTML--->
+<!---PLAYERTURN.HTML--->
 
-	<script id='player_turn'>
+	<script id='playerTurn'>
 <ul class='nav nav-pills' class='options'></ul>
 	</script>
 
@@ -130,16 +154,16 @@
 	</script>
 
 
-<!---SELECTION_CARD.HTML--->
+<!---SELECTIONCARD.HTML--->
 
-	<script id='selection_card'>
+	<script id='selectionCard'>
 <img width=100 src='/resources/images/mdpi/{{card}}.png' />
 	</script>
 
 
-<!---SELECTION_HEADER.HTML--->
+<!---SELECTIONHEADER.HTML--->
 
-	<script id='selection_header'>
+	<script id='selectionHeader'>
 <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
 <h4 class='modal-title' id='myModalLabel'>{{title}}</h4>
 	</script></templates>
