@@ -11,9 +11,9 @@ html {
   padding: 10px;
 }
 
-#players {
+#opponents {
 
-	.player {
+	.opponent {
 		background: green;
 		width: 32%;
 		display: inline-block;
@@ -22,7 +22,7 @@ html {
 	}
 }
 
-.player {
+.opponent {
 	h1 {
 		text-align: center;
 		height: 1.5em;
@@ -78,6 +78,33 @@ html {
 .card {
 	margin: 0 -1em;
     border-radius: 0.5em;
+}
+
+.player {
+    
+    .city {
+        background: gray;
+        text-align: center;
+        
+        .card {
+            height: 100px;
+        
+        }
+    }
+    
+    .hand {
+        position: fixed;
+        bottom: 10px;
+        left: 0px;
+        width: 100%;
+        text-align: center;
+        height: 150px;
+        
+        .card {
+            height: 100%;
+            
+        }
+    }
 }
 
 .option {

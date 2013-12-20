@@ -21,8 +21,8 @@ define(function (require) {
 
     /* TEMPLATES */
     view_template = Views.getTemplate("selection");
-    header_template = Views.getTemplate("selection_header");
-    card_choice_template = Views.getTemplate("selection_card");
+    header_template = Views.getTemplate("selectionHeader");
+    card_choice_template = Views.getTemplate("selectionCard");
     
     /* CONSTRUCTOR */
     function SelectionView() {

@@ -45,17 +45,21 @@ define(function (require) {
     /****************************************/
     /**  VIEWS                             **/
     /****************************************/
+    views = [];
+    
     opponentView = new Views.Opponents(model);
-    $('#players').html(opponentView.elm);
+    $('#opponents').html(opponentView.elm);
+    views.push(opponentView);
     
     playerView = new Views.Player(model, controller);
     $('#player').html(playerView.elm);
+    views.push(playerView);
     
     boardView = new Views.Board(model, controller);
     $('#board').html(boardView.elm);
+    views.push(boardView);
     
 
-    views = [];
     
     // inject selectionView
     selectionView = new SelectionView();
