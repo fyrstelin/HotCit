@@ -1,169 +1,143 @@
 <templates>
 
-
-<!---BOARD.HTML--->
-
+	<!---BOARD.HTML--->
 	<script id='board'>
-<button class='controller gold' data-option='TakeAction'>gold</button>
-<button class='controller districts' data-option='TakeAction'>district</button>
-<button class='controller endTurn' data-option='EndTurn'>End Turn</button>
+		<button class='controller gold' data-option='TakeAction'>gold</button>
+		<button class='controller districts' data-option='TakeAction'>district</button>
+		<button class='controller endTurn' data-option='EndTurn'>End Turn</button>
 	</script>
 
-
-<!---CARD.HTML--->
-
+	<!---CARD.HTML--->
 	<script id='card'>
-<img class='card' src='/resources/images/mdpi/{{.}}.png'/>
+		<img class='card' src='/resources/images/mdpi/{{.}}.png'/>
 	</script>
 
-
-<!---CITY.HTML--->
-
+	<!---CITY.HTML--->
 	<script id='city'>
-{{#.}}
-    <img class='card' src='/resources/images/mdpi/{{.}}.png'/>
-{{/.}}
+		{{#.}}
+		    <img class='card' src='/resources/images/mdpi/{{.}}.png'/>
+		{{/.}}
 	</script>
 
-
-<!---HAND.HTML--->
-
+	<!---HAND.HTML--->
 	<script id='hand'>
-{{#.}}
-    <img class='card' src='/resources/images/mdpi/{{.}}.png' data-card='{{.}}'/>
-{{/.}}
+		{{#.}}
+		    <img class='card' src='/resources/images/mdpi/{{.}}.png' data-card='{{.}}'/>
+		{{/.}}
 	</script>
 
-
-<!---OPPONENT.HTML--->
-
+	<!---OPPONENT.HTML--->
 	<script id='opponent'>
-<div class='opponent'>
-    <h1>
-        {{username}}
-        {{#characters}}
-            <img class='character' src='/resources/images/ldpi/{{.}}.png'/>
-        {{/characters}}
-    </h1>
-    <div class='stats'>
-        <span class='gold'>{{gold}}</span>
-        <span class='points'>{{points}}</span>
-    </div>
-    
-    <h3>Hand</h3>
-    <div class='hand'>
-        {{#hand}}
-            <img class='card' src='/resources/images/mdpi/{{.}}.png' data-card='{{.}}'/>
-        {{/hand}}
-    </div>
-    
-    <h3>City</h3>
-    <div class='city'>
-        {{#city}}
-            <img class='card' src='/resources/images/mdpi/{{.}}.png'/>
-        {{/city}}
-    </div>
-</div>
+		<div class='opponent'>
+		    <h1>
+		        {{username}}
+		        {{#characters}}
+		            <img class='character' src='/resources/images/ldpi/{{.}}.png'/>
+		        {{/characters}}
+		    </h1>
+		    <div class='stats'>
+		        <span class='gold'>{{gold}}</span>
+		        <span class='points'>{{points}}</span>
+		    </div>
+		    
+		    <h3>Hand</h3>
+		    <div class='hand'>
+		        {{#hand}}
+		            <img class='card' src='/resources/images/mdpi/{{.}}.png' data-card='{{.}}'/>
+		        {{/hand}}
+		    </div>
+		    
+		    <h3>City</h3>
+		    <div class='city'>
+		        {{#city}}
+		            <img class='card' src='/resources/images/mdpi/{{.}}.png'/>
+		        {{/city}}
+		    </div>
+		</div>
 	</script>
 
-
-<!---OPTION.HTML--->
-
+	<!---OPTION.HTML--->
 	<script id='option'>
-<li>
-    <button type='button' class='btn btn-primary'>
-        {{Message}}
-    </button>
-</li>
+		<li>
+		    <button type='button' class='btn btn-primary'>
+		        {{Message}}
+		    </button>
+		</li>
 	</script>
 
-
-<!---OPTIONS.HTML--->
-
+	<!---OPTIONS.HTML--->
 	<script id='options'>
-<ul class='nav nav-pills nav-stacked' class='options'></ul>
+		<ul class='nav nav-pills nav-stacked' class='options'></ul>
 	</script>
 
-
-<!---PLAYER.HTML--->
-
+	<!---PLAYER.HTML--->
 	<script id='player'>
-<div class='player'>
-    <div class='city'></div>
-    <div class='hand'></div>
-</div>
+		<div class='player'>
+		    <div class='city'></div>
+		    <div class='hand'></div>
+		</div>
 	</script>
 
-
-<!---PLAYERINTURN.HTML--->
-
+	<!---PLAYERINTURN.HTML--->
 	<script id='playerInTurn'>
-<li {{#isPlayerInTurn}}class='active'{{/isPlayerInTurn}}>
-    <a class='btn'>{{pid}}</a>
-</li>
+		<li {{#isPlayerInTurn}}class='active'{{/isPlayerInTurn}}>
+		    <a class='btn'>{{pid}}</a>
+		</li>
 	</script>
 
-
-<!---PLAYERTURN.HTML--->
-
+	<!---PLAYERTURN.HTML--->
 	<script id='playerTurn'>
-<ul class='nav nav-pills' class='options'></ul>
+		<ul class='nav nav-pills' class='options'></ul>
 	</script>
 
-
-<!---SCORE.HTML--->
-
+	<!---SCORE.HTML--->
 	<script id='score'>
-<h1>Score</h1>
-<table>
-    <tr>
-        <th colspan="2">Player</th>
-        <th>Gold</th>
-        <th>Points</th>
-    </tr>
-    {{#.}}
-        <tr>
-            <td>{{username}}</td>
-            <td>
-                {{#inTurn}}!{{/inTurn}}
-                {{#king}}+{{/king}}
-            </td>
-            <td>{{gold}}</td>
-            <td>{{points}}</td>
-        </tr>
-    {{/.}}
-</table>
+		<h1>Score</h1>
+		<table>
+		    <tr>
+		        <th colspan="2">Player</th>
+		        <th>Gold</th>
+		        <th>Points</th>
+		    </tr>
+		    {{#.}}
+		        <tr>
+		            <td>{{username}}</td>
+		            <td>
+		                {{#inTurn}}!{{/inTurn}}
+		                {{#king}}+{{/king}}
+		            </td>
+		            <td>{{gold}}</td>
+		            <td>{{points}}</td>
+		        </tr>
+		    {{/.}}
+		</table>
 	</script>
 
-
-<!---SELECTION.HTML--->
-
+	<!---SELECTION.HTML--->
 	<script id='selection'>
-<div class='modal fade' id='myModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
-  <div class='modal-dialog'>
-    <div class='modal-content'>
-      <div class='modal-header'></div>
-      <div class='modal-body'></div>
-      <div class='modal-footer'>
-        <button type='button' class='cancel btn btn-default' data-dismiss='modal'>Cancel</button>
-        <button type='button' class='select btn btn-primary' data-dismiss='modal'>Select</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+		<div class='modal fade' id='myModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
+		  <div class='modal-dialog'>
+		    <div class='modal-content'>
+		      <div class='modal-header'></div>
+		      <div class='modal-body'></div>
+		      <div class='modal-footer'>
+		        <button type='button' class='cancel btn btn-default' data-dismiss='modal'>Cancel</button>
+		        <button type='button' class='select btn btn-primary' data-dismiss='modal'>Select</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 	</script>
 
-
-<!---SELECTIONCARD.HTML--->
-
+	<!---SELECTIONCARD.HTML--->
 	<script id='selectionCard'>
-<img width=100 src='/resources/images/mdpi/{{card}}.png' />
+		<img width=100 src='/resources/images/mdpi/{{card}}.png' />
 	</script>
 
-
-<!---SELECTIONHEADER.HTML--->
-
+	<!---SELECTIONHEADER.HTML--->
 	<script id='selectionHeader'>
-<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-<h4 class='modal-title' id='myModalLabel'>{{title}}</h4>
-	</script></templates>
+		<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+		<h4 class='modal-title' id='myModalLabel'>{{title}}</h4>
+	</script>
+
+</templates>
