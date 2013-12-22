@@ -15,7 +15,7 @@ define(function (require) {
 	"use strict";
     
 	var server, views, selectionView, optionsView, playerInTurnView,
-        pid, opponentView, playerView, boardView, controller,
+        pid, opponentView, playerView, boardView, controller, simulateView,
         $ = require('jquery'),
 		Server = require('server'),
 		Model = require('model'),
@@ -23,6 +23,8 @@ define(function (require) {
 		OptionsView = require('options_view'),
 		SelectionView = require('selection_view'),
 		Controller = require('controller'),
+        SimulateView = require('simulate_view'),
+        SimulateController = require('simulate_controller'),
 		PlayerInTurnView = require('playerinturn_view');
     
     server = new Server.Game("test");
@@ -76,6 +78,11 @@ define(function (require) {
     $('#playerinturnView').append(playerInTurnView.elm);
     views.push(playerInTurnView);
 
+    // inject simulateView
+    simulateView = new SimulateView(new SimulateController(model, controllers));  
+    $('#simulateView').append(simulateView.elm);
+    views.push(simulateView);
+    
     views.forEach(function (view) { view.render(); });
     
     /****************************************/

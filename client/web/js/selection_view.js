@@ -7,6 +7,7 @@ define(function (require) {
     "use strict";
     
     /* LOCAL VARIABLES */
+    // // STATIC!!!!!!
     var that, Mustache, Views,
         view_template,
         header_template,
@@ -27,7 +28,7 @@ define(function (require) {
     /* CONSTRUCTOR */
     function SelectionView() {
         console.log("INIT: SELECTVIEW");
-        that = this;
+        that = this; 
         
         that.elm = $(Mustache.render(view_template));
         headerElm = that.elm.find('.modal-header');

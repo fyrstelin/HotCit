@@ -46,6 +46,7 @@
                 out_stream.end("\n\n</templates>");
                 console.log('\tupdated template, included #files:', len);
                 time_last_updated = Date.now();
+                done();
             });
         });
     }
@@ -55,14 +56,14 @@
     }
     
     function setUpdateOnChanged(delay, notify) {
-        function next() {
+        function check() {
             if (time_last_changed > time_last_updated) {
-                notify(next);
+                notify(check);
             } else {
-                setTimeout(next, delay);
+                setTimeout(check, delay);
             }
         }
-        next();
+        check();
     }
     
     fs.watch("templates", change_listener);

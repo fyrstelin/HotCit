@@ -34,7 +34,7 @@ define("model", function () {
 		/********************************/
 		function setSimpleFields(update) {
 			model.king = update.King || model.king;
-			model.playerInTurn = model.playerInTurnOverride || update.PlayerInTurn || model.playerInTurn;
+			model.playerInTurn = update.PlayerInTurn || model.playerInTurn;
 			model.turn = update.Turn || model.turn;
 			model.step = update.Step || model.step;
 			model.round = update.Round || model.round;
@@ -97,15 +97,6 @@ define("model", function () {
 			});
 		}
 
-        // allow local state changes to override playerInTurn
-        // todo: this is a hack and should be replaced by a prober 
-        //       state change pattern?
-		this.overridePlayerInTurn = function (playerInTurn) {
-			model.playerInTurnOverride = playerInTurn;
-			model.playerInTurn = playerInTurn;
-			notify();
-		};
- 
 		this.addListener = function (cb) {
 			listeners.push(cb);
 		};
