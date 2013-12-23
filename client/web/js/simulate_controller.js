@@ -1,4 +1,6 @@
-/*global define, console, window, setTimeout */
+/*global define, console, setTimeout, window */
+/*jslint es5: true*/
+/*jslint nomen: true*/
 
 define(function (require) {
 	"use strict";
@@ -7,6 +9,7 @@ define(function (require) {
     
     return function simulate_controller(model, controllers) {
         var that, gameEvents, eventpoints, counter;
+        
         that = this;
         counter = 0;
         
@@ -18,42 +21,61 @@ define(function (require) {
         ];
         
         eventpoints = {
-            'START': 0,
-            'PHASE2': 4
+            'start': 0,
+            'character_select': 4
         };
         
+        
         // not part of official api
-        that._resetGame = function() {
+        that._resetGame = function () {
+            counter = 0;
+            //console.log('RESET GAME', counter);
             return $.ajax({
                 type: "delete",
                 async: false,
-                url: "http://localhost:8080/games",
+                url: "http://localhost:8080/games"
             });
         };
            
         
-        that.next = function() {
+        that.next = function () {
             gameEvents[counter]();
-            console.log(counter, gameEvents[counter]);
             counter += 1;
+            // console.log('NEXT', counter);
             return counter;
         };
         
         that.skipTo = function (to) {
-            var i;
             
+            // translate from id to event point index
             if (typeof to === "string") {
                 to = eventpoints[to];
             }
-            
             if (to > gameEvents) {
                 throw new Error('to few events!');
             }
-                  
-            for (i = 0; i < to; i += 1) {
-                that.next();
+            
+            // always reset game first
+            if (that.counter > to || to === 0) {
+                that._resetGame();
+            }
+
+            // QUICKFIX
+            // neccessary as server does not send an update
+            if (to === 0) {
+                window.location.reload();
+                return;
+            }
+                              
+            // delay is neccessary to avoid race conditions 
+            function loop(i) {
+                if (i < to) {
+                    that.next();
+                    setTimeout(function () { loop(i + 1); }, 10);
+                }
             }
             // GAME SHOULD UPDATE WHEN RESET?
+            loop(0);
         };
     };
 });

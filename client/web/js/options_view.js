@@ -6,107 +6,154 @@
 define(function (require) {
 	"use strict";
     
-    /* LOCAL VARIABLES */
-    var that, Mustache, Views, view_template,
-        option_template, model, controllers, selectionView;
+    /* STATIC VARIABLES */
+    var Mustache, Views, view_template, option_template;
     
     /* IMPORTS */
     Mustache = require('mustache');
     Views = require('views');
-    /**
-        TODO:
-        outfactor general behavior to subclss
-    */
     
     /* TEMPLATES */
     view_template = Views.getTemplate("options");
     option_template = Views.getTemplate("option");
       
-     /* CONSTRUCTOR */
-    function OptionsView(in_model, in_controllers, in_selectionView) {
-        console.log("INIT: OPTIONSVIEW", model);
-
+    return function OptionsView(model, controller, selectionView) {
+        var that, noOptionsBtn, optionHandles;
         that = this;
+        noOptionsBtn =  $(Mustache.render(option_template, {'Message': 'no options sir!', disabled: true}));
         
-        model = in_model;
-        controllers = in_controllers;
-        model.addListener(this.notify);
-        selectionView = in_selectionView;
+        function initialize() {
+            // console.log("INIT: OPTIONSVIEW", model);
+            that.elm = $(view_template);
+            model.addListener(that.notify);
+        }
+        
+        /* METHOD */
+        that.render = function () {
+            // clear container
+            that.elm.empty();
+            that._renderOptions();
+  
+        };
+        
+        /* METHOD */
+        that.notify = function () {        
+            that.render();
+                       
+            // auto select
+            if(model.my.options.length === 1 && model.my.options[0].Type === 'Select') {
+                that._optionSelect(model.my.options[0]);    
+            }
+        };
+
+        
+        /* EVENT HANDLER */
+        that._handleSelect = function (option, choices) {
+            selectionView.render(
+                choices,
+                controller.select,
+                'Please select a card'
+            );
+        };
                 
-        this.elm = $(view_template);
-    }
+        that._handlePassivAbility = function() {
+            // BUG: how is current/active character defined?
+            if(model.my.characters.length > 1) throw new Error('multiple characters are not supported!');
+            controller.useAbility(model.my.characters[0], undefined);
+               
+        };
     
-    /* METHOD */
-    OptionsView.prototype.render = function (model) {
-        console.log("RENDER OPTIONSVIEW", model);
+        that._handleAbility = function(option) {
+            switch(model.my.characters[0]) {
+            case 'king': 
+                that._handlePassivAbility(option);
+                break;
+            }
+        };
         
-        // clear container
-        that.elm.empty();
-
-        // render all options
-        that._renderOptions();
-
-        return that;
-    };
+        that._handleAction = function() {
+            selectionView.render(
+                ["takegold", "drawdistricts"],
+                function(choice) {
+                    switch(choice) {
+                    case 'takegold': 
+                        controller.takeGold();
+                        break;
+                            
+                    case 'drawdistricts':
+                        controller.drawDistricts();
+                        break;
+                            
+                    default: 
+                        throw new Error('option was not matched: ' + choice);
+                    }       
+                },
+                'Please select an option'
+            );      
+        };
+        
+        /* EVENT HANDLER */
+        that._optionSelect = function (option) {
+            // console.log("EVENT: CLICK OPTION", option, optionHandles);
+            //optionHandles[option.Type](option);
+            switch(option.Type) {
+                    
+            case 'EndTurn': 
+                controller.endTurn();
+                break;
+                    
+            case 'TakeAction':
+                that._handleAction(option);
+                break;
+                    
+            // but model is not proberly updated 
+            case 'BuildDistrict':
+                selectionView.render(
+                    option.Choices,
+                    controller.buildDistrict,
+                    'Please select a card'
+                );    
+                break;   
+                    
+            case 'Select': 
+                selectionView.render(
+                    option.Choices,
+                    controller.select,
+                    'Please select a card'
+                );    
+                break;
+                    
+            case 'UseAbility':
+                that._handleAbility(option);
+                break;
+            
+            default: 
+                throw new Error('option was not matched: ' + option.Type);
+            }
+        };
     
-    /* METHOD */
-    OptionsView.prototype.notify = function () {
-        that.render();
-        return that;
-    };
-
-    /* EVENT HANDLER */
-    /* PRIVATE METHOD */
-    OptionsView.prototype.select = function (choice) {
-        // todo: outfactor events to a 'enum' like structure?
-        if (choice !== "_CANCEL") {
-            console.log("SELECTED: ", choice);
-            controllers[model.playerInTurn].select(choice);
-        }
-
-        return that;
-    };
-
-    /* EVENT HANDLER */
-    /* PRIVATE METHOD */
-    OptionsView.prototype.optionSelect = function (option) {
-        // console.log("EVENT: CLICK OPTION", option);
-        selectionView.render(option.Choices,
-             that.select, 'Please select a card');
-       
-        return that;
-    };
-
-    /* PRIVATE METHOD */
-    OptionsView.prototype._renderOption = function (option) {
-        var element = $(Mustache.render(option_template, option));
-
-        // add event listener
-        element.click(function () { that.optionSelect(option); });
-
-        // add element to the DOM
-        that.elm.append(element);
-
-        return this;
-    };
-
-    /* PRIVATE METHOD */
-    OptionsView.prototype._renderOptions = function () {
-        var options, element;
-
-        options = (model.my.username === model.playerInTurn) ?
-                   model.my.options : [];
+        that._renderOptions = function () {
+            var options;
+    
+            options = model.my.options;
+            
+            if (options.length === 0) {
+                that.elm.append(noOptionsBtn);
+            } else {
+                options.forEach(that._renderOption);
+            }
+        };
         
-        if (options.length === 0) {
-            element = $(Mustache.render(option_template, {'Message': 'no options sir!'}));
-            element.find('.btn').attr('disabled', 'disabled');
+        that._renderOption = function (option) {
+            var element = $(Mustache.render(option_template, option));
+    
+            // add event listener
+            element.click(function () { that._optionSelect(option); });
+    
+            // add element to the DOM
             that.elm.append(element);
-        } else {
-            options.forEach(that._renderOption);
-        }
-
-        return this;
+        };
+        
+        initialize();
     };
-
-    return OptionsView;
 });

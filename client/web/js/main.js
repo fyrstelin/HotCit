@@ -16,6 +16,7 @@ define(function (require) {
     
 	var server, views, selectionView, optionsView, playerInTurnView,
         pid, opponentView, playerView, boardView, controller, simulateView,
+        characterView,
         $ = require('jquery'),
 		Server = require('server'),
 		Model = require('model'),
@@ -25,7 +26,8 @@ define(function (require) {
 		Controller = require('controller'),
         SimulateView = require('simulate_view'),
         SimulateController = require('simulate_controller'),
-		PlayerInTurnView = require('playerinturn_view');
+		PlayerInTurnView = require('playerinturn_view'),
+        CharacterView = require('character_view');
     
     server = new Server.Game("test");
     
@@ -61,15 +63,12 @@ define(function (require) {
     $('#board').html(boardView.elm);
     views.push(boardView);
     
-
-    
     // inject selectionView
-    selectionView = new SelectionView();
-    $('body').append(selectionView.elm);
+    selectionView = new SelectionView(model, controller);
     // should only be rendered in specific cases via other views
 
     // inject optionsview
-    optionsView = new OptionsView(model, controllers, selectionView);
+    optionsView = new OptionsView(model, controller, selectionView);
     $('#optionsView').append(optionsView.elm); // or replacewith
     views.push(optionsView);
 
@@ -83,12 +82,18 @@ define(function (require) {
     $('#simulateView').append(simulateView.elm);
     views.push(simulateView);
     
+    // inject simulateView
+    characterView = new CharacterView(model, controller, selectionView);  
+    $('#characterView').append(characterView.elm);
+    views.push(characterView);
+    
     views.forEach(function (view) { view.render(); });
     
     /****************************************/
     /**  ACTIVE CONTROLLERS                **/
     /****************************************/
     
+    /*
     function activateController() {
         $(".controller").each(function () {
             var elm = $(this),
@@ -103,4 +108,5 @@ define(function (require) {
     
     model.addListener(activateController);
     activateController();
+    */
 });

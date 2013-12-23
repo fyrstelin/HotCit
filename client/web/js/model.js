@@ -145,7 +145,7 @@ define("model", function () {
 				model.my.options.push(o);
 			});
 
-			notify();
+			notify(update);
 		}, data.etag);
 	}
 

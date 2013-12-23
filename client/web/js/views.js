@@ -4,6 +4,7 @@ define(function (require) {
 	var templates,
 		$ = require('jquery'),
 		Mustache = require('mustache'),
+        BoardView2 = require('board_view2'),
         HandView;
     
     templates = $($.ajax({
@@ -129,7 +130,6 @@ define(function (require) {
             cityView = new CityView(model);
         that.elm = $("<div>").addClass("PlayerView");
         
-        
         that.render = function () {
             that.elm.html(that.template);
             that.elm.find(".hand").append(handView.elm);
@@ -157,7 +157,7 @@ define(function (require) {
 	return {
 		Opponents: OpponentsView,
 		Player: PlayerView,
-        Board: BoardView,
+        Board: BoardView2,
         getTemplate: getTemplate
 	};
 });

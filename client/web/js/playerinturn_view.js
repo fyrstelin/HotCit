@@ -22,7 +22,7 @@ define(function (require) {
 
     /* CONSTRUCTOR */
     function PlayerInTurnView(in_model) {
-        console.log("INIT: PlayerInTurnView", in_model);
+        // console.log("INIT: PlayerInTurnView", in_model);
         that = this;
         
         model = in_model;
@@ -37,7 +37,6 @@ define(function (require) {
             playerids.push(player.username);
         });
         playerids.sort();
-        console.log(playerids);
 
         selected = model.playerInTurn;
         model.addListener(that.notify);
@@ -45,7 +44,7 @@ define(function (require) {
 
     /* METHOD */
     PlayerInTurnView.prototype.render = function () {
-        console.log("RENDER PlayerInTurnView");
+        // console.log("RENDER PlayerInTurnView");
 
         // clear container
         that.elm.empty();

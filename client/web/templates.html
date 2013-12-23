@@ -2,9 +2,11 @@
 
 	<!---BOARD.HTML--->
 	<script id='board'>
-		<button class='controller gold' data-option='TakeAction'>gold</button>
-		<button class='controller districts' data-option='TakeAction'>district</button>
-		<button class='controller endTurn' data-option='EndTurn'>End Turn</button>
+		<div style='text-align:center;'>
+		    <button class='controller gold' data-option='TakeAction'>gold</button>
+		    <button class='controller districts' data-option='TakeAction'>district</button>
+		    <button class='controller endTurn' data-option='EndTurn'>End Turn</button>
+		</div>
 	</script>
 
 	<!---CARD.HTML--->
@@ -59,7 +61,7 @@
 	<!---OPTION.HTML--->
 	<script id='option'>
 		<li>
-		    <button type='button' class='btn btn-primary' style='width:250px'>
+		    <button type='button' class='btn btn-primary' style='width:250px' {{#disabled}}disabled='disabled'{{/disabled}}>
 		        {{Message}}
 		    </button>
 		</li>
@@ -141,7 +143,7 @@
 
 	<!---SELECTIONCARD.HTML--->
 	<script id='selectionCard'>
-		<img width=100 src='/resources/images/mdpi/{{card}}.png' />
+		<img width=100 class='img-thumbnail' src='/resources/images/mdpi/{{card}}.png' />
 	</script>
 
 	<!---SELECTIONHEADER.HTML--->

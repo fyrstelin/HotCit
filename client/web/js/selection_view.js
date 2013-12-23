@@ -13,7 +13,7 @@ define(function (require) {
         header_template,
         card_choice_template,
         bodyElm, headerElm,
-        selected_value,
+        selected_value, selectedElement,
         closeBtn, cancelBtn, selectBtn;
     
    /* IMPORTS */
@@ -26,29 +26,34 @@ define(function (require) {
     card_choice_template = Views.getTemplate("selectionCard");
     
     /* CONSTRUCTOR */
-    function SelectionView() {
-        console.log("INIT: SELECTVIEW");
-        that = this; 
+    function SelectionView(model) {
+        // console.log("INIT: SELECTVIEW");
+        that = this;
         
-        that.elm = $(Mustache.render(view_template));
+        // small hack, must get element with correct context
+        $('body').append($(Mustache.render(view_template)));
+        that.elm = $('#myModal');
+        that.controller = that.elm.modal.bind(that.elm);
         headerElm = that.elm.find('.modal-header');
         bodyElm = that.elm.find('.modal-body');
-
+        
         selected_value = "_NONE";
         closeBtn = that.elm.find('.close');
         cancelBtn = that.elm.find('.cancel');
         selectBtn = that.elm.find('.select');
+        
+        model.addListener(that.notify);
     }
 
     /* PUBLIC METHOD */
     SelectionView.prototype.render = function (choices, callback, title) {
-        console.log("RENDER SELECTVIEW", choices);
+        // console.log("RENDER SELECTVIEW", choices);
         that._renderHeader(title)
             ._renderBody(choices)
             ._renderButtons(callback);
         
         // activate modal
-        $('#myModal').modal({ // easiest hack to remove backdrop, bootstrap error..
+        that.controller({ // easiest hack to remove backdrop, bootstrap error..
             keyboard: true,
             backdrop: true,
         });
@@ -58,9 +63,15 @@ define(function (require) {
 
     /* EVENT HANDLER */
     /* METHOD */
-    SelectionView.prototype.select = function (value) {
-        console.log("selected", value);
+    // TODO: use .active instead of option
+    SelectionView.prototype.select = function (value, element) {
+        // console.log("selected", value);
         selected_value = value;
+        if (selectedElement) {
+            selectedElement.removeClass('option');
+        }
+        selectedElement = element;
+        selectedElement.addClass('option');
         selectBtn.removeAttr('disabled');
     };
     
@@ -87,7 +98,7 @@ define(function (require) {
             );
 
             element.click(function () {
-                that.select(choice);
+                that.select(choice, element);
             });
 
             bodyElm.append(element);
@@ -95,20 +106,29 @@ define(function (require) {
 
         return that;
     };
+    
+    SelectionView.prototype.notify = function() {
+        // because of automatic render of single shot options,
+        // hide option if model updates
+        that.controller('hide');
+    };
 
     /* METHOD */
     SelectionView.prototype._renderButtons = function (callback) {
         // event listeners
         closeBtn.off().click(function () {
-            callback('_CANCEL');
+            //callback('_CANCEL');
         });
 
         cancelBtn.off().click(function () {
-            callback('_CANCEL');
+            //callback('_CANCEL');
         });
 
         selectBtn.off().click(function () {
-            callback(selected_value);
+            // This event is fired when the modal has finished being hidden from the user (will wait for CSS transitions to complete).
+            that.elm.one('hidden.bs.modal', function () {
+                callback(selected_value);
+            });
         });
 
         selectBtn.attr('disabled', 'disabled');
