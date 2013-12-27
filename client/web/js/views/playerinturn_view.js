@@ -7,18 +7,25 @@ define(function (require) {
     "use strict";
     
     /* LOCAL VARIABLES */
-    var that, Mustache, Views, view_template, option_template, model, selected, playerids;
+    var that, Mustache, view_template, option_template, model, selected, playerids;
     
     /* IMPORTS */
     Mustache = require('mustache');
-    Views = require('views');
 
+    var templates = $($.ajax({
+        url: "templates.html",
+        async: false
+    }).responseText);
+    
+    function getTemplate(id) {
+        return templates.find("#" + id).html();
+    }
     /* TEMPLATES */
     // TODO: do we want these small templates to be in separate files?
     // I argued 'yes', last time.
-    view_template = Views.getTemplate("playerTurn");
+    view_template = getTemplate("playerTurn");
 
-    option_template = Views.getTemplate("playerInTurn");
+    option_template = getTemplate("playerInTurn");
 
     /* CONSTRUCTOR */
     function PlayerInTurnView(in_model) {
@@ -39,7 +46,7 @@ define(function (require) {
         playerids.sort();
 
         selected = model.playerInTurn;
-        model.addListener(that.notify);
+        // model.addListener(that.notify);
     }
 
     /* METHOD */

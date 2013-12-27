@@ -1,5 +1,21 @@
 <templates>
 
+	<!---APP.HTML--->
+	<script id='app'>
+		<div>
+		    <div id='opponents'></div>
+		    <div id='board'></div>
+		    <div id='player'></div>
+		    <div style='width:300px; position: absolute; left:10px; top:10px;'>
+		        <div id='simulateView' class='well'></div>
+		        <div id='playerinturnView' class='well'></div>
+		        <div id='optionsView' class='well'></div>
+		    </div>
+		    <div id='characterView' style='width:300px; position: absolute; right:10px; top:10px;'>
+		    </div>
+		</div>
+	</script>
+
 	<!---BOARD.HTML--->
 	<script id='board'>
 		<div style='text-align:center;'>
@@ -11,7 +27,29 @@
 
 	<!---CARD.HTML--->
 	<script id='card'>
-		<img class='card' src='/resources/images/mdpi/{{.}}.png'/>
+		<img class='card img-thumbnail' data-card_type='{{.}}' src='/resources/images/mdpi/{{.}}.png'/>
+	</script>
+
+	<!---CHARACTER.HTML--->
+	<script id='character'>
+		<div class="well">
+		    <div class="abilityBtns" style="position:absolute; right:10px; top:10px"></div>
+		    <div class="character"></div>
+		    <div>Gold: <span class="goldcount"></span></div>
+		</div>
+	</script>
+
+	<!---CHARACTER_CARD--->
+	<script id='character_card'>
+		<img class='img-thumbnail' src='/resources/images/mdpi/{{.}}.png'/>
+	</script>
+
+	<!---CHARACTER_VIEW_ABILITY_BTN--->
+	<script id='character_view_ability_btn'>
+		<button type="button" class="btn btn-{{buttonType}} btn-lg" style="margin-left: 4px;
+		    data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{description}}">
+		    <span class="glyphicon glyphicon-{{iconType}}"></span>
+		</button>
 	</script>
 
 	<!---CITY.HTML--->
@@ -51,9 +89,9 @@
 		    
 		    <h3>City</h3>
 		    <div class='city'>
-		        {{#city}}
+		        <!--{{#city}}
 		            <img class='card' src='/resources/images/mdpi/{{.}}.png'/>
-		        {{/city}}
+		        {{/city}}-->
 		    </div>
 		</div>
 	</script>
@@ -131,7 +169,7 @@
 		  <div class='modal-dialog'>
 		    <div class='modal-content'>
 		      <div class='modal-header'></div>
-		      <div class='modal-body'></div>
+		      <div class='equidistant modal-body'></div>
 		      <div class='modal-footer'>
 		        <button type='button' class='cancel btn btn-default' data-dismiss='modal'>Cancel</button>
 		        <button type='button' class='select btn btn-primary' data-dismiss='modal'>Select</button>
@@ -143,13 +181,34 @@
 
 	<!---SELECTIONCARD.HTML--->
 	<script id='selectionCard'>
-		<img width=100 class='img-thumbnail' src='/resources/images/mdpi/{{card}}.png' />
+		<span><img width=100 class='img-thumbnail' src='/resources/images/mdpi/{{card}}.png' /></span>
 	</script>
 
 	<!---SELECTIONHEADER.HTML--->
 	<script id='selectionHeader'>
 		<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
 		<h4 class='modal-title' id='myModalLabel'>{{title}}</h4>
+	</script>
+
+	<!---SIMULATE.HTML--->
+	<script id='simulate'>
+		<div>
+		    <button type='button' class='skip_character_select_btn btn btn-success' style='width:250px'>
+		        skip character selection
+		    </button>
+		    <br /><br />
+		    <button type='button' class='warlord_turn_btn btn btn-success' style='width:250px'>
+		        skip to destroy ability test
+		    </button>
+		    <br /><br />
+		    <button type='button' class='magician_turn_btn btn btn-success' style='width:250px'>
+		        skip to magician ability test
+		    </button>
+		    <br /><br />
+		    <button type='button' class='reset_btn btn btn-danger' style='width:250px'>
+		        Reset Game
+		    </button>
+		</div>
 	</script>
 
 </templates>

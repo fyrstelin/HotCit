@@ -11,14 +11,37 @@ html {
   padding: 10px;
 }
 
-#opponents {
 
+/* OVERWRITE BOOTSTRAP */
+.modal-footer {
+    margin-top: 0px;
+}
+
+/* http://stackoverflow.com/questions/7245018/how-to-evenly-distribute-elements-in-a-div-next-to-each-other */
+div.equidistant {
+    width:100%;
+    display: table;
+    table-layout: fixed;    /* For cells of equal size */
+  
+    span {
+        display: table-cell;
+        text-align: center;    
+    }
+}
+
+#opponents {
+    > div {
+        width:100%;
+        display: table;
+    }
+    
 	.opponent {
 		background: green;
-		width: 32%;
+		// width: 20%;
 		display: inline-block;
 		font-size: 0.5em;
 		border: 2px solid black;
+        display: table-cell;
 	}
 }
 

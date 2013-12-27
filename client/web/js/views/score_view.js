@@ -7,7 +7,6 @@ define(function (require) {
         
         
     Mustache = require('mustache');
-    Views = require('views');
     $ = require('jquery');
     
     function ScoreView(model) {
@@ -26,7 +25,7 @@ define(function (require) {
             that.elm.html(that.template(players));
         };
         
-        model.addListener(that.render);
+        // model.addListener(that.render);
     }
     
     ScoreView.prototype.template = Mustache.compile(Views.getTemplate("score"));

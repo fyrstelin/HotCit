@@ -7,25 +7,27 @@ define(function (require) {
 	"use strict";
     
     /* STATIC VARIABLES */
-    var Mustache, Views, view_template, option_template;
-    
-    /* IMPORTS */
-    Mustache = require('mustache');
-    Views = require('views');
-    
-    /* TEMPLATES */
-    view_template = Views.getTemplate("options");
-    option_template = Views.getTemplate("option");
-      
-    return function OptionsView(model, controller, selectionView) {
-        var that, noOptionsBtn, optionHandles;
-        that = this;
-        noOptionsBtn =  $(Mustache.render(option_template, {'Message': 'no options sir!', disabled: true}));
+    var Mustache = require('mustache'),
+        utils = require('utils'),
+        getTemplate = utils.getTemplate,
+        view_template,
+        option_template;
         
+    /* TEMPLATES */
+    view_template = getTemplate("options");
+    option_template = getTemplate("option");
+      
+    // CLASS
+    return function OptionsView(model, controller) {
+        var that, noOptionsBtn;
+        
+        that = this;
+        noOptionsBtn =  $(Mustache.render(option_template,
+                            {'Message': 'no options sir!', disabled: true}));
+        
+        /* CONSTRUCTOR */
         function initialize() {
-            // console.log("INIT: OPTIONSVIEW", model);
             that.elm = $(view_template);
-            model.addListener(that.notify);
         }
         
         /* METHOD */
@@ -33,72 +35,64 @@ define(function (require) {
             // clear container
             that.elm.empty();
             that._renderOptions();
-  
+            that._autoSelect();
         };
         
         /* METHOD */
-        that.notify = function () {        
+        that.notify = function () {
             that.render();
-                       
-            // auto select
-            if(model.my.options.length === 1 && model.my.options[0].Type === 'Select') {
-                that._optionSelect(model.my.options[0]);    
-            }
         };
 
+        /* EVENT HANDLER */
+        that._autoSelect = function () {
+            // AUTO SELECT: SHOULD BE MOVED TO A CONTROLLER!
+            if (model.my.options.length === 1 &&
+                    model.my.options[0].Type === 'Select') {
+                that._optionSelect(model.my.options[0]);
+            }
+        };
         
         /* EVENT HANDLER */
         that._handleSelect = function (option, choices) {
-            selectionView.render(
+            controller.promt(
                 choices,
                 controller.select,
                 'Please select a card'
             );
         };
-                
-        that._handlePassivAbility = function() {
-            // BUG: how is current/active character defined?
-            if(model.my.characters.length > 1) throw new Error('multiple characters are not supported!');
-            controller.useAbility(model.my.characters[0], undefined);
-               
-        };
-    
-        that._handleAbility = function(option) {
-            switch(model.my.characters[0]) {
-            case 'king': 
-                that._handlePassivAbility(option);
+        
+        /* DELEGATE */
+        /* EVENT HANDLER */
+        that._actionHandle = function (choice) {
+            switch (choice) {
+            case 'takegold':
+                controller.takeGold();
                 break;
+                    
+            case 'drawdistricts':
+                controller.drawDistricts();
+                break;
+                    
+            default:
+                throw new Error('option was not matched: ' + choice);
             }
         };
         
-        that._handleAction = function() {
-            selectionView.render(
+        /* EVENT HANDLER */
+        that._handleAction = function () {
+            controller.promt(
                 ["takegold", "drawdistricts"],
-                function(choice) {
-                    switch(choice) {
-                    case 'takegold': 
-                        controller.takeGold();
-                        break;
-                            
-                    case 'drawdistricts':
-                        controller.drawDistricts();
-                        break;
-                            
-                    default: 
-                        throw new Error('option was not matched: ' + choice);
-                    }       
-                },
+                that._actionHandle,
                 'Please select an option'
-            );      
+            );
         };
         
         /* EVENT HANDLER */
         that._optionSelect = function (option) {
-            // console.log("EVENT: CLICK OPTION", option, optionHandles);
             //optionHandles[option.Type](option);
-            switch(option.Type) {
+            switch (option.Type) {
                     
-            case 'EndTurn': 
+            case 'EndTurn':
                 controller.endTurn();
                 break;
                     
@@ -108,30 +102,31 @@ define(function (require) {
                     
             // but model is not proberly updated 
             case 'BuildDistrict':
-                selectionView.render(
+                controller.promt(
                     option.Choices,
                     controller.buildDistrict,
                     'Please select a card'
-                );    
-                break;   
+                );
+                break;
                     
-            case 'Select': 
-                selectionView.render(
+            case 'Select':
+                controller.promt(
                     option.Choices,
                     controller.select,
                     'Please select a card'
-                );    
+                );
                 break;
                     
             case 'UseAbility':
-                that._handleAbility(option);
+                controller.useAbility(model.my.characters[0], option, model, true);
                 break;
             
-            default: 
+            default:
                 throw new Error('option was not matched: ' + option.Type);
             }
         };
     
+        /* DELEGATE */
         that._renderOptions = function () {
             var options;
     
@@ -144,6 +139,7 @@ define(function (require) {
             }
         };
         
+        /* DELEGATE */
         that._renderOption = function (option) {
             var element = $(Mustache.render(option_template, option));
     

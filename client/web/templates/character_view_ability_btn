@@ -1,0 +1,4 @@
+<button type="button" class="btn btn-{{buttonType}} btn-lg" style="margin-left: 4px;
+    data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{description}}">
+    <span class="glyphicon glyphicon-{{iconType}}"></span>
+</button>

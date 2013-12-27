@@ -2,7 +2,7 @@
 (function () {
     "use strict";
 
-    var LineByLineReader = require('./line-by-line/line-by-line.js'),
+    var LineByLineReader = require('.vendors//line-by-line/line-by-line.js'),
         fs = require("fs"),
         dir = "templates",
         out = "templates.html",

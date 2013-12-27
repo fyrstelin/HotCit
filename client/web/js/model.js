@@ -90,14 +90,17 @@ define("model", function () {
 
 		/********************************/
 		/** LISTENERS                  **/
-		/********************************/
+		/********************************/        
 		function notify() {
-			listeners.forEach(function (cb) {
-				cb(model);
+			listeners.forEach(function (listener) {
+				listener.notify(model);
 			});
 		}
 
 		this.addListener = function (cb) {
+            if(listeners.length > 30) {
+                throw new Error('more than 30 listeners, careful!', listeners.length);
+            }
 			listeners.push(cb);
 		};
 
@@ -147,7 +150,7 @@ define("model", function () {
 
 			notify(update);
 		}, data.etag);
-	}
+    }
 
 	return Model;
 });
