@@ -1,0 +1,15 @@
+todo: include simulate path to replicate bugs
+bug> takeGold does not cause updated model (suspect serverproblem)
+bug> when draw district, new cards are not included in buildDistrict option
+bug> character ability is not reset, when resting game
+bug> gold points are not updated every time an ability is used
+bug> warlord's ability does not cost gold
+bug> server sends server-error sometimes, when the effect and message is correct.
+refactor suggestion> magician's use of ability is annoying and unintuitive,
+                     it would fit the general approach if the option allowed
+                     direct return of either cards, or player.
+                     (can't remember one of the two requires three option selections),
+                     
+refactor> it would be nice with a prober state update print from server,
+          when debugging it is not clear what the server actually recieves.
+          
