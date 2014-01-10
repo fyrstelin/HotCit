@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Hotcit design</title>
+        <link rel="stylesheet" href="styles/css/normalize.css">
+        
+        <!-- Bootstrap -->
+        <link rel='stylesheet' href='vendors/bootstrap/css/bootstrap.min.css' type='text/css'>
+        <script src="js/libs/jquery-2.0.3.js"></script> <!-- dependency -->
+        <script src="vendors/bootstrap/js/bootstrap.min.js"></script>
+        <!-- /Bootstrap -->
+
+        <link rel="stylesheet" href="styles/css/main.css">
+    
+        <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
+        <!-- <script src="js/main.js"></script> -->
+    </head>
+    <body>
+        <article id='app' class='container'>
+            <nav id='infobar'>    
+                <div class='current_player'>
+                    afk
+                    <img class='icon' 
+                         src='img/character_small_icon.png' />
+                </div>
+                <div class='status_message'>
+                    mis is in turn - 
+                    <span style='color: darkblue'>
+                        revealed bishop
+                    </span>
+                </div>
+                <div class='status_values'>
+                    <div class='gold'>
+                        10
+                        <img class='icon' 
+                             src='img/two_coins.png' />
+                    </div>
+                    <div class='points'>
+                        4
+                        <img class='icon' 
+                             src='img/points.png' />
+                    </div>
+                </div>    
+            </nav> 
+            
+            <div id='content' class='row'>
+                <section id='board'>board</section>
+                <aside id='sidebar'>
+                    <div id='scoreboard'>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th>
+                                        <img src='img/two_coins.png' class='icon' />
+                                    </th>
+                                    <th>
+                                        <img src='img/points.png' class='icon' />
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td>rko</td>
+                                    <td>3</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr class='king'>
+                                    <td><img src='img/crown.png' class='icon'/></td>
+                                    <td>tugend</td>
+                                    <td>9</td>
+                                    <td>11</td>
+                                </tr>
+                                <tr class='current_player'>
+                                    <td></td>
+                                    <td>mis</td>
+                                    <td>6</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr class='me'>
+                                    <td></td>
+                                    <td>afk</td>
+                                    <td>10</td>
+                                    <td>12</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>                    
+                    <div id='terminal'>
+                        <ul>
+                            <li>terminal for messages</li>
+                            <li>for a start: afk is in turn, 
+                                mis takes gold, 
+                                rko build cathedral, 
+                                turing wins ect.</li>
+                            <li>in future, colors could be used to
+                                indicate <span style='color:yellow;'>king</span>,
+                                <span style='color:blue;'>bishop</span>,
+                                <span style='color:green'>merchant</span>,
+                                <span style='color:red'>warlord</span>
+                                and the district 
+                                <span style='color:yellow;'>t</span>
+                                <span style='color:blue;'>?</span>
+                                <span style='color:green;'>p</span>
+                                <span style='color:red;'>e</span>
+                                <span style='color:purple;'>s</span>.</li>
+                            <li>Maybe a chat could be useful some day?</li>
+                            <li>Or a little script language (js?) for interaction with the game or for cheats.</li>
+                            <li>Muhahaha</li>
+                            <li>tugend: I've got a baaad feeling about this :-/</li>
+                            <li>foo</li>
+                            <li>bar</li>
+                            <li>more foo</li>
+                            <li>more bar</li>
+                        </ul>
+                </aside>
+            </div>
+        </article>
+    </body>
+</html>

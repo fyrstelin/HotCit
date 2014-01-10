@@ -1,0 +1,146 @@
+@import "../../vendors/bootstrap-sass/bootstrap";
+
+// VARIABLES
+$boardgreen   : #33CC33;
+$infobargreen : #003300;
+
+// INDEPENDENT COMPONTENTS
+
+// disable responsive layout
+.container {
+    width: 1366px !important;
+}
+
+.icon {
+    height: 25px;
+    width: 25px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+// SPECIFIC ELEMENTS
+html, body {
+    background: black;
+}
+
+#app {
+    @extend .container;
+    background: blue;   
+}
+
+#infobar {
+    background: $infobargreen;
+    color: white;
+    font-size: 20pt;
+    @extend .navbar-inverse; 
+    @extend .navbar-default;
+    @extend .navbar-static-top;
+    @extend .row;
+        
+    .current_player {
+        // background: brown;
+        font-weight: bold;
+        @extend .col-xs-2;
+    }
+    
+    .status_message {
+        // background: tan;
+        @extend .col-xs-4;
+    }
+    
+    .status_values {
+        // background: teal;
+        text-align: right;
+        @extend .col-xs-4;
+        @extend .col-xs-offset-2;
+        
+        .gold {
+            // background: white; 
+            padding: 0px;
+            @extend .col-xs-3;
+            @extend .col-xs-offset-7;
+        }
+        .points {
+            // background: pink;
+            padding: 0px;
+            @extend .col-xs-2;
+        }   
+    }
+}
+
+// CONTENT
+#content {
+    height: 731px; // 768-37
+    
+    // BOARD
+    #board {
+        background: $boardgreen;  
+        //border: 1px solid black;
+        height: 100%;
+        @extend .col-xs-9;
+    }
+    
+    // SIDEBAR
+    #sidebar {
+        padding: 0px;
+        background: lightgrey;
+        //border: 1px solid black;
+        height: 100%;
+        @extend .col-xs-3;
+        
+        // TERMINAL
+        #terminal {
+            color: lightgray;
+            background: black;
+            opacity: 0.7;
+            height: 551px;
+            padding: 20px 10px 0px;
+            &::-webkit-scrollbar { width: 0 !important }
+            overflow-y: scroll;
+             
+            ul {  
+                list-style: none;
+                li {
+                    text-indent:-10px;
+                    padding-bottom: 10px;
+                    font-family: "Lucida Console";
+                    &:before {
+                        content: ">";        
+                        position: relative; left:-15px;
+                    }
+                }
+            }
+        }
+        
+        // SCOREBOARD
+        #scoreboard {
+            //background: orange;  
+            font-size: 20px;
+            padding: 20px 0 20px;
+            height: 180px;
+                    
+            table {
+                vertical-align: middle;
+                width: 100%;
+            } 
+            
+            td, th {
+                text-align: center; 
+                vertical-align: middle;
+            }
+            
+            // first column
+            th:nth-child(2), td:nth-child(2) {
+                text-align: left;
+            }
+            
+            tr.me {
+                font-weight: bold;
+            }
+
+            tr.current_player {
+                color: red;
+            }
+        }
+    }
+}
