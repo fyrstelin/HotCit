@@ -4,6 +4,77 @@
 $boardgreen   : #33CC33;
 $infobargreen : #003300;
 
+///////////////////////////////////////
+
+@mixin rotate($i) {
+    $xaxis : 0%;
+    $yaxis : 100%;
+    //transform-origin: $xaxis $yaxis;
+    //transform: rotate(#{ $deg }deg);
+    //-ms-transform-origin: $xaxis $yaxis;
+    //-ms-transform: rotate(#{ $deg }deg);
+    -webkit-transform-origin: 10% 250%;
+    -webkit-transform: rotate( -25 + $i*7 * 1deg);   
+    //-webkit-transform-origin: #{ -$i*$i*1.4 + 50*$unit} #{15+100*$unit};
+    //-webkit-transform: rotate(#{ -80 + $i*15 }deg); 
+}
+
+@mixin rotate2($deg) {
+    $xaxis : 50%;
+    $yaxis : 50%;
+    //transform-origin: $xaxis $yaxis;
+    //transform: rotate(#{ $deg }deg);
+    //-ms-transform-origin: $xaxis $yaxis;
+    //-ms-transform: rotate(#{ $deg }deg);
+    -webkit-transform-origin: $xaxis $yaxis;
+    -webkit-transform: rotate( $deg * 1deg);   
+    //-webkit-transform-origin: #{ -$i*$i*1.4 + 50*$unit} #{15+100*$unit};
+    //-webkit-transform: rotate(#{ -80 + $i*15 }deg); 
+}
+
+@mixin card_overlap($dist) {
+    @for $i from 0 through 10 {
+        img:nth-child(#{$i}) {
+            z-index: $i;  
+            left: ($i - 1) * $dist * 1px; 
+        }            
+    }
+}
+
+.card_curved_overlap {
+     @for $i from 0 through 10 {
+        img:nth-child(#{$i}) {
+            position: absolute;
+            @include rotate($i);
+            z-index: $i; 
+        }            
+    }
+}   
+
+// centering
+/* This parent can be any width and height */
+.block {
+  text-align: center;
+}
+ 
+/* The ghost, nudged to maintain perfect centering */
+.block:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em; /* Adjusts for spacing */
+}
+
+/* The element to be centered, can
+   also be of any width and height */ 
+.centered {
+  display: inline-block;
+  vertical-align: middle;
+  width: 300px;
+}
+// centering
+
 // INDEPENDENT COMPONTENTS
 
 // disable responsive layout
@@ -70,14 +141,124 @@ html, body {
 
 // CONTENT
 #content {
-    height: 731px; // 768-37
     
     // BOARD
     #board {
         background: $boardgreen;  
         //border: 1px solid black;
-        height: 100%;
+        height: 731px; // 768-37
         @extend .col-xs-9;
+        padding-top: 20px;
+             
+        .opponent { 
+            margin: 0px;
+            padding: 0px;
+            > div {
+                margin-left: 30px;
+            }
+            
+            height: 0.40*711px;
+            //background: brown;
+            //border: 1px dotted black;
+            
+            // PLAYER 1
+            &:nth-child(1) { 
+                position: relative;
+                left: 45px;
+                //top: 80px;
+                @include rotate2(-30);
+                //transform: rotate(-30deg);
+                //-ms-transform: rotate(-30deg); /* IE 9 */
+                //-webkit-transform: rotate(-30deg); /* Safari and Chrome */
+            }
+            
+            // PLAYER 2
+             &:nth-child(2) { 
+                position: relative;
+                left: 22.5px; 
+            }
+            
+            // PLAYER 3
+            &:nth-child(3) { 
+                position: relative;
+                left: 0px; 
+                top: 80px;
+                @include rotate2(30);
+                //transform: rotate(30deg);
+                //-ms-transform: rotate(30deg); /* IE 9 */
+                //-webkit-transform: rotate(30deg); /* Safari and Chrome */
+            }
+            
+            .pid {
+                margin-bottom: 10px;   
+            }
+            
+            .districts {
+                margin-top: 20px;  
+                margin-left: 1px;
+                 
+                img {
+                    position: absolute;   
+                    width: 65px;
+                    
+                    &:hover {
+                        z-index: 999 !important;
+                        width: 100px; // zoom?
+                        //top: 10px; 
+                    }
+                }
+                
+                @include card_overlap(30);
+            }
+             
+            .hand {
+                position: relative; 
+                
+                img {
+                    position: absolute;
+                }
+                
+                @include card_overlap(15);
+            }
+        }
+        
+        .player {
+            height: 0.60*711px;
+            background: $boardgreen;
+            //border: 1px dotted black;  
+            padding-top: 85px;
+            padding-left: 20px;
+            
+            .districts img, .hand img {
+                width: 100px;   
+                margin-bottom: 5px;
+
+            }
+            
+            .hand {  
+                padding-top: 55px;
+                position: absolute;
+                right: -190px;
+                padding-left: 30px;
+                @extend .card_curved_overlap;  
+            }
+        }
+        
+        .center {
+            //height: 1px;
+            width: 200px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -0.5 * 200px;
+            margin-left: -0.5 * 200px;
+            // background: tan;
+            // border: 1px dotted black;
+            
+            .gold {
+                margin-top: 21px;    
+            }
+        }   
     }
     
     // SIDEBAR
@@ -143,4 +324,22 @@ html, body {
             }
         }
     }
+}
+            
+#content #board .player .hand img:hover {
+    //width: 110px !important;
+    zoom: 1.2;
+    z-index: 999;
+    -webkit-box-shadow: 1px 1px 7px rgba(0,0,0,0.4);
+    box-shadow: 3px 3px 7px rgba(0,0,0,0.4); 
+}
+
+.card:hover {
+    cursor: pointer; 
+}
+
+.card{
+    border-radius: 10px;
+    //-webkit-box-shadow: 5px 5px rgba(0,0,0,0.3);
+    //box-shadow: 5px 5px rgba(0,0,0,0.3);
 }
