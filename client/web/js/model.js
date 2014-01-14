@@ -17,10 +17,10 @@ define("model", function () {
 		var data = server.getGame(), //getGame is sync
 			game = data.game,
 			listeners = [],
-			model = this;
+			that = this;
 
-		model.opponents = [];
-		model.my = {};
+		that.opponents = [];
+		that.my = {};
         
 
 		/********************************/
@@ -33,12 +33,12 @@ define("model", function () {
 		/**    - faceup character      **/
 		/********************************/
 		function setSimpleFields(update) {
-			model.king = update.King || model.king;
-			model.playerInTurn = update.PlayerInTurn || model.playerInTurn;
-			model.turn = update.Turn || model.turn;
-			model.step = update.Step || model.step;
-			model.round = update.Round || model.round;
-			model.faceUpCharacters = update.FaceUpCharacters || model.faceUpCharacters; //ODO array reference
+			that.king = update.King || that.king;
+			that.playerInTurn = update.PlayerInTurn || that.playerInTurn;
+			that.turn = update.Turn || that.turn;
+			that.step = update.Step || that.step;
+			that.round = update.Round || that.round;
+			that.faceUpCharacters = update.FaceUpCharacters || that.faceUpCharacters;
 		}
 		setSimpleFields(game);
 
@@ -58,30 +58,51 @@ define("model", function () {
 		/**     - filter out self      **/
 		/**		- fill out self        **/
 		/********************************/
-		game.Players.forEach(function (player) {
-			if (player.Username != pid) {
-				model.opponents.push({
-					username: player.Username,
-					city: player.City,
-					hand: createUnknownHand(player.NumberOfCards),
-					points: player.Points,
-					gold: player.Gold,
-					characters: player.Characters
-				});
-			} else {
-				model.my.username = player.Username;
-				model.my.city = player.City;
-				model.my.points = player.Points;
-				model.my.gold = player.Gold;
-				model.my.characters = player.Characters;
-			}
-		});
+        function setPlayers(update) {
+            console.log("setting players");
+            console.log(update);
+            update.Players.forEach(function (p1) {
+                var opp, p2;
+                if (p1.Username == pid) {
+                    that.my.city       = p1.City       || that.my.city;
+                    that.my.points     = p1.Points     || that.my.points;
+                    that.my.gold       = p1.Gold       || that.my.gold;
+                    that.my.characters = p1.Characters || that.my.characters;
+                } else { //update opponents
+                    opp = that.opponents.filter(function (opp) {
+                        return opp.username == p1.Username;
+                    });
+                    if (opp.length == 1) {
+                        p2 = opp[0];
+                        p2.city       = p1.City       || p2.city;
+                        p2.points     = p1.Points     || p2.points;
+                        p2.gold       = p1.Gold       || p2.gold;
+                        p2.characters = p1.Characters || p2.characters;
+                        if (p1.NumberOfCards) {
+                            p2.hand = createUnknownHand(p1.NumberOfCards);
+                        }
+                    } else if (opp.length == 0) {
+                        that.opponents.push({
+                            username: p1.Username,
+                            city: p1.City,
+                            hand: createUnknownHand(p1.NumberOfCards),
+                            points: p1.Points,
+                            gold: p1.Gold,
+                            characters: p1.Characters
+                        });
+                    } else {
+                        console.log("two player named " + p1.Username);
+                    }
+                }
+            });
+        }
+        setPlayers(game);
 
-		model.my.hand = server.getHand(pid);
-		model.my.options = server.getOptions(pid);
+		that.my.hand = server.getHand(pid);
+		that.my.options = server.getOptions(pid);
 
-        model.my.can = function (what) {
-            return model.my.options.some(function (option) {
+        that.my.can = function (what) {
+            return that.my.options.some(function (option) {
                 return option.Type == what;
             });
         };
@@ -90,15 +111,15 @@ define("model", function () {
 
 		/********************************/
 		/** LISTENERS                  **/
-		/********************************/        
+		/********************************/
 		function notify() {
 			listeners.forEach(function (listener) {
-				listener.notify(model);
+				listener.notify(that);
 			});
 		}
 
 		this.addListener = function (cb) {
-            if(listeners.length > 30) {
+            if (listeners.length > 30) {
                 throw new Error('more than 30 listeners, careful!', listeners.length);
             }
 			listeners.push(cb);
@@ -111,44 +132,14 @@ define("model", function () {
 			setSimpleFields(update);
 
 			if (update.Players) {
-				//traverse players. A map could have been nice
-				update.Players.forEach(function (p1) {
-					if (p1.Username == model.my.username) { //update my
-						model.my.city       = p1.City       || model.my.city;
-						model.my.points     = p1.Points     || model.my.points;
-						model.my.gold       = p1.Gold       || model.my.gold;
-						model.my.characters = p1.Characters || model.my.characters;
-					} else { //update opponents
-						model.opponents.forEach(function (p2) {
-							if (p1.Username == p2.username) {
-								p2.city       = p1.City       || p2.city;
-								p2.points     = p1.Points     || p2.points;
-								p2.gold       = p1.Gold       || p2.gold;
-								p2.characters = p1.Characters || p2.characters;
-								if (p1.NumberOfCards) {
-									p2.hand = createUnknownHand(p1.NumberOfCards);
-								}
-							}
-						});
-					}
-				});
+				setPlayers(update);
 			}
 
-			//ODO: implement longpolling on serverside
+			//TODO: implement longpolling on serverside
+			that.my.hand = server.getHand(pid);
+			that.my.options = server.getOptions(pid);
 
-			//To keep reference to model.my.hand
-			model.my.hand.length = 0;
-			server.getHand(pid).forEach(function (c) {
-				model.my.hand.push(c);
-			});
-
-			//To keep reference to model.my.options
-			model.my.options.length = 0;
-			server.getOptions(pid).forEach(function (o) {
-				model.my.options.push(o);
-			});
-
-			notify(update);
+			notify(that);
 		}, data.etag);
     }
 
