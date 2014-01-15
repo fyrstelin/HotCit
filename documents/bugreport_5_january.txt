@@ -8,8 +8,7 @@ solved bug> when draw district, new cards are not included in buildDistrict opti
 bug> character ability is not reset, when reseting game
 	
 
--- bug> gold points are not updated every time an ability is used
-	not replicable
+-- bug> charcter points are not updated, i.e. districts does not yield points..
 
 solved bug> warlord's ability does not cost gold
 	is free for districts of value 1
