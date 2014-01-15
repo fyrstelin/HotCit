@@ -6,6 +6,20 @@ $infobargreen : #003300;
 
 ///////////////////////////////////////
 
+/*
+.equidistant {
+    width:100%;
+    display: table;
+    table-layout: fixed;    /* For cells of equal size
+  
+    span {
+        display: table-cell;
+        text-align: center;    
+    }
+}
+*/
+
+// TODO: use javascript instead---
 @mixin rotate($i) {
     $xaxis : 0%;
     $yaxis : 100%;
@@ -231,8 +245,11 @@ html, body {
             
             .districts img, .hand img {
                 width: 100px;   
-                margin-bottom: 5px;
-
+                margin-bottom: 5px
+            }
+            
+            .districts {
+                @extend .block;   
             }
             
             .hand {  

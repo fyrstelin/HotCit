@@ -36,6 +36,7 @@
 		    <div class="abilityBtns" style="position:absolute; right:10px; top:10px"></div>
 		    <div class="character"></div>
 		    <div>Gold: <span class="goldcount"></span></div>
+		    <div>Points: <span class="pointcount"></span></div>
 		</div>
 	</script>
 
@@ -69,31 +70,25 @@
 	<!---OPPONENT.HTML--->
 	<script id='opponent'>
 		<div class='opponent'>
-		    <h1>
-		        {{username}}
-		        {{#characters}}
-		            <img class='character' src='/resources/images/ldpi/{{.}}.png'/>
-		        {{/characters}}
-		    </h1>
-		    <div class='stats'>
-		        <span class='gold'>{{gold}}</span>
-		        <span class='points'>{{points}}</span>
-		    </div>
+		    <h1 class='characters'></h1>
 		    
+		    <div class='stats'></div>
+		
 		    <h3>Hand</h3>
-		    <div class='hand'>
-		        {{#hand}}
-		            <img class='card' src='/resources/images/mdpi/{{.}}.png' data-card='{{.}}'/>
-		        {{/hand}}
-		    </div>
-		    
+		    <div class='hand'></div>
+		
 		    <h3>City</h3>
-		    <div class='city'>
-		        <!--{{#city}}
-		            <img class='card' src='/resources/images/mdpi/{{.}}.png'/>
-		        {{/city}}-->
-		    </div>
+		    <div class='city'><div>
 		</div>
+	</script>
+
+	<!---OPPONENT_CHARACTERS.HTML--->
+	<script id='opponent_characters'>
+		<span>
+		    {{username}} {{#characters}}
+		    <img class='character'src='/resources/images/ldpi/{{.}}.png' />
+		    {{/characters}}
+		</span>
 	</script>
 
 	<!---OPTION.HTML--->
@@ -209,6 +204,12 @@
 		        Reset Game
 		    </button>
 		</div>
+	</script>
+
+	<!---STATS.HTML--->
+	<script id='stats'>
+		<span class='gold'>{{gold}}</span>
+		<span class='points'>{{points}}</span>
 	</script>
 
 </templates>

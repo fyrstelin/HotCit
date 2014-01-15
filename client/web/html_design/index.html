@@ -16,6 +16,22 @@
         <!-- <script src="js/main.js"></script> -->
     </head>
     <body>
+        
+        <div style='background: #f9f2f4;
+                    padding:    10px;
+                    border-radius:  10px; 
+                    width:          1366px;
+                    margin:         auto auto;
+                    margin-bottom: 10px;'>
+            <code>
+                TODO: <br />
+                1. refactor such that all components are styled relative to 
+                   their container <br />
+                2. dry, document and cleanup html + sass <br />
+                components: infobar, opponents, center, player(districts, hand), sidebar(scoreboard, terminal)
+            </code>
+        </div>
+        
         <article id='app' class='container'>
             <nav id='infobar'>    
                 <div class='current_player'>
@@ -215,12 +231,15 @@
                                  src='img/manor.png' />
                             <img class='card'
                                  src='img/prison.png' />
-                            <!--<img class='card'
+                            <img class='card'
+                                 style='visibility:hidden'
                                  src='img/prison.png' />
                             <img class='card'
+                                 style='visibility:hidden'
                                  src='img/prison.png' />
                             <img class='card'
-                                 src='img/prison.png' />-->
+                                 style='visibility:hidden'
+                                 src='img/prison.png' />
                         </div>
                         <div class='hand col-xs-6'>
                             <img class='card'
