@@ -30,6 +30,7 @@ define(function (require) {
             // when I have choosen a character, it is not available in the model!
             that.elm = $(template);
             that.goldCountElm = that.elm.find('.goldcount');
+            that.pointCountElm = that.elm.find('.pointcount');
             that.characterElm = that.elm.find('.character');
             that.abilityBtns = that.elm.find('.abilityBtns');
         }
@@ -50,6 +51,7 @@ define(function (require) {
               
             that._renderCharacter(characterCard);
             that._renderGoldCount(model.my.gold);
+            that._renderPointCount(model.my.points);
             that._renderAbilityButtons(characterCard, model.my.options);
         };
         
@@ -63,6 +65,10 @@ define(function (require) {
         /* DELEGATE METHOD */
         that._renderGoldCount = function(gold) {
             that.goldCountElm.html(gold);      
+        };
+        
+        that._renderPointCount = function(points) {
+            that.pointCountElm.html(points);      
         };
         
         /* DELEGATE METHOD */
