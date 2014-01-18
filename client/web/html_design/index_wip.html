@@ -64,16 +64,20 @@
             }
             
             .card {
-                width: 65px;   
+                width: 70px;   
                 position: absolute;
             }
         
             .bar .card {
-                width: 100px;
+                width: 120px;
             }
         
             .foo .card {
-                width: 150px;
+                width: 50px;
+            }
+            .card:hover {
+                border: 2px solid darkgray;
+/*                z-index: 9999 !important;*/
             }
         
             .hand {
@@ -103,19 +107,51 @@
                 
                 */
             
+                function enableZoom(elements) {
+                     // zoom feature -> outfactor
+                    elements.dblclick(function() {
+//                    cards.click(function(event) {
+//                        event.stopPropagation();
+                        
+                        var origin = $(this);
+                        var elm = origin.clone();
+                        $('body').append(elm);
+                        elm
+                            .css('border', 'none')
+                            .css('-webkit-transform', 'rotate(0)')
+                            .css('position', 'absolute')
+                            .css('z-index', '999')
+                            .css('width', '150px') 
+                            
+                            // center fixed
+//                            .css('top', '50%')
+//                            .css('left', '50%')
+//                            .css('margin-left', -elm.width()/2 + 'px')
+//                            .css('margin-top', -elm.height()/2 + 'px')
+                            .css('top', origin.offset().top + 'px')
+                            .css('left', origin.offset().left + 'px')
+                            console.log('origin.offset().left', origin.offset().left)
+                        $('body').one('click', function() {
+                            elm.remove();  
+                        });
+                    });   
+                }
             
-                function spread(classname) {
+            
+                function spread(classname) {                
                     var toRadians = Math.PI/180.0;
                     var toDegrees = 180/Math.PI
                     
                     var hand = $(classname + ' .hand');
                     var cards = hand.find('.card');
+                    enableZoom(cards);
+                    
                     var num = cards.length;
                     
                     var degree_offset = (degree_inc*(num-1)) / 2.0                    
                     var width = cards.outerWidth(); // carefull
                     var height = cards.outerHeight();
-                    
+                                        
                     // magic and trigometry: computes the dist from left outer cornor to right outer cornor
                     // set parent element to tight fit
                     var max_degree = Math.asin((width/2.0)/(1.5*height))*toDegrees+degree_offset
@@ -133,7 +169,6 @@
                     // magic and trigometry: computes the diff from lowest cornor to top middle card
                     var tmp = Math.sin((90-max_degree)*toRadians)*(1.5*height); /* 1.5 instead of 2.5 since only measure from bottom */
                     hand.css('height', ((2.5*height - tmp))+vertical_margin + 'px');
-                    console.log(tmp, 'tmp');
                     
                     //hand.css('left', -(num/2.0*0.40*65) + 'px');
 
