@@ -1,0 +1,37 @@
+[{
+    "name": "assassin",
+    "number": 1,
+    "text": "Announce a character you wish to murder. The murdered character misses his entire turn."
+},{
+    "name": "thief",
+    "number": 2,
+    "text": "Announce a character from whom you wish to steal. When the player with this card is revealed, take his gold."
+},{
+    "name": "magician",
+    "number": 3,
+    "text": "You may either exchange your cards with another player or discard any Number of cards and draw an equal Number of cards."
+},{
+    "name": "king",
+    "number": 4,
+    "text": "You receive on gold for each noble (yellow) district in your city. When the King is called, you immediately receive the crown counter.",
+    "color": "yellow"
+},{
+    "name": "bishop",
+    "number": 5,
+    "text": "You receive one gold for each religious (blue) district in your city. Your districts may not me destroyed by the Warlord.",
+    "color": "blue"
+},{
+    "name": "merchant",
+    "number": 6,
+    "text": "You receive one gold for each trade (green) district in your city. When you take an action, you recieve one extra gold.",
+    "color": "green"
+},{
+    "name": "architect",
+    "number": 7,
+    "text": "After you take an action, draw two extra cards and put both in your hand. You may build up to three districts during your turn."
+},{
+    "name": "warlord",
+    "number": 8,
+    "text": "You receive one gold for each military (red) district in your city. You may pay to destroy one district of your choice.",
+    "color": "red"
+}]

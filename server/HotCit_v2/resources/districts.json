@@ -1,0 +1,152 @@
+[{
+    "title": "cathedral",
+    "price": 5,
+    "value": 5,
+    "color": "blue"
+},{
+    "title": "church",
+    "price": 2,
+    "value": 2,
+    "color": "blue"
+},{
+    "title": "monastery",
+    "price": 3,
+    "value": 3,
+    "color": "blue"
+},{
+    "title": "temple",
+    "price": 1,
+    "value": 1,
+    "color": "blue"
+},{
+    "title": "docks",
+    "price": 3,
+    "value": 3,
+    "color": "green"
+},{
+    "title": "harbor",
+    "price": 4,
+    "value": 4,
+    "color": "green"
+},{
+    "title": "market",
+    "price": 2,
+    "value": 2,
+    "color": "green"
+},{
+    "title": "tavern",
+    "price": 1,
+    "value": 1,
+    "color": "green"
+},{
+    "title": "town_hall",
+    "price": 5,
+    "value": 5,
+    "color": "green"
+},{
+    "title": "trading_post",
+    "price": 2,
+    "value": 2,
+    "color": "green"
+},{
+    "title": "battlefield",
+    "price": 3,
+    "value": 3,
+    "color": "red"
+},{
+    "title": "fortress",
+    "price": 5,
+    "value": 5,
+    "color": "red"
+},{
+    "title": "prison",
+    "price": 2,
+    "value": 2,
+    "color": "red"
+},{
+    "title": "watchtower",
+    "price": 1,
+    "value": 1,
+    "color": "red"
+},{
+    "title": "dragon_gate",
+    "price": 6,
+    "value": 8,
+    "color": "purple",
+    "text" : "This district costs 6 gold to build, but is worth 8 points at the end of the game."
+},{
+    "title": "graveyard",
+    "price": 5,
+    "value": 5,
+    "color": "purple",
+    "text" : "When the Warlord destroys a district, you may pay one gold to take the destroyed districts into your hand. You may not do this if you are the Warlord."
+},{
+    "title": "great_wall",
+    "price": 6,
+    "value": 6,
+    "color": "purple",
+    "text" : "The cost for the Warlord to destroy any of your other districts is increased by on gold."
+},{
+    "title": "haunted_city",
+    "price": 2,
+    "value": 2,
+    "color": "purple",
+    "text" : "For purpose of victory points, the Haunted City is considered to be of the color of your choice. You cannot use this ability if you built it during the last round of the game."
+},{
+    "title": "keep",
+    "price": 3,
+    "value": 3,
+    "color": "purple",
+    "text" : "The Keep cannot be destroyed by the Warlord."
+},{
+    "title": "laboratory",
+    "price": 5,
+    "value": 5,
+    "color": "purple",
+    "text" : "Once during your turn, you may discard a district card form your hand and receive on gold from the bank."
+},{
+    "title": "library",
+    "price": 6,
+    "value": 6,
+    "color": "purple",
+    "text" : "If you choose to draw cards when you take an action, you keep both of the cards you have drawn."
+},{
+    "title": "observatory",
+    "price": 5,
+    "value": 5,
+    "color": "purple",
+    "text" : "If you choose to draw cards when you take an action, you draw three cards, keep on of your choice, and put the other two on the bottom of the deck."
+},{
+    "title": "school_of_magic",
+    "price": 6,
+    "value": 6,
+    "color": "purple",
+    "text" : "For purposes of income, the School is considered to be the color of your choice. If you are the King this round, for example, the School is considered to be a noble (yellow) district."
+},{
+    "title": "smithy",
+    "price": 5,
+    "value": 5,
+    "color": "purple",
+    "text" : "Once during your turn, you may pay two gold to draw three district cards."
+},{
+    "title": "university",
+    "price": 6,
+    "value": 8,
+    "color": "purple",
+    "text" : "This district costs 6 gold to build, but is worth 8 points at the end of the game."
+},{
+    "title": "castle",
+    "price": 4,
+    "value": 4,
+    "color": "yellow"
+},{
+    "title": "manor",
+    "price": 3,
+    "value": 3,
+    "color": "yellow"
+},{
+    "title": "palace",
+    "price": 5,
+    "value": 5,
+    "color": "yellow"
+}]
