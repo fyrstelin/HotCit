@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Hotcit design</title>
+    <link rel="stylesheet" href="styles/css/normalize.css">
+
+    <!-- Bootstrap -->
+    <link rel='stylesheet' href='vendors/bootstrap/css/bootstrap.min.css' type='text/css'>
+    <script src="js/libs/jquery-2.0.3.js"></script>
+    <!-- dependency -->
+    <script src="vendors/bootstrap/js/bootstrap.min.js"></script>
+    <!-- /Bootstrap -->
+
+    <!-- <link rel="stylesheet" href="styles/css/main.css"> -->
+
+    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
+    <!-- <script src="js/main.js"></script> -->
+    <style>
+        .hand {
+                background: grey;
+                border: 1px dotted red;
+            }
+            
+            .foo, .bar, .basbaz {
+                border: 10px dotted black;   
+            }
+            
+            .baz .card {
+        
+            }
+            
+            .foo {
+                background: green; 
+
+            }
+            
+            .bar {
+                background: green;
+
+                float: right;
+            }
+        
+            .bar .hand {
+                float: right;
+            }       
+            
+            .basbaz {
+                background: green;
+                height: 500px;
+                margin-top: 20px;
+            }
+            
+            .bas, baz {
+
+            }
+            
+            .baz {
+                padding-top: 20px;   
+            }
+                    
+            #app, body {
+                background: gray;   
+            }
+            
+            .card {
+                width: 65px;   
+                position: absolute;
+            }
+        
+            .bar .card {
+                width: 100px;
+            }
+        
+            .foo .card {
+                width: 150px;
+            }
+        
+            .hand {
+                font-size: 0px;
+                margin: auto auto;
+                padding: 0px;
+                margin: 0px;
+                background: url('img/grid.gif');
+            }
+            .hand img {
+                position: absolute;
+                background: black;
+            }
+    </style>
+    <script>
+        $(function() {            
+                var degree_inc = 7;
+                
+                /*
+                    Have used manual adjusting by offsets,
+                    problem is: cards are rotated by (center, bottom),
+                    but we need to align by (left, bottom) to which
+                    we need the prober angle by (left, bottom)
+                    
+                    problem now: difficult to read formulae, 
+                    and left, right side padding is not consistent.
+                
+                */
+            
+            
+                function spread(classname) {
+                    var toRadians = Math.PI/180.0;
+                    var toDegrees = 180/Math.PI
+                    
+                    var hand = $(classname + ' .hand');
+                    var cards = hand.find('.card');
+                    var num = cards.length;
+                    
+                    var degree_offset = (degree_inc*(num-1)) / 2.0                    
+                    var width = cards.outerWidth(); // carefull
+                    var height = cards.outerHeight();
+                    
+                    // magic and trigometry: computes the dist from left outer cornor to right outer cornor
+                    // set parent element to tight fit
+                    var max_degree = Math.asin((width/2.0)/(1.5*height))*toDegrees+degree_offset
+                    
+                    var horisontal_margin = width*0.2;
+                    var max_degree_outer = Math.asin((width/2.0)/(2.5*height))*toDegrees+degree_offset
+                    hand.css('width', 2*Math.sin(max_degree_outer*toRadians)*2.5*height + horisontal_margin + 'px');  
+                    
+                    // hand is implictly rotated by 90 degrees, correction with padding
+                    hand.css('padding-left', (hand.width()-width)/2 + 'px');
+                                
+                    // rounding error somewhere? -> top, bottom padding
+                    var vertical_margin = height*0.05;
+        
+                    // magic and trigometry: computes the diff from lowest cornor to top middle card
+                    var tmp = Math.sin((90-max_degree)*toRadians)*(1.5*height); /* 1.5 instead of 2.5 since only measure from bottom */
+                    hand.css('height', ((2.5*height - tmp))+vertical_margin + 'px');
+                    console.log(tmp, 'tmp');
+                    
+                    //hand.css('left', -(num/2.0*0.40*65) + 'px');
+
+                    cards.each(function(index) {
+                        var elm = $(this);
+                        elm.css('z-index', index);   
+                        var turn = -degree_offset + index * degree_inc;
+                        elm.css('-webkit-transform-origin', "50% 250%"); // 10% 250
+                        elm.css('-webkit-transform', "rotate(" + turn + "deg)");
+                        elm.css('top', vertical_margin+'px');
+                    });                    
+                }
+                
+                ['.foo', '.bar', '.bas', '.barr'].forEach(function(classname) {
+                    spread(classname);
+                });
+                
+            });
+    </script>
+</head>
+
+<body>
+
+    <div style='background: #f9f2f4;
+                    padding:    10px;
+                    border-radius:  10px; 
+                    width:          1366px;
+                    margin:         auto auto;
+                    margin-bottom: 10px;'>
+        <code>
+            TODO:
+            <br />1. refactor such that all components are styled relative to their container
+            <br />2. dry, document and cleanup html + sass
+            <br />components: infobar, opponents, center, player(districts, hand), sidebar(scoreboard, terminal)
+        </code>
+    </div>
+
+    <article id='app' class='container'>
+        <div class='row'>
+            <div class='foo
+                            col-xs-4'>
+                <div class='hand'>
+                    <img class='card' src='img/battlefield.png' />
+                    <img class='card' src='img/castle.png' />
+                    <img class='card' src='img/church.png' />
+                    <img class='card' src='img/graveyard.png' />
+                    <img class='card' src='img/cathedral.png' />
+                    <!--<img class='card'
+src='img/prison.png' />
+<img class='card'
+src='img/prison.png' />
+<img class='card'
+src='img/prison.png' />-->
+                </div>
+            </div>
+            <div class='bar
+                            col-xs-4 
+                            col-xs-offset-2'>
+                <div class='hand'>
+                    <img class='card' src='img/battlefield.png' />
+                    <img class='card' src='img/castle.png' />
+                    <!--<img class='card'
+src='img/prison.png' />
+<img class='card'
+src='img/prison.png' />
+<img class='card'
+src='img/prison.png' />-->
+                </div>
+            </div>
+        </div>
+        <div class='basbaz'>
+            <div class='row'>
+                <div class='bas
+                            col-xs-6'>
+                    <div class='hand'>
+                        <img class='card' src='img/battlefield.png' />
+                        <img class='card' src='img/castle.png' />
+                        <img class='card' src='img/church.png' />
+                        <img class='card' src='img/graveyard.png' />
+                        <img class='card' src='img/cathedral.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                    </div>
+                </div>
+                <div class='barr
+                            col-xs-6'>
+                    <div class='hand'>
+                        <img class='card' src='img/battlefield.png' />
+                        <img class='card' src='img/castle.png' />
+                        <img class='card' src='img/church.png' />
+                        <img class='card' src='img/graveyard.png' />
+                        <img class='card' src='img/cathedral.png'> 
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                        <img class='card' src='img/prison.png' />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+</body>
+
+</html>
