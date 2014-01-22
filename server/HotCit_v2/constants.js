@@ -15,6 +15,14 @@ module.exports = {
             return "Cannot select " + what;
         },
         TURN_ALREADY_ENDED: "You have already ended your turn",
-        END_YOUR_TURN: "End your turn"
+        END_YOUR_TURN: "End your turn",
+        DO_NOT_HAVE_DISTRICT_IN_HAND: function (title) {
+            "use strict";
+            return "You do not have " + title + " in your hand";
+        },
+        NOT_ENOUGH_GOLD: function (title) {
+            "use strict";
+            return title + " is to expensive";
+        }
     }
 };

@@ -1,9 +1,24 @@
 /*jslint node: true, sloppy: true, vars: true, plusplus: true, eqeq: true*/
-var Player = require('./player');
 var async = require('async');
 var constants = require('./constants');
 var resources = require('./resources');
 require('array-sugar');
+
+
+function Player(username, controller) {
+    var that = this;
+    that.username = username;
+    controller.username = username;
+    that.hand = [];
+    that.city = [];
+    
+    that.setCharacter = function (character) {
+        that.character = character;
+    };
+    
+    that.takeAction = controller.takeAction;
+}
+
 
 /**
  * setup:
@@ -48,7 +63,7 @@ function Game(setup) {
     
     
     function createPlayer(username) {
-        var p = new Player(username);
+        var p = new Player(username, new setup.Controller());
         p.gold = setup.startingGold;
         
         return p;
@@ -58,6 +73,18 @@ function Game(setup) {
         that.players[username] = createPlayer(username);
     });
     
+    
+    
+    function getTopDistrict() {
+        var res = districts.first;
+        if (res) {
+            districts.shift();
+            return res;
+        } else {
+            districts = setup.districts.copy();
+            return getTopDistrict();
+        }
+    }
     
     
     //This isn't actually async, but uses a callback for consistency
@@ -135,6 +162,7 @@ function Game(setup) {
             
             var ended = false;
             var actionTaken = false;
+            var districtBuilt = false;
             var choices = [];
             
             function playerEndedHisTurn() {
@@ -149,6 +177,7 @@ function Game(setup) {
                     }
                     ended = true;
                     newOptions(null);
+                    player.takeAction(null);
                 }
                 
                 function takeGold(err) {
@@ -169,8 +198,7 @@ function Game(setup) {
                     var options = [],
                         c = 0;
                     for (c; c < 2; c++) {
-                        options.push(districts.first);
-                        districts.shift();
+                        options.push(getTopDistrict());
                     }
                     var amount = 1; //TODO architect
                     var selected = false;
@@ -186,9 +214,13 @@ function Game(setup) {
                             amount: amount,
                             choices: options.map(function (d) { return d.title; }),
                             callback: function (choosen, err) {
+                                if (!Array.isArray(choosen)) {
+                                    choosen = [choosen];
+                                }
                                 if (choosen.length === amount && choosen.every(function (d) {
                                         return options.some(function (o) { return o.title == d; });
                                     })) {
+                                    console.log("### %s ###", choosen);
                                     selected = true;
                                     actionTaken = true;
                                     choosen.forEach(function (title) {
@@ -203,6 +235,22 @@ function Game(setup) {
                     }
                     
                     async.until(selectedADistrict, letPlayerSelectADistrict, newOptions);
+                }
+                
+                function buildDistrict(title, err) {
+                    var district = player.hand.findOne(function (d) { return d.title == title; });
+                    if (!district) {
+                        err(constants.messages.DO_NOT_HAVE_DISTRICT_IN_HAND(title));
+                        return;
+                    }
+                    if (player.gold < district.cost) {
+                        err(constants.messages.NOT_ENOUGH_GOLD(title));
+                        return;
+                    }
+                    player.hand.remove(district);
+                    player.city.push(district);
+                    districtBuilt = true;
+                    newOptions();
                 }
                 
                 var options = []; //TODO include character ability
@@ -225,7 +273,7 @@ function Game(setup) {
                         message: "Draw 2 districts and discard one of them", //TODO architect
                         callback: drawDistricts
                     });
-                } else {
+                } else if (!districtBuilt) {
                     var choices = player.hand.filter(function (d) {
                             return d.price <= player.gold;
                         }).map(function (d) {
@@ -234,7 +282,8 @@ function Game(setup) {
                     options.push({
                         type: constants.options.BUILD_DISTRICT,
                         message: "Build a district",
-                        choices: choices
+                        choices: choices,
+                        callback: buildDistrict
                     });
                 }
                 
@@ -252,6 +301,10 @@ function Game(setup) {
             var p = that.players[user];
             console.log("%s has %d gold and %d districts on his hand", p.username, p.gold, p.hand.length);
         });
+        
+        characters = setup.characters.copy();
+        that.faceUpCharacters.clear();
+        
         next(null);
     }
     
