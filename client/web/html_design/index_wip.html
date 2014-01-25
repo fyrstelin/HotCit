@@ -26,10 +26,6 @@
                 border: 10px dotted black;   
             }
             
-            .baz .card {
-        
-            }
-            
             .foo {
                 background: green; 
 
@@ -66,6 +62,8 @@
             .card {
                 width: 70px;   
                 position: absolute;
+                background: pink;
+
             }
         
             .bar .card {
@@ -75,9 +73,9 @@
             .foo .card {
                 width: 50px;
             }
+        
             .card:hover {
                 border: 2px solid darkgray;
-/*                z-index: 9999 !important;*/
             }
         
             .hand {
@@ -86,10 +84,6 @@
                 padding: 0px;
                 margin: 0px;
                 background: url('img/grid.gif');
-            }
-            .hand img {
-                position: absolute;
-                background: black;
             }
     </style>
     <script>
@@ -138,7 +132,8 @@
                 }
             
             
-                function spread(classname) {                
+                function spread(classname) {       
+                    /* induces a spread of cards, resizes wrapper and centers */
                     var toRadians = Math.PI/180.0;
                     var toDegrees = 180/Math.PI
                     
@@ -181,9 +176,18 @@
                         elm.css('top', vertical_margin+'px');
                     });                    
                 }
+            
+                function overlap(classname, overlap) {
+                    /* induces a overlap of cards, resizes wrapper and centers */
+                    var hand = $(classname + ' .hand');
+                    var cards = hand.find('.card');
+                    var num = cards.length;
+                    console.log(num);
+                    cards.css('position', 'inherit'); // not neccessary!
+                }
                 
                 ['.foo', '.bar', '.bas', '.barr'].forEach(function(classname) {
-                    spread(classname);
+                    overlap(classname, 30);
                 });
                 
             });
