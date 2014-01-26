@@ -14,35 +14,20 @@
         
         <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
         <!-- <script src="js/main.js"></script> -->
-         <script src="js/card_effects.js"></script> 
-
-        <style>
-            .hand {
-                font-size: 0px;
-                margin: auto auto;
-                padding: 0px;
-                margin: 0px;
-                background: url('img/grid.gif');
-            }
-            .hand .card {
-                position: absolute;
-                background: pink;
-            }
-            
-            .card:hover {
-                border: 2px solid darkgray;
-                border-radius: 10px;
-                cursor: pointer; 
-            }
-        </style>
+        <script src="js/card_effects.js"></script> 
         <script>
-            $(function() {            
-                spread('#board_player')
+            $(function() { 
+                // hack to wait until images is loaded and thus have hight, widths set
+                $('<img src="img/castle.png" />').load(function() {
+                    effects.spread($('#board_player .hand'));
+                    effects.enableZoom($('.card:not([src*="facedown"])'));
+                })
             });
         </script>
     </head>
     <body>
         
+<!--
         <div style='background: #f9f2f4;
                     padding:    10px;
                     border-radius:  10px; 
@@ -50,15 +35,12 @@
                     margin:         auto auto;
                     margin-bottom: 10px;'>
             <code>
-                TODO: <br />
-                1. refactor such that all components are styled relative to 
-                their container <br />
-                2. dry, document and cleanup html + sass <br />
-                components: infobar, opponents, center, player(districts, hand), sidebar(scoreboard, terminal)
+                TODO:  <br />
             </code>
         </div>
+-->
         
-        <article id='app' class='container'>
+        <article id='app'>
             <nav id='infobar'>    
                 <div class='current_player'>
                     afk
@@ -85,40 +67,20 @@
                 </div>    
             </nav>             
             <div id='content' class='row'> <!--todo: remove this div-->
-                <section id='board' class='col-xs-12'>
+                <section id='board'>
                     <div id='opponents' class='row'>
-                        <div class='opponent col-xs-4'>
+                        <div class='opponent'>
                             <div class='row'>
-                                <div class='col-xs-2'>
-                                    <div class='pid text-center'>rko</div>    
+                                <div class='info'>
+                                    <div class='pid'>rko</div>    
                                     <div class='token'>
                                         <img src='img/magician_icon.png' 
-                                             class='img-circle'
-                                             width=30/>
+                                             class='img-circle' />
                                     </div>
                                 </div>
-                                <div class='hand col-xs-10'>
-                                    <img class='card'
-                                         src='img/facedown2.png' 
-                                         width='45'/>
-                                    <img class='card'
-                                         src='img/facedown2.png' 
-                                         width='45'/>
-                                    <img class='card'
-                                         src='img/facedown2.png' 
-                                         width='45'/>
-                                    <!--<img class='card'
-src='img/facedown2.png' 
-width='45'/>
-<img class='card'
-src='img/facedown2.png' 
-width='45'/>
-<img class='card'
-src='img/facedown2.png' 
-width='45'/>
-<img class='card'
-src='img/facedown2.png' 
-width='45'/>-->
+                                <div class='hand'>
+                                    <img class='card passive'
+                                         src='img/facedown2.png'/>
                                 </div>
                             </div>
                             <div class='row'>
@@ -127,41 +89,33 @@ width='45'/>-->
                                          src='img/church.png' />
                                     <img class='card'
                                          src='img/harbor.png' />
-                                    <img class='card'
-                                         src='img/prison.png' />
-                                    <!--<img class='card'
-src='img/prison.png' />
-<img class='card'
-src='img/prison.png' />
-<img class='card'
-src='img/prison.png' />
-<img class='card'
-src='img/prison.png' />
-<img class='card'
-src='img/prison.png' />-->
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
                                 </div>
                             </div>
                         </div>
-                        <div class='opponent col-xs-4'>
+                        <div class='opponent'>
                             <div class='row'>
-                                <div class='col-xs-2'>
-                                    <div class='pid text-center'>rko</div>    
+                                <div class='info'>
+                                    <div class='pid'>rko</div>    
                                     <div class='token'>
                                         <img src='img/king_icon.png' 
-                                             class='img-circle'
-                                             width=30/>
+                                             class='img-circle' />
                                     </div>
                                 </div>
-                                <div class='hand col-xs-10'>
+                                <div class='hand'>
                                     <img class='card'
-                                         src='img/facedown2.png' 
-                                         width='45'/>
-                                    <img class='card'
-                                         src='img/facedown2.png' 
-                                         width='45'/>
-                                    <!--<img class='card'
-src='img/facedown2.png' 
-width='45'/>-->
+                                         src='img/facedown2.png' />
                                 </div>
                             </div>
                             <div class='row'>
@@ -173,74 +127,65 @@ width='45'/>-->
                                     <img class='card'
                                          src='img/prison.png' />
                                     <img class='card'
-                                         src='img/battlefield.png' />
-                                    <!--<img class='card'
-src='img/prison.png' />
-<img class='card'
-src='img/prison.png' />
-<img class='card'
-src='img/prison.png' />
-<img class='card'
-src='img/prison.png' />-->
+                                         src='img/castle.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
                                 </div>
                             </div>
                         </div>
-                        <div class='opponent col-xs-4'>
+                        <div class='opponent'>
                             <div class='row'>
-                                <div class='col-xs-2'>
-                                    <div class='pid text-center'>rko</div>    
+                                <div class='info'>
+                                    <div class='pid'>rko</div>    
                                     <div class='token'>
                                         <img src='img/bishop_icon.png' 
-                                             class='img-circle'
-                                             width=30/>
+                                             class='img-circle' />
                                     </div>
                                 </div>
-                                <div class='hand col-xs-10'>
+                                <div class='hand'>
                                     <img class='card'
-                                         src='img/facedown2.png' 
-                                         width='45'/>
-                                    <img class='card'
-                                         src='img/facedown2.png' 
-                                         width='45'/>
-                                    <img class='card'
-                                         src='img/facedown2.png' 
-                                         width='45'/>
+                                         src='img/facedown2.png' />
                                 </div>
                             </div>
                             <div class='row'>
                                 <div class='districts'>
-                                    <img class='card'
-                                         src='img/docks.png' />
-                                    <!--<img class='card'
-src='img/harbor.png' />
-<img class='card'
-src='img/prison.png' />
-<img class='card'
-src='img/prison.png' />
-<img class='card'
-src='img/prison.png' />
-<img class='card'
-src='img/prison.png' />
-<img class='card'
-src='img/prison.png' />
-<img class='card'
-src='img/prison.png' />-->
+                                    <img class='card '
+                                         src='img/observatory.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
+                                    <img class='card grayscale'
+                                         src='img/facedown2.png' />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div id='board_center' class='row'>
-                        <div class='gold pull-left'>
-                            <img src='img/many_coins.png' 
-                                 width='75' /></div>
-                        <div class='deck pull-right'>
+                        <div class='gold'>
+                            <img src='img/many_coins.png' />
+                        </div>
+                        <div class='deck'>
                             <img class='card'
-                                 src='img/facedown2.png' 
-                                 width='75' />
+                                 src='img/facedown2.png' />
                         </div>
                     </div>
                     <div id='board_player' class='row'>
-                        <div class='districts col-xs-6'>
+                        <div class='districts'>
                             <img class='card'
                                  src='img/temple.png' />
                             <img class='card'
@@ -249,19 +194,16 @@ src='img/prison.png' />-->
                                  src='img/watchtower.png' />
                             <img class='card'
                                  src='img/manor.png' />
-                            <img class='card'
-                                 src='img/prison.png' />
-                            <img class='card'
-                                 style='visibility:hidden'
-                                 src='img/prison.png' />
-                            <img class='card'
-                                 style='visibility:hidden'
-                                 src='img/prison.png' />
-                            <img class='card'
-                                 style='visibility:hidden'
-                                 src='img/prison.png' />
+                            <img class='card grayscale'
+                                 src='img/facedown2.png' />
+                            <img class='card grayscale'
+                                 src='img/facedown2.png' />
+                            <img class='card grayscale'
+                                 src='img/facedown2.png' />
+                            <img class='card grayscale'
+                                 src='img/facedown2.png' />
                         </div>
-                        <div class='hand col-xs-6'>
+                        <div class='hand'>
                             <img class='card'
                                  src='img/battlefield.png' />
                             <img class='card'
@@ -272,12 +214,16 @@ src='img/prison.png' />-->
                                  src='img/graveyard.png' />
                             <img class='card'
                                  src='img/cathedral.png' />
-                            <!--<img class='card'
-src='img/prison.png' />
-<img class='card'
-src='img/prison.png' />
-<img class='card'
-src='img/prison.png' />-->
+                            <img class='card grayscale'
+                                 src='img/facedown2.png' />
+                            <img class='card grayscale'
+                                 src='img/facedown2.png' />
+                            <img class='card grayscale'
+                                 src='img/facedown2.png' />
+                            <img class='card grayscale'
+                                 src='img/facedown2.png' />
+                            <img class='card grayscale'
+                                 src='img/facedown2.png' />
                         </div>
                     </div>
                 </section>

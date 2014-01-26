@@ -9,9 +9,9 @@ $app_height: 768;
 $infobar_height: 37;
 $board_height: #{($app_height)-($infobar_height)};
 
-$board_opponents_height: 35%;
+$board_opponents_height: 45%;
 $board_center_height: 20%;
-$board_player_height: 45%;
+$board_player_height: 35%;
 
 $scoreboard_height: 30%;
 $terminal_height: 70%;
@@ -25,23 +25,32 @@ $terminal_height: 70%;
     -webkit-transform: rotate( $deg * 1deg) translate3d(0,0,0);   
 }
 
-@mixin card_overlap($dist) {
-    @for $i from 0 through 10 {
-        img:nth-child(#{$i}) {
-            z-index: $i;  
-            left: ($i - 1) * $dist * 1px; 
-        }            
+.card:not([src*="facedown"]):hover {
+    border: 2px solid darkgray;
+    border-radius: 10px;
+    cursor: pointer; 
+}
+.gold:hover, .deck:hover {
+    cursor: pointer;   
+}
+
+.grayscale {
+    opacity: 0.2; 
+    -webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
+    &:hover {
+        border: none !important;
+        border-radius: 0px;
+        cursor: auto;
     }
 }
 
-// INDEPENDENT CLASSES
-// disable responsive layout
 .icon {
     height: 25px;
     width: 25px;
     margin-left: 5px;
     margin-right: 5px;
 }
+
 
 // SPECIFIC ELEMENTS
 html, body {
@@ -51,7 +60,6 @@ html, body {
 #app {
     height: #{$app_height}px !important;
     width: #{$app_width}px !important;
-    background: blue;   
     @extend .container;
 }
 
@@ -64,7 +72,7 @@ html, body {
     @extend .navbar-default;
     @extend .navbar-static-top;
     @extend .row;
-        
+
     .current_player {
         font-weight: bold;
         @extend .col-xs-2;
@@ -98,106 +106,135 @@ html, body {
 #board {
     background: $boardgreen;  
     height: 100%;
-    @extend .col-xs-9;
     padding: 30px;
-//    padding-top: 20px;
-         
+    @extend .col-xs-9;
+    
     #opponents {
         height: $board_opponents_height;
+        margin-left: 39px; /* centers board content */
     }
-
+    
     .opponent { 
+        padding-right: 10px;
+        @extend .col-xs-4;
         
-        .hand, .districts {
-            background: blue;
-            border: 1px solid red;
-            text-align: center; /*also hits images*/
+        .info {
+            @extend .col-xs-2;
         }
         
         .hand {
-            padding-right: 16.66667%; // col-xs-2: width  
-        }
-        
-        .districts {
-            @include card_overlap(30);   
-        }
-        
-        // PLAYER 1
-        &:nth-child(1) { 
-//            position: relative;
-//            left: 45px;
-//            @include rotate(-30);
-        }
-        
-        // PLAYER 2
-         &:nth-child(2) { 
-//            position: relative;
-//            left: 22.5px; 
-        }
-        
-        // PLAYER 3
-        &:nth-child(3) { 
-//            position: relative;
-//            left: 30px; 
-//            top: 80px;
-            //@include rotate(30);
+            @extend .col-xs-10;  
         }
         
         .pid {
-//            margin-bottom: 10px;   
+            text-align: center;   
+        }
+        
+        .token img {
+            width: 30px;   
+        }
+        
+        .hand .card {
+            width: 45px;   
+        }
+        
+        .districts .card {
+            width: 65px;
+        }
+         
+        .hand .card, .opponent_info {
+            width: 45px;   
+            float: left;  
+            text-align: center; /*also hits images*/
         }
         
         .districts {
-//            padding: 0px;
-//            margin-top: 20px;  
-//            margin-left: 1px;
-             
-            .card {
-                width: 65px;
-            }
-            
-            @include card_overlap(30);
-        }
-         
-        .hand {            
-            @include card_overlap(15);
-        }
-    }
-    
-    #board_player {
-        height: $board_player_height;
-        background: $boardgreen;
-//        padding-top: 85px;
-//        padding-left: 20px;
+            width: 274px; /* MAGIC! */
+            height: 209PX; /* MAGIC! */
+            margin-top: 10px;
+        }  
         
-        .card {
-            width: 100px;   
-            margin-bottom: 5px
+        .districts {
+            .card:nth-child(1), 
+            .card:nth-child(2), 
+            .card:nth-child(3),
+            .card:nth-child(4) {
+                margin-bottom: 5px;
+            }
         }
+
+//        &:nth-child(1) {
+//            top: 23px;
+//            @include rotate(-10);
+//        }
+//
+//        &:nth-child(3) {
+//            top: 30px;
+//            @include rotate(10);
+//        }
+    }
+}
+
+#board_player {
+    height: $board_player_height;
+    background: $boardgreen;
+    margin-left: 39px; /* centers board content */
+    
+    .districts {
+        width: 36%;
+        float: left;  
     }
     
-    #board_center {
-        height: $board_center_height;
-        width: 200px;
-        margin: auto;
+    .districts .card {
+        width: 80px;   
+        margin-bottom: 5px
+    }
     
-        .gold {
-            padding-top: 21px;    
-        }
-    }   
+    .hand {
+        top: 10px;
+        right: 30px;
+        float: right;
+        position: relative;
+    }
+    
+    .hand .card {
+        width: 100px;
+        margin-bottom: 5px;
+    }
+    
 }
+
+#board_center {
+    height: $board_center_height;
+    width: 200px;
+    margin: auto;
+    
+    .gold img, .deck img {
+        width: 75px;
+    }
+    
+    .gold {
+        float: left;
+        padding-top: 21px;    
+    }
+    
+    .deck {
+        float: right;    
+    }   
+}   
+
 
 #sidebar {
     padding: 0px;
     background: lightgrey;
     height: 100%;
     @extend .col-xs-3;
-        
+    
     #scoreboard {
         font-size: 20px;
         padding: 20px 0 20px;
         height: $scoreboard_height;
-                        
+        
         table {
             vertical-align: middle;
             width: 100%;
@@ -212,16 +249,16 @@ html, body {
         th:nth-child(2), td:nth-child(2) {
             text-align: left;
         }
-        
+    
         tr.me {
             font-weight: bold;
         }
-
+    
         tr.current_player {
             color: red;
         }
     }
-
+    
     #terminal {
         color: lightgray;
         background: black;
@@ -230,7 +267,7 @@ html, body {
         padding: 20px 10px 0px;
         &::-webkit-scrollbar { width: 0 !important }
         overflow-y: scroll;
-         
+        
         ul {  
             list-style: none;
             li {
