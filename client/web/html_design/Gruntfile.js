@@ -1,3 +1,6 @@
+/*
+    TODO: USE UGLIFY; CONCAT, UGLIFY, JSLINT, MINIMIZE AND ALL THE OTHER FUN TOOLS
+*/
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -9,24 +12,25 @@ module.exports = function(grunt) {
             }
         },
         watch: {
+            options: {
+                livereload: true,
+            },
             sass: {
                 files: 'styles/sass/*.scss',
                 tasks: ['sass'],
-                options: {
-                    livereload:  true
-                },
             },
-            css: {
-                files: 'styles/css/main.css',
-            },
-            html:{
+            html: {
                 files: 'index.html',
-                options: {
-                    livereload:  true
-                },
-            }
+            },
+            js: {
+                files: 'js/**/*',
+            },
+            // resources: {
+            //    files: 'img/**/*',
+            // } 
         }
     });
+    
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.registerTask('default', ['watch']);

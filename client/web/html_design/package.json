@@ -1,11 +1,9 @@
 {
-  "name": "my-project-name",
-  "version": "0.0.1",
+  "name": "Hotcit",
+  "version": "0.2.1",
   "dependencies": {
     "grunt-cli": "latest",
-    "grunt-contrib-concat": "latest",
-    "grunt-contrib-uglify": "latest",
-    "grunt-contrib-less": "latest",
+    "grunt-contrib-sass": "latest",
     "grunt-contrib-watch": "latest"
   }
 }
