@@ -13,8 +13,8 @@ $board_opponents_height: 45%;
 $board_center_height: 20%;
 $board_player_height: 35%;
 
-$scoreboard_height: 30%;
-$terminal_height: 70%;
+$scoreboard_height: 40%;
+$terminal_height: 60%;
 ///////////////////////////////////////
 
 // MIXINS
@@ -191,14 +191,15 @@ html, body {
     }
     
     .hand {
-        top: 10px;
-        right: 30px;
-        float: right;
-        position: relative;
+//        top: 10px;
+//        left: 50px;
+//        right: 30px;
+//        float: right;
+//        position: relative;
     }
     
     .hand .card {
-        width: 100px;
+        width: 115px;
         margin-bottom: 5px;
     }
     
@@ -234,6 +235,8 @@ html, body {
         font-size: 20px;
         padding: 20px 0 20px;
         height: $scoreboard_height;
+        position: relative; /* used to push logo to bottom */
+        margin-right: 10px;
         
         table {
             vertical-align: middle;
@@ -256,6 +259,12 @@ html, body {
     
         tr.current_player {
             color: red;
+        }
+
+        .logo {
+            position: absolute; 
+            bottom: 10px;
+            right: 4px;
         }
     }
     

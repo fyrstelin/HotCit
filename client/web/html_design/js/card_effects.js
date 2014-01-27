@@ -95,15 +95,15 @@ var effects = {};
         // left outer corner to right outer corner (max_degree_outer)
         degree_max = Math.asin((width / 2.0) / (1.5 * height)) * toDegrees + degree_offset;
         tmp = Math.asin((width / 2.0) / (2.5 * height)) * toDegrees + degree_offset;
-        hand.css('width', 2 * Math.sin(tmp * toRadians) * 2.5 * height + horisontal_margin + 'px');
+//        hand.css('width', 2 * Math.sin(tmp * toRadians) * 2.5 * height + horisontal_margin + 'px');
         // magic and trigometry: computes the diff from lowest cornor to top middle card
         tmp = Math.sin((90 - degree_max) * toRadians) * (1.5 * height); /* 1.5 instead of 2.5 since only measure from bottom */
-        hand.css('height', ((2.5 * height - tmp)) + vertical_margin + 'px');
+//        hand.css('height', ((2.5 * height - tmp)) + vertical_margin + 'px');
         
         
         // CORRECT FOR POSTION WHEN ROTATED
         // hand is implictly rotated by 90 degrees, correction with padding
-        hand.css('padding-left', (hand.width() - width) / 2 + 'px');
+//        hand.css('padding-left', (hand.width() - width) / 2 + 'px');
         
         
         // ROTATE
