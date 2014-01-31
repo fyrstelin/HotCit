@@ -44,6 +44,26 @@ $terminal_height: 60%;
     }
 }
 
+/* must be same size as card */
+.card-overlay {
+    position: absolute;
+    z-index: 100;
+    color: white;
+    font-weight: bold;
+
+    /* breaks when absolute pos */
+    /* vertical-align: middle; 
+       display:table-cell;   
+    */
+    
+    text-align:center;
+    line-height: 75px;
+    text-align:center;  
+    font-size: 2em;
+    
+    background-color:rgba(0, 155, 6, 0.3);
+}
+
 .icon {
     height: 25px;
     width: 25px;
@@ -124,6 +144,11 @@ html, body {
         
         .hand {
             @extend .col-xs-10;  
+            
+            .card-overlay {
+                width: 45px;
+                height: 70px;
+            }
         }
         
         .pid {
