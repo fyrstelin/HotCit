@@ -1,4 +1,6 @@
 /*global define*/
+/*jslint nomen: true */
+
 
 define(function (require) {
     "use strict";
@@ -6,11 +8,13 @@ define(function (require) {
     var Mustache = require('mustache'),
         $ = require('jquery'),
         utils = require('utils'),
-        getTemplate = utils.getTemplate;
+        getTemplate = utils.getTemplate,
+        template,
+        collection_template;
     
     /* TEMPLATES */
-    var template = getTemplate("scoreboard");
-    var collection_template = Mustache.compile(getTemplate("scoreboard_collection"));
+    template = getTemplate("scoreboard");
+    collection_template = Mustache.compile(getTemplate("scoreboard_collection"));
     
     function extractPlayerData(player, pid, king, playerInTurn) {
         return {
@@ -36,24 +40,30 @@ define(function (require) {
             that.collection = that.elm.find('.collection');
         }
         
-        that.notify = function() {
-            if(model.my.can('endturn')) {
-                that.logoBtn
-                .on('click.endturn', playercontroller.endTurn)
-                .addClass('active');
-            }
-            else 
-                that.logoBtn
-                .off('click.endturn')
-                .removeClass('active');
-            
+        that._updateScores = function () {
             var players = [];
             players.push(extractPlayerData(model.my, model.my.username, model.king, model.playerInTurn));
-            model.opponents.forEach(function(player) {
-                players.push(extractPlayerData(player, model.my.username, model.king, model.playerInTurn)); 
+            model.opponents.forEach(function (player) {
+                players.push(extractPlayerData(player, model.my.username, model.king, model.playerInTurn));
             });
             that.collection.html(collection_template(players));
-            
+        };
+        
+        that._toggleLogoBtn = function () {
+            if (model.my.can('endturn')) {
+                that.logoBtn
+                    .on('click.endturn', playercontroller.endTurn)
+                    .addClass('active');
+            } else {
+                that.logoBtn
+                    .off('click.endturn')
+                    .removeClass('active');
+            }
+        };
+        
+        that.notify = function () {
+            that._updateScores();
+            that._toggleLogoBtn();
         };
         
         that.render = that.notify;
