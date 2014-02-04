@@ -1,0 +1,10 @@
+{
+  "name": "Hotcit",
+  "version": "0.2.1",
+  "dependencies": {
+        "grunt-cli": "latest",
+        "grunt-contrib-sass": "latest",
+        "grunt-contrib-watch": "latest",
+        "grunt-execute": "latest"
+    }
+}
