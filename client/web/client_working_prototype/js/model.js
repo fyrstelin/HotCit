@@ -21,6 +21,7 @@ define("model", function () {
 
 		that.opponents = [];
 		that.my = {};
+        that.players = game.Players.map(function(player) { return player.Username; });
         
 
 		/********************************/
@@ -64,6 +65,7 @@ define("model", function () {
             update.Players.forEach(function (p1) {
                 var opp, p2;
                 if (p1.Username == pid) {
+                    that.my.username   = p1.Username   || that.my.username;
                     that.my.city       = p1.City       || that.my.city;
                     that.my.points     = p1.Points     || that.my.points;
                     that.my.gold       = p1.Gold       || that.my.gold;

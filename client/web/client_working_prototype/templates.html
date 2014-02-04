@@ -190,49 +190,7 @@
 		            </div>
 		        </section>
 		        <aside id='sidebar'>
-		            <div id='scoreboard'>
-		                <table>
-		                    <thead>
-		                        <tr>
-		                            <th></th>
-		                            <th></th>
-		                            <th>
-		                                <img src='img/two_coins.png' class='icon' />
-		                            </th>
-		                            <th>
-		                                <img src='img/points.png' class='icon' />
-		                            </th>
-		                        </tr>
-		                    </thead>
-		                    <tbody>
-		                        <tr>
-		                            <td></td>
-		                            <td>rko</td>
-		                            <td>3</td>
-		                            <td>8</td>
-		                        </tr>
-		                        <tr class='king'>
-		                            <td><img src='img/crown.png' class='icon'/></td>
-		                            <td>tugend</td>
-		                            <td>9</td>
-		                            <td>11</td>
-		                        </tr>
-		                        <tr class='current_player'>
-		                            <td></td>
-		                            <td>mis</td>
-		                            <td>6</td>
-		                            <td>3</td>
-		                        </tr>
-		                        <tr class='me'>
-		                            <td></td>
-		                            <td>afk</td>
-		                            <td>10</td>
-		                            <td>12</td>
-		                        </tr>
-		                    </tbody>
-		                </table>
-		                <img class='logo' src='img/logo.png' />
-		            </div>                    
+		            <div id='scoreboard'></div>                    
 		            <div id='terminal'>
 		                <ul>
 		                    <li>terminal for messages</li>
@@ -406,6 +364,40 @@
 		        </tr>
 		    {{/.}}
 		</table>
+	</script>
+
+	<!---SCOREBOARD.HTML--->
+	<script id='scoreboard'>
+		<div id='scoreboard'>
+		    <table>
+		        <thead>
+		            <tr>
+		                <th></th>
+		                <th></th>
+		                <th>
+		                    <img src='img/two_coins.png' class='icon' />
+		                </th>
+		                <th>
+		                    <img src='img/points.png' class='icon' />
+		                </th>
+		            </tr>
+		        </thead>
+		        <tbody class='collection'></tbody>
+		    </table>
+		    <img class='logo' src='img/logo.png' />
+		</div>
+	</script>
+
+	<!---SCOREBOARD_COLLECTION.HTML--->
+	<script id='scoreboard_collection'>
+		{{#.}}
+		<tr {{#isInTurn}}class='current_player'{{/isInTurn}}>
+		    <td>{{#isKing}}<img src='img/crown.png' class='icon'/>{{/isKing}}</td>
+		    <td>{{username}}</td>
+		    <td>{{gold}}</td>
+		    <td>{{points}}</td>
+		</tr>
+		{{/.}}
 	</script>
 
 	<!---SELECTION.HTML--->

@@ -10,7 +10,7 @@ define(function (require) {
         PlayerInTurnView = require('./views/playerinturn_view'),
         CharacterView = require('./views/character_view'),
         BoardView = require('./views/board'),
-        TerminalView = require('./views/terminal_view'),
+        ScoreboardView = require('./views/scoreboard_view'),
         utils = require('utils'),
         $ = require('jquery'),
         template = utils.getTemplate('app'),
@@ -22,7 +22,7 @@ define(function (require) {
         playerInTurnView,
         simulateView,
         characterView,
-        terminalView;
+        scoreboardView;
     
     /* CLASS */
     return function AppView(model, state, playercontroller, simulatecontroller) {
@@ -34,7 +34,8 @@ define(function (require) {
             
             // DEFINE AND INJECT VIEWS
             views = [];
-            terminalView = new TerminalView(model, state, playercontroller);
+            scoreboardView = new ScoreboardView(model, state, playercontroller);
+            views.push(scoreboardView);
             
 //            opponentsView = new OpponentsView(model, state, playercontroller);
 //            that.elm.find('#opponents').html(opponentsView.elm);
@@ -64,7 +65,12 @@ define(function (require) {
 //            that.elm.find('#characterView').append(characterView.elm);
 //            views.push(characterView);
 //            
-//            that.render(model);
+            
+            views.forEach(function(view) {
+                that.elm.find("#"+view.elm.attr('id')).replaceWith(view.elm); 
+            });
+            
+            that.render(model);            
         }
         
         /* METHOD */
