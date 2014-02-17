@@ -30,116 +30,7 @@
 		    </nav>             
 		    <div id='content' class='row'> <!--todo: remove this div-->
 		        <section id='board'>
-		            <div id='opponents' class='row'>
-		                <div class='opponent'>
-		                    <div class='row'>
-		                        <div class='info'>
-		                            <div class='pid'>rko</div>    
-		                            <div class='token'>
-		                                <img src='img/magician_icon.png' 
-		                                     class='img-circle' />
-		                            </div>
-		                        </div>
-		                        <div class='hand'>
-		                            <div class='card-overlay'>0</div>
-		                            <img class='card'
-		                                 src='img/facedown2.png'/>
-		                        </div>
-		                    </div>
-		                    <div class='row'>
-		                        <div class='districts'>
-		                            <img class='card'
-		                                 src='img/church.png' />
-		                            <img class='card'
-		                                 src='img/harbor.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                        </div>
-		                    </div>
-		                </div>
-		                <div class='opponent'>
-		                    <div class='row'>
-		                        <div class='info'>
-		                            <div class='pid'>rko</div>    
-		                            <div class='token'>
-		                                <img src='img/king_icon.png' 
-		                                     class='img-circle' />
-		                            </div>
-		                        </div>
-		                        <div class='hand'>
-		                            <div class='card-overlay'>6</div>
-		                            <img class='card'
-		                                 src='img/facedown2.png' />
-		                        </div>
-		                    </div>
-		                    <div class='row'>
-		                        <div class='districts'>
-		                            <img class='card'
-		                                 src='img/church.png' />
-		                            <img class='card'
-		                                 src='img/harbor.png' />
-		                            <img class='card'
-		                                 src='img/prison.png' />
-		                            <img class='card'
-		                                 src='img/castle.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                        </div>
-		                    </div>
-		                </div>
-		                <div class='opponent'>
-		                    <div class='row'>
-		                        <div class='info'>
-		                            <div class='pid'>rko</div>    
-		                            <div class='token'>
-		                                <img src='img/assassin_icon.png' 
-		                                     class='img-circle' />
-		                            </div>
-		                        </div>
-		                        <div class='hand'>
-		                            <div class='card-overlay'>4</div>
-		                            <img class='card'
-		                                 src='img/facedown2.png' />
-		                        </div>
-		                    </div>
-		                    <div class='row'>
-		                        <div class='districts'>
-		                            <img class='card '
-		                                 src='img/observatory.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                            <img class='card grayscale'
-		                                 src='img/facedown2.png' />
-		                        </div>
-		                    </div>
-		                </div>
-		            </div>
+		            <div id='opponents' class='row'></div>
 		            <div id='board_center' class='row'>
 		                <div class='gold'>
 		                    <img src='img/many_coins.png' />
@@ -235,7 +126,7 @@
 
 	<!---CARD.HTML--->
 	<script id='card'>
-		<img class='card img-thumbnail' data-card_type='{{.}}' src='/resources/images/mdpi/{{.}}.png'/>
+		<img class='card' data-card_type='{{.}}' src='/resources/images/mdpi/{{.}}.png'/>
 	</script>
 
 	<!---CHARACTER.HTML--->
@@ -278,15 +169,25 @@
 	<!---OPPONENT.HTML--->
 	<script id='opponent'>
 		<div class='opponent'>
-		    <h1 class='characters'></h1>
-		    
-		    <div class='stats'></div>
-		
-		    <h3>Hand</h3>
-		    <div class='hand'></div>
-		
-		    <h3>City</h3>
-		    <div class='city'><div>
+		    <div class='row'>
+		        <div class='info'>
+		            <div class='pid'>{{username}}</div>    
+		            <div class='token'>
+		                {{#character}}
+		                <img src='img/{{character}}.png' 
+		                     class='img-circle' />
+		                {{/character}}
+		            </div>
+		        </div>
+		        <div class='hand'>
+		            <div class='card-overlay'>{{handno}}</div>
+		            <img class='card'
+		                 src='img/facedown2.png'/>
+		        </div>
+		    </div>
+		    <div class='row'>
+		        <div class='districts'></div>
+		    </div>
 		</div>
 	</script>
 
@@ -368,24 +269,22 @@
 
 	<!---SCOREBOARD.HTML--->
 	<script id='scoreboard'>
-		<div id='scoreboard'>
-		    <table>
-		        <thead>
-		            <tr>
-		                <th></th>
-		                <th></th>
-		                <th>
-		                    <img src='img/two_coins.png' class='icon' />
-		                </th>
-		                <th>
-		                    <img src='img/points.png' class='icon' />
-		                </th>
-		            </tr>
-		        </thead>
-		        <tbody class='collection'></tbody>
-		    </table>
-		    <img class='logo' src='img/logo.png' />
-		</div>
+		<table>
+		    <thead>
+		        <tr>
+		            <th></th>
+		            <th></th>
+		            <th>
+		                <img src='img/two_coins.png' class='icon' />
+		            </th>
+		            <th>
+		                <img src='img/points.png' class='icon' />
+		            </th>
+		        </tr>
+		    </thead>
+		    <tbody class='collection'></tbody>
+		</table>
+		<img class='logo' src='img/logo.png' />
 	</script>
 
 	<!---SCOREBOARD_COLLECTION.HTML--->

@@ -10,48 +10,57 @@ define(function (require) {
         OpponentView;
     
     // TODO: refactor, Mads
-    var opponent_template = getTemplate('opponent');
-    //var city_template = getTemplate('city'); //"{{#city}}<img class='card' src='/resources/images/mdpi/{{.}}.png' />{{/city}}";
-    var hand_template = getTemplate('hand'); // "{{#hand}}<img class='card' src='/resources/images/mdpi/{{.}}.png' data-card='{{.}}' />{{/hand}}";
-    var stats_template = getTemplate('stats'); 
-    var characters_template = getTemplate('opponent_characters');
-    console.log(stats_template);
+    var opponent_template = Mustache.compile(getTemplate('opponent'));
+    var character_template = Mustache.compile("<img src='img/{{.}}.png' class='img-circle' />");
+
     // COLLECTION VIEW
     // PRIVATE CLASS
-    OpponentView = (function () {
-        var template = opponent_template;
-        
+    OpponentView = (function () {    
         return function (player, model, state, controller) {
             var that, collection;
             that = this;
-            
+                    
             /* CONSTRUCTOR */
-            function initialize() {
+            function initialize() {            
                 collection = [];
                 
-                that.elm = $(Mustache.render(template, player));
-                that.cityElm = that.elm.find('.city');
-                that.handElm = that.elm.find('.hand');
-                that.statsElm = that.elm.find('.stats');
-                that.charsElm = that.elm.find('.characters');
+                that.elm = $(opponent_template({
+                    username: player.username,
+                    character: (player.characters.length === 0)? undefined : player.characters[0], // QUICK FIX, no design decision yet...
+                    handno: player.hand.length,                       
+                }));
+                
+                that.tokenElm = that.elm.find('.token');
+                that.handElm = that.elm.find('.hand card-overlay');
+                that.districtsElm = that.elm.find('.districts');
                 
                 state.onSelectDistrictEnable(that._toggleSelect);
             }
             
             /* METHOD */
             that.render = function () {
-                that.cityElm.empty();
                 collection.length = 0;
                 
-                that.handElm.html($(Mustache.render(hand_template, player.hand)));
-                that.charsElm.html($(Mustache.render(characters_template, player)));
-                that.statsElm.html($(Mustache.render(stats_template, player)));    
-
-                // annoying, not using the same approach here, can this be fixed?
+                // decide how to handle multiple characters..
+                if(player.characters.length) {
+                    that.tokenElm.html(character_template(player.characters[0]));
+                } else {
+                    // that.tokenElm.empty();   
+                    that.tokenElm.html(character_template('assassin_icon')); // TODO: MOCKUP
+                }
+                
+                that.handElm.html(player.hand.length); // TODO: give number instead of this silliness. =)
+                
+                player.city.push('tavern'); // MOCKUP
+                player.city.push('tavern'); 
+                player.city.push('tavern'); 
+                player.city.push('tavern'); 
+                player.city.push('tavern'); 
+                
                 player.city.forEach(function (card) {
                     var view = new CardView(player.username, card, model, state, controller);
                     collection.push(view);
-                    that.cityElm.append(view.elm);
+                    that.districtsElm.append(view.elm);
                 });
             };
 
@@ -73,17 +82,15 @@ define(function (require) {
     
     // COMPOSITE VIEW
     // CLASS
-    return (function OpponentsView() {
-        var template = "<div>";
-        
-        return function (model, state, controller) {
+    return (function OpponentsView() {    
+        return function (container, model, state, controller) {
             var that, views;
-            
+
             that = this;
             
             /* CONSTRUCTOR */
             function initialize() {
-                that.elm = $(template);
+                that.elm = container;
                 views = [];
             
                 model.opponents.forEach(function (opponent) {

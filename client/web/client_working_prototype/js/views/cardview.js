@@ -7,18 +7,18 @@ define(function (require) {
 	var $ = require('jquery'),
 		Mustache = require('mustache'),
         utils = require('utils'),
-        getTemplate = utils.getTemplate;
+        getTemplate = utils.getTemplate,
+        template = Mustache.compile(getTemplate('card'));
     
     /* CLASS */
     return (function CardView() {
-        var template = getTemplate('card');
         
         return function (owner, card) {
             var that = this;
             
             /* CONSTRUCTOR */
             function initialize() {
-                that.elm = $(Mustache.render(template, card));
+                that.elm = $(template(card));
             }
             
             /* STATE CHANGE HANDLER */

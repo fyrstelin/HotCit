@@ -1,11 +1,21 @@
 <div class='opponent'>
-    <h1 class='characters'></h1>
-    
-    <div class='stats'></div>
-
-    <h3>Hand</h3>
-    <div class='hand'></div>
-
-    <h3>City</h3>
-    <div class='city'><div>
+    <div class='row'>
+        <div class='info'>
+            <div class='pid'>{{username}}</div>    
+            <div class='token'>
+                {{#character}}
+                <img src='img/{{character}}.png' 
+                     class='img-circle' />
+                {{/character}}
+            </div>
+        </div>
+        <div class='hand'>
+            <div class='card-overlay'>{{handno}}</div>
+            <img class='card'
+                 src='img/facedown2.png'/>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='districts'></div>
+    </div>
 </div>

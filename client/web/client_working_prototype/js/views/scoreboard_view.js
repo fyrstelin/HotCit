@@ -27,7 +27,7 @@ define(function (require) {
         };
     }
     
-    function ScoreboardView(model, state, playercontroller) {
+    function ScoreboardView(container, model, state, playercontroller) {
         /*
             Display a scoreboard with points, gold, who is king, 
             and who has the turn.
@@ -35,7 +35,8 @@ define(function (require) {
         
         var that = this;
         function initialize() {
-            that.elm = $(template);
+            that.elm = container;
+            that.elm.html(template);
             that.logoBtn = that.elm.find('.logo');
             that.collection = that.elm.find('.collection');
         }

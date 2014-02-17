@@ -4,7 +4,7 @@ define(function (require) {
 	"use strict";
    
     var ClientPlayerView = require('./views/clientplayer'),
-        OpponentsView = require('./views/opponentsview'),
+        OpponentsView = require('./views/opponents_view'),
         OptionsView = require('./views/options_view'),
         SimulateView = require('./views/simulate_view'),
         PlayerInTurnView = require('./views/playerinturn_view'),
@@ -28,18 +28,21 @@ define(function (require) {
     return function AppView(model, state, playercontroller, simulatecontroller) {
         var that = this;
         
+        function attach(Constructor, idd) {
+            var container = that.elm.find('#'+idd);
+            var view = new Constructor(container, model, state, playercontroller);
+            views.push(view);
+        }
+        
         /* CONSTRUCTOR */
         function initialize() {
             that.elm  = $(template);
             
             // DEFINE AND INJECT VIEWS
             views = [];
-            scoreboardView = new ScoreboardView(model, state, playercontroller);
-            views.push(scoreboardView);
             
-//            opponentsView = new OpponentsView(model, state, playercontroller);
-//            that.elm.find('#opponents').html(opponentsView.elm);
-//            views.push(opponentsView);
+            attach(ScoreboardView, 'scoreboard');            
+            attach(OpponentsView, 'opponents');
 //            
 //            playerView = new ClientPlayerView(model, playercontroller, state, playercontroller);
 //            that.elm.find('#player').html(playerView.elm);
@@ -64,13 +67,8 @@ define(function (require) {
 //            characterView = new CharacterView(model, playercontroller);
 //            that.elm.find('#characterView').append(characterView.elm);
 //            views.push(characterView);
-//            
-            
-            views.forEach(function(view) {
-                that.elm.find("#"+view.elm.attr('id')).replaceWith(view.elm); 
-            });
-            
-            that.render(model);            
+
+            that.render(model);
         }
         
         /* METHOD */
