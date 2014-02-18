@@ -3,7 +3,7 @@
 define(function (require) {
 	"use strict";
    
-    var ClientPlayerView = require('./views/clientplayer'),
+    var ClientPlayerView = require('./views/clientplayer_view'),
         OpponentsView = require('./views/opponents_view'),
         OptionsView = require('./views/options_view'),
         SimulateView = require('./views/simulate_view'),
@@ -43,7 +43,7 @@ define(function (require) {
             
             attach(ScoreboardView, 'scoreboard');            
             attach(OpponentsView, 'opponents');
-//            
+            attach(ClientPlayerView, 'board_player');       
 //            playerView = new ClientPlayerView(model, playercontroller, state, playercontroller);
 //            that.elm.find('#player').html(playerView.elm);
 //            views.push(playerView);

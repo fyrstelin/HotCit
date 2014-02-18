@@ -10,7 +10,6 @@ define(function (require) {
         ClientPlayerView,
         CardView = require('./cardview'),
         utils = require('utils'),
-        getTemplate = utils.getTemplate,
         containsOptionOfType = utils.containsOptionOfType;
     
     /* STATIC METHOD */
@@ -42,15 +41,14 @@ define(function (require) {
     /* PRIVATE CLASS */
     /* COLLECTION VIEW */
     HandView = (function () {
-        var template = '<div class="HandView"></div>';
         
-        return function (owner, model, state, controller) {
+        return function (container, owner, model, state, controller) {
             var that, collection, buildDistrictFlag;
             that = this;
             
             /* CONSTRUCTOR */
             function initialize() {
-                that.elm = $(template);
+                that.elm = container;
                 collection = [];
                 buildDistrictFlag = false;
             }
@@ -61,7 +59,7 @@ define(function (require) {
             };
             
             /* METHOD */
-            that.notify = function (update) {
+            that.notify = function () {
                 // consider conditional render depending on update content
                 that.render();
             };
@@ -98,22 +96,20 @@ define(function (require) {
     /* PRIVATE CLASS */
     /* COLLECTION VIEW */
     CityView = (function () {
-        var template = '<div>';
-        
-        return function CityView(owner, model, state, controller) {
+        return function CityView(container, owner, model, state, controller) {
             var that, collection;
             
             that = this;
             
             /* CONSTRUCTOR */
             function initialize() {
-                that.elm = $(template);
                 collection = [];
+                that.elm = container;
                 state.onSelectDistrictEnable(that._toggleSelect);
             }
             
             /* METHOD */
-            that.notify = function (update) {
+            that.notify = function () {
                 // consider conditional render depending on update content
                 that.render();
             };
@@ -149,21 +145,17 @@ define(function (require) {
     /* CLASS */
     /* COMPOSITE VIEW */
 	ClientPlayerView = (function () {
-        var template = getTemplate("player");
         
-        return function (model, controller, state) {
+        return function (container, model, state, controller) {
             var that = this;
             
             function initialize() {
-                that.elm = $(template);
-               
-                that.handView = new HandView(model.my.username, model, state, controller);
+                that.elm = container;
                 that.handElm = that.elm.find('.hand');
-                that.handElm.append(that.handView.elm);
-                
-                that.cityView = new CityView(model.my.username, model, state, controller);
                 that.cityElm = that.elm.find('.city');
-                that.cityElm.append(that.cityView.elm);
+               
+                that.handView = new HandView(that.handElm, model.my.username, model, state, controller);
+                that.cityView = new CityView(that.cityElm, model.my.username, model, state, controller);
             }
             
             that.render = function () {

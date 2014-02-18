@@ -123,7 +123,19 @@ html, body {
     height: #{$board_height}px;
 }
 
+.city {
+    .card:nth-child(1), 
+    .card:nth-child(2), 
+    .card:nth-child(3),
+    .card:nth-child(5),
+    .card:nth-child(6),
+    .card:nth-child(7) {
+        margin-right: 5px;
+    }
+}
+
 #board {
+//    background: url('../../img/grid.gif');
     background: $boardgreen;  
     height: 100%;
     padding: 30px;
@@ -139,19 +151,25 @@ html, body {
         @extend .col-xs-4;
         
         .info {
-            @extend .col-xs-2;
+            float: left;
         }
         
-        .hand {
-            @extend .col-xs-10;  
-            
+        .hand {   
+            float: left;
+            width: 65px;
+            margin-left: 10px;
             .card-overlay {
                 width: 45px;
                 height: 70px;
             }
         }
         
-        .pid {
+        .token {
+            margin-right: 5px;
+        }
+        
+        .pid, .token, .hand {
+            width: 65px;
             text-align: center;   
         }
         
@@ -163,9 +181,8 @@ html, body {
             width: 45px;   
         }
         
-        .districts .card {
+        .city .card {
             width: 65px;
-            margin-right: 5px;
         }
          
         .hand .card, .opponent_info {
@@ -174,20 +191,18 @@ html, body {
             text-align: center; /*also hits images*/
         }
         
-        .districts {
-            width: 274px; /* MAGIC! */
+        .city {
+            width: 275px; /* MAGIC! */
             height: 209PX; /* MAGIC! */
             margin-top: 10px;
-        }  
-        
-        .districts {
+            
             .card:nth-child(1), 
             .card:nth-child(2), 
             .card:nth-child(3),
             .card:nth-child(4) {
                 margin-bottom: 5px;
-            }
-        }
+            } 
+        }  
 
 //        &:nth-child(1) {
 //            top: 23px;
@@ -203,15 +218,14 @@ html, body {
 
 #board_player {
     height: $board_player_height;
-    background: $boardgreen;
     margin-left: 39px; /* centers board content */
     
-    .districts {
+    .city {
         width: 36%;
         float: left;  
     }
     
-    .districts .card {
+    .city .card {
         width: 80px;   
         margin-bottom: 5px
     }

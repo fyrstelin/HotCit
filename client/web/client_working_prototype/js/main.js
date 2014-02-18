@@ -63,6 +63,30 @@ define(function (require) {
         
         // $('#board_player .hand').html('');
         
+        
+        // TODO: MOCKUP
+        model.my.hand.push('tavern');
+        model.my.hand.push('harbor');
+        model.my.hand.push('castle');
+        model.my.hand.push('tavern');
+        model.my.hand.push('tavern');
+        model.my.city.push('tavern');
+        model.my.city.push('tavern');
+        model.my.city.push('tavern');
+        model.my.city.push('harbor');
+        model.my.city.push('observatory');
+        model.my.city.push('observatory');
+        model.my.city.push('observatory');
+        model.my.city.push('tavern');
+        
+        model.opponents.forEach(function(player) {
+            player.city.push('tavern'); // MOCKUP
+            player.city.push('tavern'); 
+            player.city.push('tavern'); 
+            player.city.push('tavern'); 
+            player.city.push('tavern');  
+        });
+        
         var appView = new AppView(model, state, playercontroller, simulateController, selectionView);
         $('#app').replaceWith(appView.elm); // TODO: DONT USE REPLACE!
         model.addListener(appView);

@@ -32,7 +32,7 @@ define(function (require) {
                 
                 that.tokenElm = that.elm.find('.token');
                 that.handElm = that.elm.find('.hand card-overlay');
-                that.districtsElm = that.elm.find('.districts');
+                that.cityElm = that.elm.find('.city');
                 
                 state.onSelectDistrictEnable(that._toggleSelect);
             }
@@ -51,16 +51,10 @@ define(function (require) {
                 
                 that.handElm.html(player.hand.length); // TODO: give number instead of this silliness. =)
                 
-                player.city.push('tavern'); // MOCKUP
-                player.city.push('tavern'); 
-                player.city.push('tavern'); 
-                player.city.push('tavern'); 
-                player.city.push('tavern'); 
-                
                 player.city.forEach(function (card) {
                     var view = new CardView(player.username, card, model, state, controller);
                     collection.push(view);
-                    that.districtsElm.append(view.elm);
+                    that.cityElm.append(view.elm);
                 });
             };
 
